@@ -1,0 +1,149 @@
+<p>الجزء الخامس والسادس هما أفضل أجزاء السلسلة بالنسبة لي، وفيهما سوف نتعرف على مواضيع حساسة جدًا في استخدامنا لإطار العمل Foundation، سنتعرف على آلية التعامل مع الصور والفيديو وسوف نتحدث عن أساليب عرض النصوص والعناوين التي يُقدمها Foundation وغيره من المواضيع.</p>
+<h2 id="-images-and-videos-">الصور والفيديو (Images and Videos)</h2>
+<h3 id="-orbit-">المدار (Orbit)</h3>
+<p>&quot;المدار&quot; وهو ما يقابل &quot;carousel&quot; في إطار العمل Bootstrap، قدم Foundation &quot;المدار&quot; بشكل مُبسطٍ وسريع الإعداد كل ما عليك فعله هو إضافة خاصية المعلومات <code>data-orbit</code>  &quot;للقائمة الغير مرتبة&quot; (<code>&lt;ul&gt;</code>) وستتكفّل JavaScript بما بقي لإنشاء &quot;المدار&quot;، ومُحتوى &quot;المدار&quot; يُمكن أنّ يكون نصّيًا أو صورًا والتي يُمكن أن يُضاف لها &quot;شرح صورة&quot; (caption)، ويدعم &quot;المدار&quot; ميزة المسح بالإصبع (swiping) في الأجهزة التي تُوفر شاشات لمسية، وخاصية الربط العميق (deep linking)، والتي تُتيح لك إنشاء رابط لأحد عناصر &quot;المدار&quot;.</p>
+<p>في صفحة المعرض قمنا باختيار ثلاث صور لعرضها باستخدام &quot;المدار&quot;، لاحظ أنّ الشيفرة بسيطة جدًا ولا تحتاج إلى الكثير من الإعداد.</p>
+<pre><code class="lang-html">    &lt;div class=&quot;row&quot;&gt;
+        &lt;ul data-orbit&gt;
+          &lt;li&gt;
+            &lt;img src=&quot;img/1.jpg&quot;&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;img src=&quot;img/2.jpg&quot;&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;img src=&quot;img/3.jpg&quot;&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/orbit-photo.png" alt=""></p>
+<p>في الصفحة الرئيسة الخاصة بالمتجر قمنا بإنشاء &quot;المدار&quot; باستخدام مُحتوى نصّي فقط.</p>
+<pre><code class="lang-html">    &lt;div class=&quot;row panel&quot;&gt;
+        &lt;ul class=&quot;text-center&quot; data-orbit&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              &lt;h2&gt;Start make money by selling you photos&lt;/h2&gt;
+              &lt;p&gt;We have connection with big clients looking for you photos&lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              &lt;h2&gt;We are fair&lt;/h2&gt;
+              &lt;p&gt;We take 95% and the rest is for you&lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;div&gt;
+              &lt;h2&gt;We have subscription plans&lt;/h2&gt;
+              &lt;p&gt;Three bussnies plans for all sizes&lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/orbit.png" alt=""></p>
+<p><em>مثال حي</em> <a href="http://codepen.io/anon/pen/NPpRqQ">http://codepen.io/anon/pen/NPpRqQ</a>:</p>
+<p>للأسف <a href="http://foundation.zurb.com/forum/posts/14504-moving-on-from-developing-orbit">توقف Foundation عن دعم &quot;المدار&quot;</a> بعد أكثر من أربعة أعوام على إصداره، تنصح Zurb باستخدام أحد الحلول البديلة وهي إضافة <a href="https://kenwheeler.github.io/slick">slick</a>. الأمر الجيد أنّه مازال بالإمكان متابعة استخدام &quot;المدار&quot; وبكامل ميزاته، ولكن بدون تحديثات مستقبلية.</p>
+<h3 id="-lightbox-">عارض الصور (Lightbox)</h3>
+<p>قام Foundation بتوفير إضافة عرض الصور (lightbox)، حيثُ أنّ &quot;المدار&quot; لا يستطيع التعامل مع الصور ذات الارتفاع المختلف، ولإنشاء عارض الصور كل ماعليك فعله هو تجميع الصور في &quot;قائمة غير مرتبة&quot; وإضافة الصنف <code>clearing-thumbs</code> والخاصية <code>data-clearing</code>، لتحصل على معرض صور بأبسط الخيارات، حيث تُعرض جميع الصور على الصفحة وعند الضغط على أحدها يتم الانتقال إلى صفحة جديدة لتُعرض الصورة بحجم كبير مع إمكانية التّنقل بين الصور الأُخرى بشكل مُصغّرات (thumbnails)، ولإضافة شيء من الجمالية للصور بإمكانك استخدام الصنف <code>th</code> للوسم <code>&lt;img&gt;</code>، الذي يضيف إطارًا و&quot;تأثير مرور&quot; (hover) للصور، كما يُقدم Foundation أسلوبًا آخرًا للعرض حيثُ بإمكانك اختيار إحدى الصور وعرضها في الصفحة بشكل منفرد وبعد الضغط عليها يُنتقل إلى صفحة أُخرى تعرض الصورة المُختارة بحجمها الكبير وباقي الصور بشكل مُصغّر، ولتطبيق هذا الأسلوب عليك إضافة الصنف <code>clearing-feature</code> &quot;للقائمة غير المرتبة&quot; والصنف <code>clearing-featured-img</code> للصورة المُختارة، ولإضافة &quot;شرح صورة&quot; (caption) نستخدم &quot;خاصية المعلومات&quot; <code>data-caption</code>.</p>
+<pre><code class="lang-html">    &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;large-12 columns&quot;&gt;
+        &lt;ul class=&quot;small-block-grid-2 medium-block-grid-3 large-block-grid-4 clearing-thumbs&quot; data-clearing&gt;
+          &lt;li&gt;&lt;a href=&quot;img/th1.jpg&quot; class=&quot;th&quot;&gt;&lt;img src=&quot;img/th1.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;img/th2.jpg&quot; class=&quot;th&quot;&gt;&lt;img src=&quot;img/th2.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;img/th3.jpg&quot; class=&quot;th&quot;&gt;&lt;img src=&quot;img/th3.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;img/th4.jpg&quot; class=&quot;th&quot;&gt;&lt;img src=&quot;img/th4.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;img/th5.jpg&quot; class=&quot;th&quot;&gt;&lt;img src=&quot;img/th5.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;img/th6.jpg&quot; class=&quot;th&quot;&gt;&lt;img src=&quot;img/th6.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;img/th7.jpg&quot; class=&quot;th&quot;&gt;&lt;img src=&quot;img/th7.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;img/th8.jpg&quot; class=&quot;th&quot;&gt;&lt;img src=&quot;img/th8.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/lightbox.png" alt=""></p>
+<h3 id="-flex-video-">الفيديو المرن (Flex Video)</h3>
+<p>التعامل مع تجاوبية الفيديو من الأمور المزعجة في CSS، وهي في نفس الوقت مطلبٌ أساسيٌ في أي موقع. يُقدم Foundation الصنف <code>flex-video</code> للتعامل مع الفيديو المُضمّن (embedded) في الصفحة، حيث يقوم هذا الصنف بالحفاظ على أبعاد الفيديو مُتناسقة على مُختلف قياسات الشاشات. للاستفادة من &quot;الفيديو المرن&quot; Flex Video كل ما عليك فعله هو إحاطة الوسم <code>&lt;iframe&gt;</code> بالوسم <code>&lt;div&gt;</code> مع الصنف <code>flex-video</code>، لتحصل على تجاوبية على أي حجم شاشة، ويُمكن استخدام الصنف <code>widescreen</code> لتوسيع عرض الفيديو. كما يُقدم Foundation صنفًا خاصًا لموقع Vimeo وبنفس الاسم وذلك لتنسيقه بشكل أفضل في الصفحة.</p>
+<pre><code class="lang-html">    &lt;div class=&quot;flex-video&quot;&gt;
+      &lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;//www.youtube.com/embed/ExAmPl3&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;
+    &lt;/div&gt;
+</code></pre>
+<p>دائمًا لدمج فيديو في الصفحة يجب استخدام الرابط المسمى Embed المُلحق بالفيديو، في YouTube يُمكن الحصول على الرابط أسفل الفيديو.</p>
+<p><img src="imgs/youtube-embed-video.png" alt=""></p>
+<h2 id="-formatting-and-visibility-">الهيئة والظهور (Formatting and Visibility)</h2>
+<h3 id="-">تنسيق العناوين والنّصوص</h3>
+<p>يَهتم Foundation بمظهر العناوين والنصوص (typography)، حيث يُقدم Foundation &quot;للقائمة غير مرتبة&quot; <code>&lt;ul&gt;</code> الأصناف &quot;قرص&quot; <code>disc</code> لجعل جميع عناصر القائمة مسبوقًا بدائرة مُطمسة وحتى المتداخل منها (nested)، ,الصنف &quot;دائري&quot; <code>circle</code> يَسبق جميع العناصر بدائرة مُفرغة، والصنف &quot;مربع&quot; <code>square</code> يسبق العناصر بمُربع صغير مُطمس، ويعرض الصنف <code>no-bullet</code> القوائم مُجردة من أيّ شكل.</p>
+<pre><code class="lang-html">    &lt;ul class=&quot;no-bullet&quot;&gt; &lt;!-- القائمة سوف تظهر من دون أيّ شكل --&gt;
+      &lt;li&gt;List item with a much longer description or more content.&lt;/li&gt;
+      &lt;li&gt;List item&lt;/li&gt;
+      &lt;li&gt;List item
+        &lt;ul&gt;
+          &lt;li&gt;Nested List Item&lt;/li&gt;
+          &lt;li&gt;Nested List Item&lt;/li&gt;
+          &lt;li&gt;Nested List Item&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;List item&lt;/li&gt;
+      &lt;li&gt;List item&lt;/li&gt;
+      &lt;li&gt;List item&lt;/li&gt;
+    &lt;/ul&gt;
+</code></pre>
+<p><img src="imgs/lists-with-foundation.png" alt=""></p>
+<p>لاحظ الفرق في الاقباسات الموجودة في الصفحة الرئيسة في المتجر قبل وبعد استخدامنا لـFoundation.</p>
+<p><img src="imgs/blockquote-before.png" alt=""></p>
+<p><img src="imgs/blockquote-after.png" alt=""></p>
+<p>لاحظ التنسيق الخاص بالعناوين (headings) في مُتصفح Chrome والتنسيق الخاص بـFoundation.</p>
+<p><img src="imgs/header-without-foundation.png" alt=""></p>
+<p><img src="imgs/header-with-foundation.png" alt=""></p>
+<p>يُقدم Foundation الصنف <code>vcard</code> &quot;لقائمة غير مرتبة&quot; <code>&lt;ul&gt;</code> لعرض العناصر <code>&lt;li&gt;</code> على شكل بطاقة عمل، حيث يُحيط العناصر بحدود (border) لتبدو كالصندوق لتُستخدم كبطاقة عرض لبيانات الاتصال.</p>
+<pre><code class="lang-html">    &lt;ul class=&quot;vcard&quot;&gt;
+      &lt;li class=&quot;fn&quot;&gt;Mohamad Abras&lt;/li&gt;
+      &lt;li class=&quot;street-address&quot;&gt;Address: its private.&lt;/li&gt;
+      &lt;li class=&quot;locality&quot;&gt;City: One of the city&lt;/li&gt;
+      &lt;li class=&quot;email&quot;&gt;&lt;a href=&quot;#&quot;&gt;mohamad.abras@sawrha.com&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;Phone: 111111111&lt;/li&gt;
+    &lt;/ul&gt;
+</code></pre>
+<p><img src="imgs/vcard.png" alt=""></p>
+<p>يُقدم Foundation الصنفين <code>show-for-print</code> لإظهار المُحتوى في صفحة الطباعة، والصنف <code>hide-for-print</code> لإخفاء المُحتوى في صفحة الطباعة.</p>
+<p>يُقدم Foundation الصنف &quot;علامة&quot; <code>label</code> لتنسيق المُحتوى النصي ليكون ظاهرًا للعيان للإشارة إلى أهمية المُحتوى.</p>
+<pre><code class="lang-html">    &lt;li class=&quot;label&quot;&gt;Its not my real number!......My number has 2 in the end.&lt;/li&gt;
+</code></pre>
+<p><img src="imgs/label.png" alt=""></p>
+<p>يُقدم Foundatin تنسيقًا خاصًا للوسم <code>&lt;kbd&gt;</code> لجعله بارزًا وأكثر وضوحًا في النص.</p>
+<p>لابُدْ أنّك لاحظت أيضًا الصنف <code>panel</code> الذي قمنا باستخدامه في المتجر أكثر من مرّة والذي يُضيف حدود واضحة مع خلفية تحمل لونًا بالقيمة <code>f2f2f2</code> للمُحتوى الداخلي، ويُمكن تخصيص الصنف <code>panel</code> بالصنف <code>callout</code> ليُضيف لونًا يحمل القيمة <code>ecfaff</code>، والصنف <code>radius</code> لجعل الحواف مصقولة.</p>
+<p>في صفحة الخطط والأسعار الخاصة بالمتجر سوف نستخدم الصنف <code>panel</code> مع الصنف <code>callout</code> والصنف <code>radius</code>.</p>
+<pre><code class="lang-html">    &lt;h1 class=&quot;panel callout radius&quot;&gt;Plans and Pricing&lt;/h1&gt;
+</code></pre>
+<p><img src="imgs/panel.png" alt=""></p>
+<h3 id="-alert-boxes-">صناديق التحذير والتنبيه (Alert Boxes)</h3>
+<p>وهي من الإضافات المُساعدة التي بإمكانك أن تستخدمها مع النماذج، أو كوسيلة عرض للإشارة إلى نجاح أو فشل عملية ما على الموقع، أو حتى لعرض معلومات مُساعدة للمستخدم. تأخذ الصناديق عرض الحاوية الخاصة بها بشكل كامل، ولإنشاء صندوق كل ما تحتاجه هو خاصية المعلومات <code>data-alert</code> والصنف <code>alert-box</code>.</p>
+<p>ولتخصيص الصناديق بإمكانك استخدام الأصناف &quot;نجاح&quot; <code>success</code>، &quot;حواف مصقولة&quot; <code>radius</code>، &quot;تحذير&quot; <code>warning</code>، &quot;حواف دائرية&quot; <code>round</code>، &quot;تحذير&quot; <code>alert</code>، و&quot;معلومة&quot; <code>info</code>.</p>
+<p>في صفحة التسجيل الخاصة بالمتجر سوف نقوم بإنشاء صندوق تنبيه للإشارة إلى أننا نقوم بحماية معلومات المُستخدم، سوف نستخدم الصنفين <code>radius</code> لجعل الحواف مصقولة و<code>info</code> من أجل اللون.</p>
+<pre><code class="lang-html">    &lt;div data-alert class=&quot;alert-box info radius&quot;&gt;
+      We protect your information.
+      &lt;a href=&quot;#&quot; class=&quot;close&quot;&gt;&amp;times;&lt;/a&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/alert-box.png" alt=""></p>
+<h3 id="-tooltip-">معلومة جانبية (Tooltip)</h3>
+<p>&quot;المعلومة الجانبية&quot; (tooltip) هي طريقة سريعة لعرض معلومات لمصطلح مُعين أو حدث (action) عند وقوف المؤشر على كلمة ما على الصفحة. للتطبيق كل ماعليك فعله هو إحاطة المصطلح المُراد إضافة &quot;معلومة جانبية&quot; له بالوسم <code>&lt;span&gt;</code> مع الصنف <code>has-tip</code>، الذي يجعل من المصطلح عريضًا (bold)، بالإضافة إلى خاصية المعلومات <code>data-tooltip</code>، والرسالة المُراد عرضها سوف نضعها في الخاصية <code>title</code>.</p>
+<p>في متجرنا سوف نستفيد من هذه الخاصية في صفحة التسجيل وفي عمود المزايا تحديدًا للإشارة إلى أنّ الرسائل الخاصة بالمتجر هي رسائل تنبيه فقط.</p>
+<pre><code class="lang-html">    &lt;p&gt;&lt;span data-tooltip class=&quot;has-tip&quot; title=&quot;Just important notifications&quot;&gt;No spam&lt;/span&gt;&lt;/p&gt;
+</code></pre>
+<p><img src="imgs/tooltip.png" alt=""></p>
+<h3 id="-reveal-modal-">حوار منبثق (Reveal Modal)</h3>
+<p>وهو نوع من أنواع النوافذ المُنبثقة، حيث النافذة تظهر لعرض مُحتوى معين مع تعتيم للخلفية في الصفحة الحالية، يَستخدم Foundation مكتبة jQuery لتوفير إضافة الحوار المنبثق، ولإنشائها نقوم بإنشاء &quot;قسم&quot; <code>&lt;div&gt;</code> وإضافة تعريف <code>id</code> باسم مناسب، والصنف <code>reveal-modal</code>، وخاصية المعلومات <code>data-reveal</code>. داخل القسم بإمكانك وضع ما تريد من مُحتوى سواءً أكان كتابيًا أو صورًا أو فيديو أو نماذج، وحتى إنّه بالإمكان ربط حوار منبثق بآخر، وللتحكم بحجم الحوار بإمكانك استخدام خمسة أصناف، وهي بالتدريج من صغير جدًا <code>tiny</code> إلى كبير جدًا <code>xlarge</code>، بالإضافة إلى الصنف ملء الشاشة <code>full</code>، وبعد إنشاء <code>modal</code> بإمكانك استدعائه عبر خاصية المعلومات <code>data-reveal-id</code>.</p>
+<p>في الصفحة الرئيسة بالمتجر سوف نقوم بإنشاء حوار منبثق للصور الأكثر مبيعًا، حيث عند الضغط على أحد الصور سوف يتم ظهور نافذة تعرض الصورة بنافذة مُستقلة مع إمكانية إغلاقها سواءً بالضغط على إشارة الإغلاق أو بالضغط على أي مكان في الصفحة.</p>
+<pre><code class="lang-html">    &lt;!-- Any where in the HTML document --&gt;
+    &lt;a href=&quot;#&quot; data-reveal-id=&quot;myModal&quot;&gt;&lt;img class=&quot;th&quot; src=&quot;img/th2.jpg&quot;&gt;&lt;/a&gt;
+    &lt;!-- At the bottom of HTML document --&gt;
+    &lt;div id=&quot;myModal&quot; class=&quot;reveal-modal small&quot; data-reveal&gt;
+      &lt;img src=&quot;img/th2.jpg&quot;&gt;
+      &lt;a class=&quot;close-reveal-modal&quot;&gt;&amp;#215;&lt;/a&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/reveal.png" alt=""></p>
+<p>إلى هنا نكون قد وصلنا إلى نهاية الجزء الخامس من السلسلة، والذي من خلاله تحدثنا فيه عن أمور عدّة، وبعد هذا الجزء من المُفترض أن تكون قد ألفت التعامل مع الإطار وتوضحت الفلسفة التي يسير عليها، وفي الجزء السادس والأخير سوف نتحدث عن أمور مُكملة للإطار وهي في نفس الوقت تُميز الإطار عن غيره من أُطر العمل.</p>
+

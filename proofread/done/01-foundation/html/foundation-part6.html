@@ -1,0 +1,157 @@
+<p>في الجزء السادس والأخير سوف نتحدث عن مواضيع مُكملة للإطار نوعًا ما، والتي رُبما تستطيع الاستغناء عنها، ولكنّك صدقني لن تفعل، لأنّ هذه الكماليات هي ما تُميز إطار العمل Foundation عن غيره من أطر العمل.</p>
+<h2 id="-equalizer-">المُسوّي (Equalizer)</h2>
+<p>المُسوّي هو إضافة JavaScript صغيرة تُساعدك في تسوية التنسيق بين حاويتين (containers) فيما بينهما عندما يحتويان على مُحتويين مُختلفين، في الصفحة الرئيسة الخاصة بالمتجر لدينا ثلاثة أعمدة على سويّة مختلفة، كذلك الأمر في صفحة الخطط والأسعار لدينا &quot;جداول الأسعار&quot;، لنستخدم المُسوّي للتصحيح من تنسيقهما.</p>
+<p><img src="imgs/equ.png" alt=""></p>
+<p><img src="imgs/equ2.png" alt=""></p>
+<p>لتنسيق هذه الصناديق بشكل مُتساوي، كل ما عليك فعله هو إضافة خاصية المعلومات <code>data-equalizer</code> إلى العنصر الأب الخاص بهذه الصناديق، وخاصية المعلومات <code>data-equalizer-watch</code> لكل عُنصرٍ تُريد تسويته على نفس الارتفاع.</p>
+<pre><code class="lang-html">    &lt;div class=&quot;row&quot; data-equalizer&gt;
+      &lt;div class=&quot;small-12 medium-4 columns&quot;&gt;
+        &lt;div class=&quot;panel&quot; data-equalizer-watch&gt;
+          &lt;h3&gt;...&lt;/h3&gt;
+          &lt;p&gt;...&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;small-12 medium-4 columns&quot;&gt;
+        &lt;div class=&quot;panel&quot; data-equalizer-watch&gt;
+          &lt;h3&gt;...&lt;/h3&gt;
+          &lt;p&gt;...&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;small-12 medium-4 columns&quot;&gt;
+        &lt;div class=&quot;panel&quot; data-equalizer-watch&gt;
+          &lt;h3&gt;...&lt;/h3&gt;
+          &lt;p&gt;...&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/right-equ1.png" alt=""></p>
+<pre><code class="lang-html">    &lt;div class=&quot;row&quot; data-equalizer&gt;
+      &lt;div class=&quot;large-4 columns&quot;&gt;
+        &lt;ul class=&quot;pricing-table&quot; data-equalizer-watch&gt;
+          ...
+        &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;large-4 columns&quot;&gt;
+        &lt;ul class=&quot;pricing-table&quot; data-equalizer-watch&gt;
+          ...
+        &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;large-4 columns&quot;&gt;
+        &lt;ul class=&quot;pricing-table&quot; data-equalizer-watch&gt;
+          ...
+        &lt;/ul&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/right-equ2.png" alt=""></p>
+<h2 id="-interchange-">التبادل (Interchange)</h2>
+<p>يُستخدم &quot;التبادل&quot; (interchange) في تحميل (load) جزء مُحدد من مُستند HTML بناءً على استعلامات وسائط (media queries) مُعينة، حيث أنك تستطيع تحميل مُحتوى مُعين دون الآخر على حجم شاشة مُعين دون الآخر، لاحظ أنّي قلّت تحميل وليس إظهار، وهو ما يحدث في &quot;أصناف الظهور&quot;. تمت إضافة &quot;التبادل&quot; في الإصدار الخامس من Foundation، وهو من الميزات التي يتوفق بها Foundation على إطار العمل Bootstrap.</p>
+<p>تخيلْ أنّ يكونَ لديك صفحة تحتوي نصًّا لخرائط Google، الخرائط سوف تظهر بشكل سلس على أجهزة سطح المكتب، ولكن على أجهزة الهاتف المحمول سيكون هناك تأخيرٌ بعض الشيء في عرض الصفحة. &quot;التبادل&quot; يسمح لك بتحميل صورة ثابتة على أجهزة الهاتف المحمول بدلًا من تضمين خريطة تفاعليّة، الأمر الذي يزيد من سرعة عرض الصفحة وبالتالي تجربة استخدام أفضل للمُستخدم.</p>
+<p>تُستخدم JavaScript لتطبيق مفهوم &quot;التبادل&quot; لذلك عليك ضمان عرض مُحتوى ما على الصفحة في حال عدم توفرها على المُتصفح، وذلك باستخدام الوسم <code>&lt;noscript&gt;</code>.</p>
+<p>يَستخدم Foundation خاصية المعلومات <code>data-interchange</code> للتحكم بتحميل المُحتوى، بحيث كل جزء نريد عرضه سوف نوفر له قيمتان، القيمة الأولى هي مسار المُحتوى، والقيمة الثانية هي استعلام وسائط (media query)، ويُوفر Foundation مجموعة من استعلامات الوسائط منها &quot;مبدئي&quot; <code>default</code> و&quot;صغير&quot; <code>small</code> و&quot;كبير&quot; <code>large</code> ولوضعية اتجاه الجهاز عمودي <code>portrait</code> وأفقي <code>landscape</code>، الصورة التالية تُوضح المجموعة الكاملة لاستعلامات الوسائط المُتوفرة.</p>
+<p><img src="imgs/media_query.png" alt=""></p>
+<p>عند عرض الصفحة يتم اختبار كل استعلام على الترتيب، والاستعلامات التي تُحقق الشرط يتم تحميل المَسار الخاص بها، حيث يتم تحميلُ مُحتوى آخر استعلام تُحقق الدلالة الخاصة بها، مع الانتباه أنّه عليك دائمًا التصريح عن الاستعلام المُسمى &quot;مبدئي&quot; <code>default</code>.</p>
+<p>في صفحة المُنتج الخاصة بالمتجر لدينا صورة تُعرض بحجمها الكامل على جميع الأجهزة، مانُريده هو تخصيص حجم الصورة لكل قياس شاشة:</p>
+<pre><code class="lang-html">    &lt;img data-interchange=&quot;[img/green-default.jpg, (default)], [img/green-small.jpg, (small)], [img/green-medium.jpg, (medium)], [img/green-large.jpg, (large)]&quot;&gt;
+</code></pre>
+<p>لاحظ أن أبعاد الصورة المُحملة في الشاشات الكبيرة هو 960 * 1600:</p>
+<p><img src="imgs/interchange-large.png" alt=""></p>
+<p>أما أبعاد الصورة في الشاشات المتوسطة هو 480 * 800:</p>
+<p><img src="imgs/interchange-medium.png" alt=""></p>
+<p>وأخيرًا الصورة في الشاشات الصغيرة ستظهر بأصغر حجم:</p>
+<p><img src="imgs/interchange-small.png" alt=""></p>
+<p>النّصّ البرمجيّ السابق يعرض المُحتوى بشكل ممتاز طالما أن JavaScript مُفعلة على المُتصفح، ولضمان عرض المُحتوى في حال أنها مُعطلة علينا إضافة السطر التالي إلى النّصّ:</p>
+<pre><code class="lang-html">    &lt;noscript&gt;&lt;img src=&quot;img/green-default.jpg&quot;&gt;&lt;/noscript&gt;
+</code></pre>
+<p>كما إنّه بإمكانك كتابةُ الاستعلامات لخاصة بك، حيثُ أنّ النّصّ السابق كان من المُمكن كتابته على الشكل التالي لتحصل على نفس النتيجة:</p>
+<pre><code class="lang-html">    &lt;img data-interchange=&quot;[img/green-default.jpg, (only screen and (min-width: 1px))], [img/green-small.jpg, (only screen and (max-width: 640px))], [img/green-medium.jpg, (only screen and (max-width: 1024px))], [img/green-large.jpg, (only screen and (min-width: 1024px))]&quot;&gt;
+</code></pre>
+<p>&quot;التبادل&quot; من الميزات التي سوف تستخدمها بكثرة إنّ كنتَ مطوّرًا مُحترفًا، طبعًا بإمكانك دائمًا الاستعانة بحلولٍ من جهة الخادم (server-side)، ولكن مع المواقع الصغيرة &quot;التبادل&quot; يأتي كحلٍ مثالي على جهة العميل (client-side) ولا يتطلب الكثير من الإعداد، لذلك أنصحك بالاعتماد على هذه الإضافة في مشاريعك.</p>
+<h2 id="-joyride-">الجولة (Joyride)</h2>
+<p>من الإضافات المُميزة جدًا في Foundation، والتي يَفتقد لها إطار العمل Bootstrap، تُتيح &quot;الجولة&quot; joyride أخذ المستخدم في جولة لاستعراض الموقع وميزاته، أو الإشارة إلى ميزة جديدة قُمت بإضافتها مؤخرًا إلى الموقع، أو حتى شرح كيفية إجراء مهمة (task) في الموقع عبر شرح خطوات التنفيذ.</p>
+<p>الإعداد سيكون عبر إنشاء &quot;قائمة مُرتبة&quot; <code>&lt;ol&gt;</code>، أو &quot;قائمة غير مُرتبة&quot; <code>&lt;ul&gt;</code>، في أسفل صفحة HTML وإضافة الخاصية <code>data-joyride</code>، هذه القائمة سوف تحتوي مكان التوقف في كل خطوة من خطوات الجولة ومُحتوى الرسالة الخاص بكل نقطة وقوف، سوف نستخدم الصنف <code>joyride-list</code> لإخفاء القائمة من الظهور في المتصفح، وخاصية المعلومات <code>data-joyride</code> ستكون مسؤولة عن النصّ الخاص بـِHTML. لكل عنصر قائمة <code>&lt;li&gt;</code>، والتي من المُمكن أن تحتوي على عنوان ورسالة مناسبة، سنُعرف محطات الوقوف بخاصية المعلومات <code>data-id</code> مُعطاةً قيمةً مُناسبة، والخاصية <code>data-text</code> ستكون مسؤولة عن الانتقال إلى نقطة الوقوف التالية، والخاصية <code>data-prev-text</code> ستكون مسؤولة عن الانتقال إلى محطة وقوف سابقة، أما القائمة الأخيرة ستكون مسؤولة عن إنهاء الجولة وذلك بالخاصية <code>data-button</code>.</p>
+<p>في صفحة المعرض الخاص بالمتجر سوف نُشير إلى الخيارات المتوفرة لاستعراض الصور، سوف نقوم بتحديد <code>id</code> لكل عنصر نريد الوقوف عنده، ومحطات الوقوف لدينا هي كالتالي: <code>stop1</code> للإشارة إلى إمكانية البحث و<code>stop2</code> للإشارة إلى إمكانية تصفية المُحتوى و أخيرًا <code>stop3</code> للإشارة إلى إمكانية استعراض الصور عبر &quot;ترقيم الصفحات&quot; (pagination)، وبعد تحديد محطات الوقوف علينا كتابة النصّ البرمجيّ الخاص بالجولة:</p>
+<pre><code class="lang-html">    &lt;ol class=&quot;joyride-list&quot; data-joyride&gt;
+      &lt;li data-id=&quot;1stop&quot; data-text=&quot;Next&quot;&gt; &lt;!-- محتوى التوقف الأول --&gt;
+        &lt;h4&gt;Search&lt;/h4&gt;
+        &lt;p&gt;You can search for photo.&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li data-id=&quot;2stop&quot; data-text=&quot;Next&quot; data-prev-text=&quot;Prev&quot;&gt; &lt;!-- محتوى التوقف الثاني --&gt;
+        &lt;h4&gt;Filter&lt;/h4&gt;
+        &lt;p&gt;You can filter the content.&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li data-id=&quot;3stop&quot; data-text=&quot;Next&quot; data-prev-text=&quot;Prev&quot;&gt; &lt;!-- محتوى التوقف الثالث --&gt;
+        &lt;h4&gt;Explore&lt;/h4&gt;
+        &lt;p&gt;Or explore our gallery.&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li data-button=&quot;End&quot; data-prev-text=&quot;Prev&quot;&gt; &lt;!-- محتوى رسالة الانتهاء من الجولة --&gt;
+        &lt;h4&gt;The end&lt;/h4&gt;
+        &lt;p&gt;Happy shooting&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+</code></pre>
+<p><img src="imgs/joyride1.png" alt=""></p>
+<p><img src="imgs/joyride2.png" alt=""></p>
+<p><img src="imgs/joyride3.png" alt=""></p>
+<p><img src="imgs/joyride-end.png" alt=""></p>
+<p>لا تعمل &quot;الجولة&quot; عند انتهاء تحميل الصفحة كما في الإضافات السابقة، ولذلك عليك استدعاء الدالة <code>start</code> باستخدام JavaScript:</p>
+<pre><code class="lang-javascript">    $(document).foundation(&#39;joyride&#39;, &#39;start&#39;);
+</code></pre>
+<p>بإمكانك تخصيص طريقة العرض كما ترغب، سرعة الانتقال من نقطة إلى أخرى، أو طريقة الانتقال، أو حتى إلغاء إمكانية التحكم &quot;بالجولة&quot; باستخدام لوحة المفاتيح، حيث بشكل افتراضي يُمكنك استخدام الأسهم للانتقال خطوة للأمام وخطوة للخلف وإنهاء &quot;الجولة&quot; بزر الهروب (<code>Esc</code>)، ولتعطيل هذه الأزرار بإمكانك استخدام خاصية المعلومات <code>data-options</code> والخيار <code>keyboard</code> والقيمة <code>false</code>، وللمزيد من التخصيص يُمكنك مراجعة <a href="http://foundation.zurb.com/docs/components/joyride.html">التوثيق الرسمي</a></p>
+<h2 id="-">الأيقونات الاجتماعية وخطوط الأيقونات</h2>
+<h3 id="-">الأيقونات الاجتماعية</h3>
+<p>يُوفر Foundation حزمة من الأيقونات الاجتماعية يصل عددها إلى 76 أيقونة، وهي بصيغة SVG والتي تجعل من عرضها على شاشات Retina مثاليًا.</p>
+<p><img src="imgs/social-web-icons.png" alt=""></p>
+<p>بإمكانك تحميل الحزمة من <a href="http://zurb.com/playground/social-webicons">هنا</a> لتحصل على ملف مضغوط، يحتوي على الأيقونات بصيغتين، SVG للمتصفحات التي تدعم هذه اللاحقة، وPNG للمتصفحات التي لا تدعم SVG. قم بفك الضغط عن الملفات وضعها في ملف CSS الخاص بالمشروع، ومن قم باستدعاء ملف CSS الخاص بالحزمة في الوسم <code>&lt;head&gt;</code> بإضافة السطر التالي:</p>
+<pre><code class="lang-html">    &lt;link rel=&quot;stylesheet&quot; href=&quot;css/webicons.css&quot; /&gt;
+
+في متجرنا سوف نقوم بإضافة ثلاث أيقونات في ذيل الصفحة `footer`، وذلك باستخدام الصنف `webicon` ومن ثم اسم الأيقونة لتظهر بالحجم المتوسط، ولتخصيص الحجم يمكننا استخدام الصنفين `small` و`large`.
+
+```html
+    &lt;div class=&quot;row&quot;&gt;
+      &lt;footer class=&quot;text-center&quot;&gt;
+        &lt;a href=&quot;#&quot; class=&quot;webicon facebook large&quot;&gt;&lt;/a&gt;
+        &lt;a href=&quot;#&quot; class=&quot;webicon flickr large&quot;&gt;&lt;/a&gt;
+        &lt;a href=&quot;#&quot; class=&quot;webicon twitter large&quot;&gt;&lt;/a&gt;
+      &lt;/footer&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/social-web-icons-footer.png" alt=""></p>
+<h3 id="-">خطوط الأيقونات</h3>
+<p>يُوفر Foundation حزمة من خطوط الأيقونات وعددها 283، ويُمكنك الحصول عليها من <a href="http://zurb.com/playground/foundation-icon-fonts-3">هنا</a>، وبعد التحميل وفك الضغط، قُم باستدعاء ملف CSS الخاص بالأيقونات في الوسم <code>&lt;head&gt;</code> بإضافة السطر التالي:</p>
+<pre><code class="lang-html">    &lt;link rel=&quot;stylesheet&quot; href=&quot;css/foundation-icons.css&quot; /&gt;
+
+في متجرنا سوف نضيف &quot;سلة التسوق&quot; `shopping-cart` في الشريط العلوي، وذلك باستخدام اسم الأيقونة مسبوقًا بـِ`fi` كصنف للوسم `&lt;i&gt;`
+
+    &lt;li class=&quot;right&quot;&gt;&lt;a href=&quot;#&quot;&gt;&lt;i class=&quot;fi-shopping-cart&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+</code></pre>
+<p><img src="imgs/icon.png" alt=""></p>
+<p>أيضًا في الصفحة الرئيسة بإمكاننا استخدام الأيقونات التالية:</p>
+<pre><code class="lang-html">    &lt;i class=&quot;fi-camera&quot;&gt;&lt;/i&gt;
+    ...
+    &lt;i class=&quot;fi-upload&quot;&gt;&lt;/i&gt;
+    ...
+    &lt;i class=&quot;fi-dollar&quot;&gt;&lt;/i&gt;
+</code></pre>
+<p><img src="imgs/three-icon.png" alt=""></p>
+<h2 id="-">أقصوصات</h2>
+<p>يُوفر Foundation أقصوصات (snippets) للمحرر Sublime Text وهي مساعدة جدًا في عملية التطوير وتزيد من إنتاجيّة المُطوّر، وبإمكانك تحميلها عن طريق مُدير الحزم الخاص بالمُحرر، ولكن لا أنصح بتحميلها في بداية تعاملك مع الإطار وإنمّا عليك في البداية التعامل مع الإطار بشكل مباشر لتحفظ الصياغة الخاصة به.</p>
+<p>إنّ كنت لا تملك مُدير الحزم فيُمكنك تحميله من <a href="https://packagecontrol.io/installation">هنا</a> بعد التحميل كل ما عليك فعله هو كتابة اسم الأقصوصات.</p>
+<p><img src="imgs/snippets-install-sublime.png" alt=""></p>
+<p>أو بإمكانك تحميل الأقصوصات بشكل مُباشر من المستودع الخاص بها على موقع GitHub، وبعد تحميلها يمكن وضعها في المُجلد الخاص بالإضافات. في نظام التشغيل Windows يُمكن تنفيذ السطر التالي في موجه الأوامر لتحصل عليها مباشرةً.</p>
+<pre><code class="lang-shell">    cd &quot;%AppData%\Sublime Text 3\Packages\User&quot;
+    git clone https://github.com/zurb/foundation-5-sublime-snippets.git
+</code></pre>
+<p>لاحظ عند كتابة <code>zf-topbar</code> في المُحرر ثم الضغط على <code>Tab</code> سينتج النّصّ البرمجيّ التالي، وهي عبارة عن الشريط العلوي (topbar).</p>
+<p><img src="imgs/zf-topbar.png" alt=""></p>
+<p>وعند كتابة <code>zf-pagination</code> في المُحرر ثم الضغط على <code>Tab</code> سينتج النّصّ البرمجيّ الخاصّ بـ&quot;ترقيم الصفحات&quot; (pagination).</p>
+<p><img src="imgs/zf-pagination.png" alt=""></p>
+<p>تُقدم لك الأقصوصات أيضًا تعليق للإشارة إلى الأصناف المتوفرة لبعض العناصر، فعند كتابة <code>zf-button</code> والضغط على <code>Tab</code> النّص التالي سيوضح لك إلى الأصناف المتوفرة والتي يُمكنك استخدامها مع الصنف <code>button</code>.</p>
+<p><img src="imgs/zf-button.png" alt=""></p>
+<p>كما تلاحظ أنّ هذه الأقصوصات تُوفر عليك الكثيرَ من الكتابة والوقت، لذلك أنصحك بالإطلاع عليها وتجربتها.</p>
+<h2 id="-">ما الذي عليك فعله بعد انتهاء السلسلة؟</h2>
+<p>بعد قراءتك لهذه السلسلة بشكلٍ كامل ستكون جاهزًا لبناء موقعك الأول باستخدام Foundation، وليكن التوثيق الرسمي هو مرجعك الدائم فهو مُنظم ومُنسق بشكل أكثر من رائع ومع الأمثلة العملية وبلغة إنكليزية مُبسطة تُسهل عليك التعامل مع الإطار حتى لو كانت لغتك الإنكليزية ضعيفة، وأهم شيء هو التطبيق العملي واختبار ما تم التّطرقُ له في هذه السلسلة، وأرجو أن تكون هذه السلسلة قد نالت إعجابك وإلى اللقاء مع مواضيع أُخرى.</p>
+

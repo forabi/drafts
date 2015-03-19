@@ -1,0 +1,185 @@
+<p>قد وصلت إلى الجزء الرابع، وهذا يعني أنّ السلسلة قد راقت لك -أرجو الله ذلك- في الجزء السابق تعرفنا على نظام التنقل الخاص بالإطار، وفي هذا الجزء سوف نتعرف على الأزرار وأنواعها، والنماذج وملحقاتها، وكيف سوف نستفيد منها في متجرنا.</p>
+<h2 id="-buttons-">الأزرار (Buttons)</h2>
+<p><img src="imgs/buttons.png" alt=""></p>
+<p>يَملك Foundation مجموعة من الأزرار الجذابة، لإنشاء زر كل ما عليك فعله هو إضافة الصنف <code>button</code> إلى الوسم <code>&lt;a&gt;</code> أو المُدخل <code>&lt;input&gt;</code> من نوع <code>submit</code> لتحصل على الزر الافتراضي وبالحجم المُتوسط مع اللون الأساسي للإطار ومع تأثير المرور (hover)، ولتخصيص حجم الزر لديك  أصناف عدّة:&quot;صغير جدًا&quot; <code>tiny</code>، و&quot;صغير&quot; <code>small</code>، و&quot;كبير&quot; <code>large</code>، و&quot;مُوسّع&quot; <code>expanded</code>. الزر بشكله الافتراضي حاد الحواف، ولتغيير ذلك بإمكانك استخدام أحد الصنفين <code>round</code> أو <code>radius</code>، أمّا لتغيير الألوان فيُقدم Foundation خمسة أصناف باستثناء اللون الأساسي، ويُشير إلى هذه الألوان على أساس دلالتها اللونية، فاللون الأحمر ستجده باسم الصنف <code>alert</code> واللون الأخضر ستجده بالصنف <code>success</code>. </p>
+<h3 id="-button-groups-">أزرار ضمن مجموعة (Button Groups)</h3>
+<p>كما يُمَكنك Foundation من إنشاء مجموعة أزرار مُترابطة مع بعضها البعض، وذلك باستخدام &quot;قائمة غير مرتبة&quot; <code>&lt;ul&gt;</code> مع الصنف <code>button-group</code>، ولتنسيق هذا النوع من الأزرار سوف نستخدم الأصناف <code>round</code> و<code>radius</code> لتظهر على أول وآخر زر من المجموعة، أمّا الصنف &quot;مُتساوي&quot; <code>even</code> فهو يُوزع مجموعة الأزرار على عرض المساحة الممنوحة لهذه الأزرار. كما يُقدم Foundation الصنف &quot;اصطفاف&quot; <code>stack</code> والذي يجعل من الأزرار مصفوفةً فوق بعضها البعض، والصنف <code>stack-for-small</code> الذي يَجعل من الأزرار متوافقةً مع الشاشات الصغيرة.</p>
+<pre><code class="lang-html">    &lt;!-- أبسط شكل من أشكال أزرار ضمن مجموعة وبدون أي تنسيق --&gt;
+    &lt;ul class=&quot;button-group&quot;&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot; class=&quot;button&quot;&gt;Button 1&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot; class=&quot;button&quot;&gt;Button 2&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot; class=&quot;button&quot;&gt;Button 3&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+
+![](imgs/default-btn-group.png)
+
+    &lt;ul class=&quot;button-group even-3&quot;&gt; &lt;!-- أزرار ضمن مجموعة مع تقسيم المساحة الكلية على ثلاثة أزرار --&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot; class=&quot;button secondary&quot;&gt;Button 1&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot; class=&quot;button secondary&quot;&gt;Button 2&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot; class=&quot;button secondary&quot;&gt;Button 3&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;ul class=&quot;button-group round even-6&quot;&gt; &lt;!-- أزرار ضمن مجموعة مع تقسيم المساحة الكلية على الأزرار الستّة وتنسيق بحواف دائرية --&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot; class=&quot;button&quot;&gt;Button 1&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot; class=&quot;button&quot;&gt;Button 2&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot; class=&quot;button&quot;&gt;Button 3&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot; class=&quot;button&quot;&gt;Button 4&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot; class=&quot;button&quot;&gt;Button 5&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot; class=&quot;button&quot;&gt;Button 6&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+</code></pre>
+<p><img src="imgs/btn-group.png" alt=""></p>
+<p><em>مثال حي</em> <a href="http://codepen.io/anon/pen/zxZrVa">http://codepen.io/anon/pen/zxZrVa</a>:</p>
+<h3 id="-dropdown-buttons-">لبأزرار مع قائمة منسدلة (Dropdown Buttons)</h3>
+<p><img src="imgs/drop-btn.png" alt=""></p>
+<p>في الإصدارات الأخيرة من إطار العمل Foundation تم تبسيط التعامل مع هذا النوع من الأزرار، كل ما تحتاج إليه العنصران <code>&lt;button&gt;</code> و<code>&lt;ul&gt;</code>، الزر سوف يأخذ الصنفين <code>button</code> و<code>dropdown</code> وخاصية المعلومات <code>data-dropdown</code> والتي تحمل قيمة بأيّ اسم معبّر لكي نعرّف به القائمة غير المرتبة، أمّا القائمة غير مرتبة ذاتها فتأخذ المعرّف المُسبق عبر قيمة الخاصية <code>id</code>، وبالإضافة إلى &quot;خاصية المعلومات&quot; <code>data-dropdown-content</code> والصنف <code>f-dropdown</code>، بهذا نحصل على زر مع قائمة مُنسدلة بأبسط شكلٍ ممكن.</p>
+<pre><code class="lang-html">    &lt;!-- زر مع قائمة مُنسدلة وبحواف دائرية ولون أحمر وكبير الحجم --&gt;
+    &lt;button data-dropdown=&quot;drop&quot; class=&quot;large alert round button dropdown&quot;&gt;Dropdown Button&lt;/button&gt;&lt;br&gt;
+    &lt;ul id=&quot;drop&quot; data-dropdown-content class=&quot;f-dropdown&quot;&gt; &lt;!-- القائمة المُنسدلة مع عناصرها --&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;This is a link&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;This is another&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Yet another&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+</code></pre>
+<p><img src="imgs/drop-btn-red.png" alt=""></p>
+<p><em>مثال حي</em> <a href="http://codepen.io/anon/pen/GgWZRJ">http://codepen.io/anon/pen/GgWZRJ</a>:</p>
+<h3 id="-split-buttons-">الأزرار المُنقسمة (Split Buttons)</h3>
+<p><img src="imgs/split-btn.png" alt=""></p>
+<p>يُنشئ &quot;زر منقسم&quot; عن طريق الربط بين الوسوم الثلاثة<code>&lt;a&gt;</code>و <code>&lt;span&gt;</code> و <code>&lt;ul&gt;</code>، الوسم <code>&lt;a&gt;</code> سوف يأخذ الصنفين <code>button</code> و<code>split</code>، أمّا الصنف <code>&lt;span&gt;</code> سوف يأخذ &quot;خاصية المعلومات&quot; <code>data-dropdown</code> مع قيمة مناسبة لتعريف &quot;القائمة غير المرتبة&quot; <code>&lt;ul&gt;</code>، أمّا القائمة <code>&lt;ul&gt;</code> سوف نُضيف لها الخاصية <code>id</code> مع القيمة المُعرفة في خاصية المعلومات <code>data-dropdown</code> في الصنف <code>&lt;span&gt;</code>، وبالإضافة إلى الصنف <code>f-dropdown</code> و&quot;خاصية المعلومات&quot; <code>data-dropdown-content</code>.</p>
+<p>لنستخدم بعض هذه الأزرار في متجرنا، في الصفحة الرئيسة لدينا الصور الأكثر مبيعًا سوف نحول زر الشراء العادي إلى زر مُنقسم (split button)، وذلك عبر إضافة الصنفين <code>button</code> و<code>split</code> ولنجعله صغير الحجم عبر الصنف <code>tiny</code>، وللقائمة المُنسدلة سوف نقوم بإنشاء &quot;قائمة غير مُرتبة&quot; للخيارات الإضافية، كما في الشيفرة التالية:</p>
+<pre><code class="lang-html">    &lt;!-- زر مُنقسم صغير جدًا مع قائمة مُنسدلة --&gt;
+    &lt;a href=&quot;#&quot; class=&quot;button split tiny&quot;&gt;Buy&lt;span data-dropdown=&quot;drop&quot;&gt;&lt;/span&gt;&lt;/a&gt;
+    &lt;ul id=&quot;drop&quot; class=&quot;f-dropdown&quot; data-dropdown-content&gt; &lt;!-- القائمة المُنسدلة وعناصرها --&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Add to favorites&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Add to cart&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+</code></pre>
+<p><img src="imgs/split-btn-ex.png" alt=""></p>
+<p>في صفحة المُنتج سوف نجعل زر &quot;أضف إلى السلة&quot; مصقول الحواف بالصنف <code>radius</code>، مع لون خفيف بالصنف Info.</p>
+<pre><code class="lang-html">    &lt;a href=&quot;#&quot; class=&quot;button info radius&quot;&gt;Add to Cart&lt;/a&gt;
+</code></pre>
+<p><img src="imgs/btn-exm.png" alt=""></p>
+<p>في صفحة التسجيل سوف نقوم بالتعديل على المُدخل input من نوع &quot;إرسال&quot; submit وتنسيقه على أنّه غير مفعل بالصنف disabled وبحواف دائرية بالصنف round.</p>
+<pre><code class="lang-html">    &lt;input type=&quot;submit&quot; value=&quot;Submit&quot; class=&quot;button round disabled&quot;&gt;
+</code></pre>
+<p><img src="imgs/submit-btn.png" alt=""></p>
+<h2 id="-tables-and-forms-">الجداول والنماذج (Tables and Forms)</h2>
+<h3 id="-tables-">الجداول (Tables)</h3>
+<p>يتفوّق Foundation على Bootstrap بتوفير &quot;جداول الأسعار&quot; (pricing tables)، ومع الاتجاه الكبير نحو تطبيقات الويب، وظهور العديد من الشركات الناشئة، تزايد الطلب على هذا النوع من الجداول. Foundation كما في كل الميزات التي يُقدمها، جعل من إنشاء &quot;جدول أسعار&quot; أمرًا يسيرًا، فالإنشاء &quot;جدول أسعار&quot; كل ما عليك فعله هو إضافة الصنف <code>pricing-table</code> إلى &quot;قائمة غير مرتبة&quot; (<code>&lt;ul&gt;</code>)، أمّا &quot;عناصر القائمة&quot; <code>&lt;li&gt;</code> فلديها الأصناف &quot;عنوان&quot; <code>title</code>، &quot;سعر&quot; <code>price</code>، &quot;وصف&quot; <code>description</code>، &quot;عنصر دائري&quot; <code>bullet-item</code>، وأخيرًا &quot;الزر&quot; <code>cta-button</code>.</p>
+<p>في صفحة الأسعار الخاصة بالمتجر سوف نحدد ثلاثة خطط للاشتراك وهي &quot;أساسية&quot; و &quot;قياسية&quot; و &quot;مُحترف&quot;، الشيفرة التالية هي للخطة &quot;مُحترف&quot; والتي تُوضح العناصر مع الأصناف المناسبة لكل عنصر.</p>
+<pre><code class="lang-html">    &lt;ul class=&quot;pricing-table&quot;&gt;
+      &lt;li class=&quot;title&quot;&gt;Pro&lt;/li&gt;
+      &lt;li class=&quot;price&quot;&gt;$99.99&lt;/li&gt;
+      &lt;li class=&quot;description&quot;&gt;We do every thing for you, just upload your photos&lt;/li&gt;
+      &lt;li class=&quot;bullet-item&quot;&gt;Unlimited photos per week&lt;/li&gt;
+      &lt;li class=&quot;bullet-item&quot;&gt;24/7 Support&lt;/li&gt;
+      &lt;li class=&quot;bullet-item&quot;&gt;We change bad comments and rating to good ones&lt;/li&gt;
+      &lt;li class=&quot;cta-button&quot;&gt;&lt;a class=&quot;button&quot; href=&quot;#&quot;&gt;Enroll Now&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+</code></pre>
+<p><img src="imgs/pricing-table.png" alt=""></p>
+<h3 id="-forms-">النماذج (Forms)</h3>
+<p>يَعتير البعض التعامل مع النماذج (forms) من الأمور المعقدة نوعًا ما في HTML، لما لها من تفاصيل، لم يشأ Foundation أن يزيد من هذا التعقيد، وحاول قدر الإمكان التسهيل من مُهمة المطوّر في التعامل معها وجعلها مرنةً في التخصيص، بُنيت النماذج في Foundation من دمج عناصر النماذج الأساسية في HTML مع النظام الشبكي، ويتحدد تَنسيق عناصر النموذج عن طريق الخاصية <code>type</code> بدلاً من استخدام الأصناف، ويُمكن جعل النماذج مُتجاوبة باستخدام النظام الشبكي في Foundation وذلك بتعريف الصنف <code>row</code> داخل الوسم <code>&lt;form&gt;</code> واستخدام الأصناف الثلاثة الخاصة بالنظام الشبكي <code>small</code>و<code>medium</code> و<code>large</code>، لتحصل على نماذج متجاوبة وبأقل قدر مُمكن من الكتابة.</p>
+<h3 id="-pre-postfix-labels-actions-">ملحقات النماذج (Pre/Postfix Labels &amp; Actions)</h3>
+<p>يُقدم Foundation النماذج بشكل مرنٍ للغاية حيثُ بإمكانك ربط المُدخل (input) مع زر أو مع لاحقة أو بادئة نصية (pre/postfix label)، والتي تُقدم طريقة سريعة للمُستخدم لإدخال المدخلات الخاصة بالنماذج، وأيضًا تعطيه تلميحًا عن ما هو مطلوب منه في تعبئة النماذج. يُقدم Foundation طريقة سريعة للتحكم بحجم هذه الملحقات، وذلك باستخدام النظام الشبكي، ولربط مُدخل مع زر نستخدم الوسم <code>&lt;input&gt;</code> من النوع نص (<code>text</code>) مع الوسم <code>&lt;a&gt;</code> بالإضافة إلى الصنفين <code>button</code> و<code>postfix</code>، ونَستخدم الوسم <code>&lt;span&gt;</code> مع الصنف <code>prefix</code> لإنشاء &quot;بادئة نصية&quot; <code>prefix label</code>، والصنف <code>postfix</code> لإنشاء &quot;لاحقة نصية&quot; <code>postfix label</code>. أما للتنسيق فعليك استخدامُ الصنف <code>collapse</code> لإزالة الحشو (padding) بين المُدخل من جهة والبادئة أو اللاحقة والزر من جهة أخرى.</p>
+<pre><code class="lang-html">    &lt;form&gt;
+      &lt;div class=&quot;row&quot;&gt; &lt;!-- الصفّ الأول ويحتوي على مُدخلين --&gt;
+        &lt;div class=&quot;large-6 columns&quot;&gt;
+          &lt;input type=&quot;text&quot; placeholder=&quot;First name&quot; /&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;large-6 columns&quot;&gt;
+          &lt;input type=&quot;text&quot; placeholder=&quot;last name&quot; /&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;row&quot;&gt; &lt;!-- الصفّ الثاني ويحتوي على مُدخل واحد --&gt;
+        &lt;div class=&quot;large-12 columns&quot;&gt;
+         &lt;input type=&quot;text&quot; placeholder=&quot;Email&quot; /&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;row&quot;&gt; &lt;!-- الصفّ الثالث ويحتوي على مُدخل واحد --&gt;
+        &lt;div class=&quot;large-12 columns&quot;&gt;
+         &lt;input type=&quot;text&quot; placeholder=&quot;Re-enter email&quot; /&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;row&quot;&gt; &lt;!-- الصفّ الرابع --&gt;
+        &lt;div class=&quot;large-12 columns&quot;&gt;
+         &lt;input type=&quot;text&quot; placeholder=&quot;Password&quot; /&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;row&quot;&gt; &lt;!-- الصفّ الخامس --&gt;
+        &lt;div class=&quot;large-6 columns&quot;&gt;
+          &lt;input type=&quot;radio&quot; name=&quot;radioname&quot; value=&quot;Male&quot; id=&quot;thisidformale&quot;&gt;&lt;label for=&quot;thisidformale&quot;&gt;Male&lt;/label&gt;
+          &lt;input type=&quot;radio&quot; name=&quot;radioname&quot; value=&quot;Female&quot; id=&quot;thisidforfemale&quot;&gt;&lt;label for=&quot;thisidforfemale&quot;&gt;Female&lt;/label&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;row collapse&quot;&gt; &lt;!-- لإزالة الحشو بين البادئة والمُدخل --&gt;
+        &lt;div class=&quot;small-2 columns&quot;&gt; &lt;!-- البادئة بعمودين --&gt;
+          &lt;span class=&quot;prefix&quot;&gt;http://&lt;/span&gt; &lt;!-- تعريف البادئة --&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;small-10 columns&quot;&gt; &lt;!-- المُدخل --&gt;
+          &lt;input type=&quot;text&quot; placeholder=&quot;Enter your URL...&quot;&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;large-12 columns&quot;&gt;
+          &lt;label&gt;What is your favorite brand?
+            &lt;select&gt;
+              &lt;option value=&quot;Canon&quot;&gt;Canon&lt;/option&gt;
+              &lt;option value=&quot;Nikon&quot;&gt;Nikon&lt;/option&gt;
+              &lt;option value=&quot;Panasonic&quot;&gt;Panasonic&lt;/option&gt;
+              &lt;option value=&quot;Sony&quot;&gt;Sony&lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/label&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;row&quot;&gt; &lt;!-- الصفّ الأخير --&gt;
+        &lt;div class=&quot;large-12 columns&quot;&gt;
+          &lt;div class=&quot;row&quot;&gt;
+            &lt;div class=&quot;large-6 columns&quot;&gt;
+              &lt;div class=&quot;row collapse prefix-radius&quot;&gt; &lt;!-- بادئة بحواف مصقولة --&gt;
+                &lt;div class=&quot;small-3 columns&quot;&gt;
+                  &lt;span class=&quot;prefix&quot;&gt;@&lt;/span&gt; &lt;!-- البادئة للإشارة إلى ادخال اسم العضوية فقط --&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;small-9 columns&quot;&gt;
+                  &lt;input type=&quot;text&quot; placeholder=&quot;Twitter Account&quot;&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;large-6 columns&quot;&gt;
+              &lt;div class=&quot;row collapse prefix-radius&quot;&gt; &lt;!-- بادئة بحواف مصقولة --&gt;
+                &lt;div class=&quot;small-3 columns&quot;&gt;
+                  &lt;span class=&quot;prefix&quot;&gt;photos/&lt;/span&gt; &lt;!-- البادئة للإشارة إلى ادخال اسم العضوية فقط --&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;small-9 columns&quot;&gt;
+                  &lt;input type=&quot;text&quot; placeholder=&quot;Flickr account&quot;&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+</code></pre>
+<p><img src="imgs/forms.png" alt=""></p>
+<p><em>مثال حي</em> <a href="http://codepen.io/anon/pen/ZYeOzZ">http://codepen.io/anon/pen/ZYeOzZ</a>:</p>
+<p>في صفحة المعرض الخاصة بالمتجر سوف نُوفر إمكانية البحث عن الصور باستخدام المُدخل <code>&lt;input&gt;</code> مع زرٍ مُلحق، سوف نُزيل الحشو (padding) بين المُدخل والزر باستخدام الصنف <code>collapse</code>، ولتنسيق الزر سوف نستخدم الصنف <code>expand</code>، والصنف <code>postfix</code> والذي سيجعل من الزر مُتناسقًا مع المُدخل.</p>
+<pre><code class="lang-html">    &lt;div class=&quot;large-12 columns&quot;&gt;
+      &lt;div class=&quot;radius panel&quot;&gt;
+      &lt;form&gt;
+        &lt;div class=&quot;row collapse&quot;&gt;
+          &lt;div class=&quot;large-10 small-8 columns&quot;&gt;
+            &lt;input type=&quot;text&quot;/&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;large-2 small-4 columns&quot;&gt;
+            &lt;a href=&quot;#&quot; class=&quot;postfix button expand&quot;&gt;Search&lt;/a&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/form&gt;
+    &lt;/div&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/search-gallery.png" alt=""></p>
+<p>تعرفنا في هذا الجزء على النماذج والأزرار وتطبيقاتها في متجرنا، وفي الجزء الخامس سوف نتحدث عن أمور عدّة منها &quot;المدار&quot; (orbit) وعارض الصور (lightbox) وغيره من المواضيع المُهمة جدًا في الإطار.</p>
+

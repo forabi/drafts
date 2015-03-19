@@ -1,0 +1,186 @@
+<p>تعرفنا على النظام الشبكي في الجزء السابق والذي هو أساس وجوهر أيّ إطار عمل ولابدّ من التعامل معه بأريحية تامة فهو من المواضيع التي سوف تتعامل معها مع أيّ مشروع. في هذا الجزء سوف نتحدث عن نظام التنقل الخاص بإطار العمل Foundation، من خلال التعامل مع الشريط العلوي والشريط الجانبي والتبويبات وغيره من الإضافات التي يُقدمها Foundation لتسهيل عمل المطوّر.</p>
+<h2 id="-navigation">التنقل Navigation</h2>
+<h3 id="-navigation-menus-and-dropdowns">شريط التنقل الرئيسي والقوائم المُنسدلة Navigation Menus and Dropdowns</h3>
+<p>الشريط العلوي من الأمور الأساسية في أي صفحة ويب، ولذلك سَهل Foundation إنشاءه، مستخدمًا JavaScript في ذلك، وجعله متجاوبًا وقدمه مع أصناف تُسهل عمل المطوّر.</p>
+<p>يَستخدم Foundation الصنف <code>top-bar</code> مع خاصية المعلومات <code>data-topbar</code> للوسم <code>&lt;nav&gt;</code> لإنشاء الشريط، والصنف <code>top-bar</code> مسؤولٌ عن تحديدِ حجم وموقع الشريط أعلى الصفحة وإضافة خلفية سوداء له، ويتألف بناء الشريط العلوي من قائمة غير مُرتبة <code>&lt;ul&gt;</code> و قسم <code>&lt;section&gt;</code>، وتحتوي القائمة على عنصر خاص لعنوان الموقع والأصناف الخاصة بالشريط في الوضع المُصغر وهو <code>toggle-topbar</code> الذي يُخفي كلمة Menu في الوضع العادي وإظهارها في الوضع المُصغر، والصنف <code>menu-icon</code> وهو من أجل ما يُعرف برمز الهامبرغر (الخطوط الأفقية الثلاثة) في الوضع المُصغر، ولك حرية استخدامه أو حذفه.</p>
+<p>أما القسم <code>&lt;section&gt;</code> ففيه يتم إنشاء القوائم الرئيسة والقوائم المُنسدلة، وله الصنف <code>top-bar-section</code>، والذي يُعطي عناوين القوائم اللون الأبيض، وتُنشئ القوائم عبر العنصر <code>&lt;ul&gt;</code>، ويُمكن التحكم بموضع القائمة بالصنفين <code>right</code> و<code>left</code>، وللإشارة إلى الصفحة الحالية نستخدم الصنف <code>active</code> لعناصر القائمة <code>&lt;li&gt;</code>، ويُمكن أن تحتوي كل قائمة رئيسة قائمة مُنسدلة، وكل قائمة مُنسدلة قائمة منسدلة داخلية، ولإنشاء قائمة مُنسدلة نضيف الصنف <code>has-dropdown</code> إلى القائمة الرئيسة، وذلك من شأنه أن يضيف مثلثًا صغيرًا يشير إلى أنّ القائمة مُنسدلة، ولكل قائمة مُنسدلة سوف نُضيف لها الصنف <code>dropdown</code> الذي يقوم بإخفاء العناصر <code>&lt;li&gt;</code> من العرض وإظهارها عند المرور (hover) فقط، ويمكنك الفصل بين العناصر عن طريق الصنف <code>divider</code>.</p>
+<p>يأخذ الشريط العلوي عرض المتصفح بالكامل بشكل افتراضي، ويُستخدم الصنف <code>contain-to-grid</code> لجعل عناصر الشريط العلوي متجانسةً مع النظام الشبكي، حيث العرض هو 1000 بكسل، والصنف <code>fixed</code> يُثبت الشريط العلوي أعلى الصفحة مهما تم التدرّج إلى أسفلها.</p>
+<p>في متجرنا لدينا الشريط العلوي مُعرف كالتالي:</p>
+<pre><code class="lang-html">    &lt;div class=&quot;contain-to-grid fixed&quot;&gt;
+      &lt;nav class=&quot;top-bar&quot; data-topbar role=&quot;navigation&quot;&gt;
+        &lt;ul class=&quot;title-area&quot;&gt;
+          &lt;li class=&quot;name&quot;&gt;
+            &lt;h1&gt;&lt;a href=&quot;#&quot;&gt;Sawrha&lt;/a&gt;&lt;/h1&gt;
+          &lt;/li&gt;
+          &lt;li class=&quot;toggle-topbar menu-icon&quot;&gt;&lt;a href=&quot;#&quot;&gt;&lt;span&gt;Menu&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+
+        &lt;section class=&quot;top-bar-section&quot;&gt;
+          &lt;ul class=&quot;right&quot;&gt; &lt;!--القوائم يمين الصفحة--&gt;
+            &lt;li class=&quot;active&quot;&gt;&lt;a href=&quot;#&quot;&gt;Home&lt;/a&gt;&lt;/li&gt; &lt;!--الصنف &quot;نشطّ للإشارة إلى الصفحة الحالية--&gt;
+            &lt;li class=&quot;has-dropdown&quot;&gt;
+              &lt;a href=&quot;#&quot;&gt;Pages&lt;/a&gt;
+              &lt;ul class=&quot;dropdown&quot;&gt;
+                &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Regiseration&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Pricing&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Gallery&lt;/a&gt;&lt;/li&gt;
+              &lt;/ul&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/section&gt;
+      &lt;/nav&gt;
+    &lt;/div&gt;
+</code></pre>
+<p>لاحظ أننا استخدمنا الصنف <code>contain-to-grid</code> لتسوية عناصر الشريط مع النظام الشبكي، والصنف <code>fixed</code> لتثبيت الشريط أعلى الصفحة بشكل دائم والفرق بين استخدام الصنف <code>contain-to-grid</code> وعدم استخدامه موضّح في الصور التالية.</p>
+<p><img src="imgs/contain-to-grid.png" alt=""></p>
+<p><img src="imgs/after-contain-to-grid.png" alt=""></p>
+<p>الشريط كما سوف يظهر على الشاشات المتوسطة والكبيرة.</p>
+<p><img src="imgs/basic-topbar.png" alt=""></p>
+<p>أما في الشاشات الصغيرة سيكون الشريط كالتالي:</p>
+<p><img src="imgs/small-topbar.png" alt=""></p>
+<p><img src="imgs/small-topbar-dropdown.png" alt=""></p>
+<p>يَسدل الشريط العلوي القوائم المُنسدلة عند المرور عليها (hover) بشكل افتراضي، وبإمكانك تغيير هذا السلوك عن طريق &quot;خاصية المعلومات&quot; <code>data-options</code> مُعطاةً القيمة <code>&quot;is_hover: false&quot;</code>، الذي سوف يجعل من القائمة تُنسدل بعد الضغط عليها.</p>
+<p>يُتيح أيضًا الشريط العلوي إمكانية إضافة أزرار وعناصر إدخال <code>&lt;input&gt;</code> وذلك عبر الصنف <code>has-form</code>، ويُمكن الفصل بين العناصر باستخدام الصنف <code>divider</code>، ولإزالة الحشو (padding) بين المُدخل (input) والزر بإمكاننا استخدام الصنف <code>collapse</code>.</p>
+<p>في متجر صوّرها سوف نضيف خانة بحث للصورة في الشريط العلوي.</p>
+<pre><code>&lt;li class=&quot;divider&quot;&gt;&lt;/li&gt; &lt;!-- فاصل بين القوائم وخانة البحث --&gt;
+&lt;li class=&quot;has-form right&quot;&gt; &lt;!-- عنصر قائمة لخانة البحث وعلى يمين الصفحة --&gt;
+&lt;div class=&quot;row collapse&quot;&gt; &lt;!-- لإزالة المسافة بين المُدخل والزر --&gt;
+  &lt;div class=&quot;large-8 small-9 columns&quot;&gt;
+    &lt;input type=&quot;text&quot; placeholder=&quot;Find photo&quot;&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;large-4 small-3 columns&quot;&gt;
+    &lt;a href=&quot;#&quot; class=&quot;button expand&quot;&gt;Search&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+</code></pre><p>لاحظ المسافة بين الزر وخانة البحث في حال عدم استخدامنا للصنف <code>collapse</code>.</p>
+<p><img src="imgs/collapse-class.png" alt=""></p>
+<p>الفاصل بين القوائم.</p>
+<p><img src="imgs/divider.png" alt=""></p>
+<p><em>مثال حي</em> <a href="http://codepen.io/anon/pen/zxZXZw">http://codepen.io/anon/pen/zxZXZw</a> يُوضح المسافة بين الزر وخانة البحث.</p>
+<p>الشريط العلوي بشكله النهائي سيكون كالتالي.</p>
+<p><img src="imgs/has-form.png" alt=""></p>
+<p><em>مثال حي</em> <a href="http://codepen.io/anon/pen/OPWavB">http://codepen.io/anon/pen/OPWavB</a>:</p>
+<h3 id="-side-nav-">شريط التّنقل الجانبي (Side Nav)</h3>
+<p>يُقدم Foundation الصنف <code>side-nav</code> لإنشاء &quot;شريط تنقّل جانبي&quot; باستخدام قائمة غير مرتبة (<code>&lt;ul&gt;</code>)، ويَستخدم Foundation هذا الشريط في <a href="http://foundation.zurb.com/docs">التوثيق الرسمي</a> الخاص به، ويُمكنك استخدام الصنف <code>active</code> للوسم<code>&lt;li&gt;</code> للإشارة إلى الصفحة الحالية، والصنف <code>divider</code> لعمل فاصل بين القوائم.</p>
+<pre><code class="lang-html">    &lt;h5&gt;Categories&lt;/h5&gt;
+    &lt;ul class=&quot;side-nav&quot;&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Snow&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Green&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Sky&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Rainbow&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Misc&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+</code></pre>
+<p><img src="imgs/side-nav.png" alt=""></p>
+<p><em>مثال حي</em> <a href="http://codepen.io/anon/pen/azpPBE">http://codepen.io/anon/pen/azpPBE</a>:</p>
+<h3 id="-tabs-and-accordions-">التبويبات والتبويبات القابلة للطيّ (Tabs and Accordions)</h3>
+<p>يُمكنك Foundation من إنشاء تبويبات أُفقية وعمودية، وهي عناصر تُساعدك على تنظيم وعرض أكثر من مُستند داخل حاوية واحدة والتبديل/التنقل فيما بينها، ولإنشاء تبويبات أفقية نستخدم عنصر قائمة وصف (<code>&lt;dl&gt;</code>) مع الصنف <code>tabs</code> والخاصية <code>data-tab</code>، ويُظهر الصنف <code>vertical</code> التبويبات بشكل عمودي، حيث أنها أفقية بشكل افتراضي. كما تدعم هذه التبويبات ميزة الربط العميق (deep linking)، والتي تُتيح لك إنشاء رابط لأحد التبويبات وتَدرّج (scroll) المتصفح إلى التبويب المُختار.</p>
+<p>في صفحة المنتج الخاصة بمتجرنا، وبعد عرض الصورة المختارة سوف نعرض معلومات عن المُصور والتعليقات الخاصة بالصورة والتقييم الخاص بها باستخدام التبويبات الأفقية.</p>
+<pre><code class="lang-html">    &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;large-12 columns&quot;&gt;
+        &lt;dl class=&quot;tabs&quot; data-tab&gt; &lt;!--التبويبات سوف تكون أفقية لأننا لم نستخدم الصنف عمودي--&gt;
+          &lt;dd class=&quot;active&quot;&gt;&lt;a href=&quot;#panel1&quot;&gt;Info&lt;/a&gt;&lt;/dd&gt; &lt;!--الصنف &quot;نشط&quot; للدلالة على أن هذا التبويب هو التبويب الحالي--&gt;
+          &lt;dd&gt;&lt;a href=&quot;#panel2&quot;&gt;Comments&lt;/a&gt;&lt;/dd&gt; &lt;!--ربط هذا التبويب مع المحتوى الموافق له --&gt;
+          &lt;dd&gt;&lt;a href=&quot;#panel3&quot;&gt;Rating&lt;/a&gt;&lt;/dd&gt; &lt;!--ربط هذا التبويب مع المحتوى الموافق له --&gt;
+        &lt;/dl&gt;
+        &lt;div class=&quot;tabs-content&quot;&gt; &lt;!--يحتوي هذا القسم جميع محتويات التبويبات الثلاثة --&gt;
+          &lt;div class=&quot;content active&quot; id=&quot;panel1&quot;&gt; &lt;!--التبويب الأول--&gt;
+            &lt;h2&gt;About the photographer&lt;/h2&gt;
+            &lt;p&gt;Mohamad Abras is the best photographer on earth.&lt;/p&gt;
+            &lt;p&gt;&lt;a href=&quot;mailto:mohamad.abras@live.com&quot;&gt;Email me&lt;/a&gt;&lt;/p&gt;
+            &lt;p class=&quot;hide-for-medium-up&quot;&gt;&lt;a href=&quot;tel:+33333333&quot;&gt;Call me&lt;/a&gt;&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;content&quot; id=&quot;panel2&quot;&gt; &lt;!--التبويب الثاني--&gt;
+            &lt;p&gt;Wow! Its the best photo I have ever seen.&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;content&quot; id=&quot;panel3&quot;&gt; &lt;!--التبويب الثالث--&gt;
+            &lt;p&gt;Five star&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/tabs.png" alt=""></p>
+<p>بإمكاننا تحسين النّص السابق بشكل أفضل من ذلك، حيث أنها الآن لا تسمح لك بإنشاء روابط عميقة للتبويبات، أي أنك لا تستطيع إنشاء رابط مُباشر للتعليقات الخاصة بالصورة مثلًا، والتبويب Info هو الذي سيُعرض دائمًا بعد تحميل الصفحة، ولكن بعد إضافة خاصية المعلومات <code>data-options</code> والقيمة <code>&quot;deep_linking:true&quot;</code>، ستتمكن من إنشاء رابط مُباشر لأحد التبويبات وفي حال كان هذا التبويب أسفل الصفحة سيقوم المتصفح بالتدرّج (scroll) إلى التبويب المُختار.</p>
+<pre><code class="lang-html">    &lt;dl class=&quot;tabs&quot; data-tab data-options=&quot;deep_linking:true&quot;&gt;
+</code></pre>
+<p><em>مثال حي</em> <a href="http://codepen.io/anon/pen/jEyXyq">http://codepen.io/anon/pen/jEyXyq</a>:</p>
+<p>يُقدم Foundation &quot;التبويبات القابلة للطي&quot; (accordions) وهي تُشبه التبويبات التقليديّة (tabs)، ولكن الاختلاف بينها هو على مُستوى تجربة المُستخدم User Experience، حيث أن محتويات التبويب القابل للطيّ يجب أن تكون ضئيلة الحجم ولا تستدعي من المُستخدم النزول والصعود في المتصفح (scroll down/up) على عكس التبويبات التقليدية التي من المُمكن أن يكون المحتوى الخاص بها على طول الصفحة دون التأثير على تجربة المُستخدم، أيضًا التبويبات القابلة للطيّ مناسبة جدًا للشاشات الصغيرة وبطبيعة الحال أجهزة الهاتف المحمول، يُمكن قراءة المزيد عن الفروقات <a href="https://ux.stackexchange.com/questions/6093/accordions-vs-tabs">هنا</a> .يَستخدم Foundation في اعداد هذه التبويبات الصنف <code>accordion</code> وخاصية المعلومات <code>data-accordion</code> مع قائمة غير مرتبة (<code>&lt;ul&gt;</code>)، والصنف <code>accordion-navigation</code> لكل عنصر من عناصر القائمة (<code>&lt;li&gt;</code>).</p>
+<pre><code>&lt;dl class=&quot;accordion&quot; data-accordion&gt;
+  &lt;dd class=&quot;accordion-navigation&quot;&gt;
+    &lt;a href=&quot;#panel1b&quot;&gt;Accordion 1&lt;/a&gt;
+    &lt;div id=&quot;panel1b&quot; class=&quot;content active&quot;&gt;
+      ...
+    &lt;/div&gt;
+  &lt;/dd&gt;
+  &lt;dd class=&quot;accordion-navigation&quot;&gt;
+    &lt;a href=&quot;#panel2b&quot;&gt;Accordion 2&lt;/a&gt;
+    &lt;div id=&quot;panel2b&quot; class=&quot;content&quot;&gt;
+      ...
+    &lt;/div&gt;
+  &lt;/dd&gt;
+  &lt;dd class=&quot;accordion-navigation&quot;&gt;
+    &lt;a href=&quot;#panel3b&quot;&gt;Accordion 3&lt;/a&gt;
+    &lt;div id=&quot;panel3b&quot; class=&quot;content&quot;&gt;
+      ...
+    &lt;/div&gt;
+  &lt;/dd&gt;
+&lt;/dl&gt;
+</code></pre><p><em>مثال حي</em> <a href="http://codepen.io/anon/pen/ogZbyQ">http://codepen.io/anon/pen/ogZbyQ</a>:</p>
+<h3 id="-breadcrumbs-">مسار التنقل (Breadcrumbs)</h3>
+<p>يُستخدم &quot;مسار التنقل&quot; (breadcrumbs) كثيرًا في أنظمة إدارة المُحتوى مثل WordPress، وخاصةً عندما يكون تسلسل الصفحات طويلًا ومتشعبًا، ويُقدم Foundation الصنف <code>breadcrumbs</code> والذي يُضاف إلى قائمة غير مرتبة (<code>&lt;ul&gt;</code>) والصنفين <code>current</code> و<code>unavailable</code> لتحديد حالة عناصر القائمة. كما يُتيح Foundation إضافة الصنف <code>breadcrumbs</code> إلى العنصر <code>nav</code> أيضًا.</p>
+<pre><code class="lang-html">    &lt;ul class=&quot;breadcrumbs&quot;&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Features&lt;/a&gt;&lt;/li&gt;
+      &lt;li class=&quot;unavailable&quot;&gt;&lt;a href=&quot;#&quot;&gt;Last Photos&lt;/a&gt;&lt;/li&gt; &lt;!-- الصنف &quot;غير مُتوفر للإشارة إلى أن المسار غير مُتوفر --&gt;
+      &lt;li class=&quot;current&quot;&gt;&lt;a href=&quot;#&quot;&gt;High Rating&lt;/a&gt;&lt;/li&gt; &lt;!-- الصنف &quot;الحالي&quot; للإشارة إلى المسار الحالي --&gt;
+    &lt;/ul&gt;
+</code></pre>
+<p>سوف نحصل على نفس النتيجة في حال استخدامنا الوسم <code>&lt;nav&gt;</code></p>
+<pre><code class="lang-html">    &lt;nav class=&quot;breadcrumbs&quot;&gt;
+      &lt;a href=&quot;#&quot;&gt;Home&lt;/a&gt;
+      &lt;a href=&quot;#&quot;&gt;Features&lt;/a&gt;
+      &lt;a class=&quot;unavailable&quot; href=&quot;#&quot;&gt;Last Photos&lt;/a&gt;
+      &lt;a class=&quot;current&quot; href=&quot;#&quot;&gt;High Rating&lt;/a&gt;
+    &lt;/nav&gt;
+</code></pre>
+<p><img src="imgs/breadcrumbs.png" alt=""></p>
+<h3 id="-sub-nav-">شريط التنقل الفرعي (Sub Nav)</h3>
+<p>يُستخدم &quot;شريط التنقل الفرعي&quot; بشكل شائع مع تصفية مُحتوى، ويُنشئ باستخدام الصنف <code>sub-nav</code> مُضافًا إلى &quot;قائمة وصف&quot; (<code>&lt;dl&gt;</code>)، والصنف <code>active</code> للدلالة على الاختيار الحالي.</p>
+<p>في متجرنا وفي صفحة المعرض لدينا عرض لجميع الصور المُتوفرة في المتجر، مانريده هو &quot;شريط تنقل فرعي&quot; لاستخدامه لتصفية الصور بناءً على المُميز منها أو الجديد وبطبيعة الحال كل الصور.</p>
+<pre><code class="lang-html">    &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;large-12 columns&quot;&gt;
+        &lt;dl class=&quot;sub-nav&quot;&gt;
+          &lt;dt&gt;Filter:&lt;/dt&gt;
+          &lt;dd&gt;&lt;a href=&quot;#&quot;&gt;All&lt;/a&gt;&lt;/dd&gt;
+          &lt;dd&gt;&lt;a href=&quot;#&quot;&gt;New&lt;/a&gt;&lt;/dd&gt;
+          &lt;dd class=&quot;active&quot;&gt;&lt;a href=&quot;#&quot;&gt;Feature&lt;/a&gt;&lt;/dd&gt;
+        &lt;/dl&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/sub-nav.png" alt=""></p>
+<h3 id="-pagination-">ترقيم الصفحات (Pagination)</h3>
+<p>يُستخدم &quot;ترقيم الصفحات&quot; (pagination) بشكل شائع على الرغم من انتشار تقنية AJAX والتحميل التلقائي، ويُقدم Foundation الصنف <code>pagination</code> للعنصر <code>&lt;ul&gt;</code> والصنف <code>unavailable</code> لإزالة تأثير المرور (hover) لعناصر القائمة <code>&lt;li&gt;</code> وجعلِها غير قابلة للنقر (unclickable)، أمّا الصنف <code>pagination-centered</code> فهو يُظهر &quot;ترقيم الصفحات&quot; في منتصف الصفحة.</p>
+<p>بإمكاننا استخدام &quot;ترقيم الصفحات&quot; مع صور المعرض الخاصة بالمتجر وذلك من أجل استكشافها جميعًا.</p>
+<pre><code class="lang-html">    &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;pagination-centered&quot;&gt; &lt;!-- ترقيم الصفحات في المُنتصف --&gt;
+        &lt;ul class=&quot;pagination&quot;&gt;
+          &lt;li class=&quot;arrow unavailable&quot;&gt;&lt;a href=&quot;&quot;&gt;&amp;laquo;&lt;/a&gt;&lt;/li&gt;
+          &lt;li class=&quot;current&quot;&gt;&lt;a href=&quot;&quot;&gt;1&lt;/a&gt;&lt;/li&gt; &lt;!-- الصفحة الأولى هي الصفحة الحالية --&gt;
+          &lt;li&gt;&lt;a href=&quot;&quot;&gt;2&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;&quot;&gt;3&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;&quot;&gt;4&lt;/a&gt;&lt;/li&gt;
+          &lt;li class=&quot;unavailable&quot;&gt;&lt;a href=&quot;&quot;&gt;&amp;hellip;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;&quot;&gt;12&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;&quot;&gt;13&lt;/a&gt;&lt;/li&gt;
+          &lt;li class=&quot;arrow&quot;&gt;&lt;a href=&quot;&quot;&gt;&amp;raquo;&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/pagination.png" alt=""></p>
+<p><em>مثال حي</em> <a href="http://codepen.io/anon/pen/wBJdRr">http://codepen.io/anon/pen/wBJdRr</a>:</p>
+<p>وصلنا إلى نهاية الجزء الثالث والذي تعرفنا من خلاله على نظام التنقل الخاص بـFoundation، وذلك من خلال التعرف على الشريط العلوي والقوائم المُنسدلة، وشريط التنقل الفرعي والجانبي والتبويبات ومسار التنقل وأخيرًا ترقيم الصفحات، وفي الجزء الرابع من السلسلة سوف نتعرف على الأزرار والنماذج.</p>
+

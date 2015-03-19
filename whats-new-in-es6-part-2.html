@@ -1,0 +1,446 @@
+<h1 id="-javascript-">ما الجديد في الإصدار القادم من JavaScript؟ (الجزء الثّاني)</h1>
+<h2 id="-destructuring">التفكيك Destructuring</h2>
+<p>ذكرنا في الجزء السابق أن اهتمامًا كبيرًا أُوليَ لتسهيل كتابة الشفرة وقراءتها في ECMAScript 6، و<strong>الإسناد بالتفكيك (Destructuring assignment)</strong> لا يخرج عن هذا السياق، وهو ليس بالمفهوم الجديد في عالم البرمجة، فهو معروف في Python وفي Ruby. بعيدًا عن تعقيدات المصطلحات، إليك هذا المثال:</p>
+<pre><code class="lang-javascript">var [a, b, c] = [1, 2, 3];
+a == 1 // true
+b == 2 // true
+c == 3 // true
+</code></pre>
+<p>ما الذي يحدث هنا؟ بكل بساطة تسمح ECMAScript 6 بصياغة جديدة للتعريف عن المتغيرات أو إسناد قيم جديدة إليها جُملةً واحدة من خلال جمعها ضمن قوسي مصفوفة (Array) وسيقوم مُفسّر اللغة بإسناد قيمة مقابلة لكل متغيّر من المصفوفة الواقعة على يمين مُعامل الإسناد (<code>=</code>). الأمر لا يقتصر على إسناد المصفوفات، بل يمكن أيضًا إسناد خصائص العناصر:</p>
+<pre><code class="lang-javascript">let person = { firstName: &quot;John&quot;, lastName: &quot;Smith&quot;, Age: 42, Country: &quot;UK&quot; };
+
+let { firstName, lastName } = person;
+
+console.log(`Hello ${ firstName } ${ lastName }!`); // Hello John Smith!
+</code></pre>
+<p>في هذا المثال لدينا متغيّرات تتبع للنطاق العامّ <code>firstName</code> و<code>lastName</code>، وقد أسندنا لها قيمًا من خصائص الكائن <code>person</code>، حيث يبحث مفسّر اللّغة عن خصائص في الكائن <code>person</code> يماثل اسمها اسم المتغيّر المفروض ويُسندها إلى المُتغيّرات. يمكن توضيح المقصود بصورة أفضل إذا أعدنا كتابة الشفرة لتتوافق مع الإصدار الحالي من JavaScript:</p>
+<pre><code class="lang-javascript">var person = { firstName: &quot;John&quot;, lastName: &quot;Smith&quot;, Age: 42, Country: &quot;UK&quot; };
+
+var firstName = person.firstName;
+var lastName = person.lastName;
+
+console.log(&quot;Hello &quot; + firstName + &quot; &quot; + lastName + &quot;!&quot;); // Hello John Smith!
+</code></pre>
+<p>يشيع استخدام التفكيك في CoffeeScript (وهي لغة أقر Brendan Eich مُخترع JavaScript بأنّ الإصدار الأخير من JavaScript استوحى الكثير منها)، وخصوصًا عندما تُنظّم البرامج في وحدات كما في Node.js ويكون اهتمامًا مُقتصرًا على استيراد جزء مُحدّد من الوحدة المعنيّة:</p>
+<pre><code class="lang-coffeescript">{ EventEmitter } = require &#39;events&#39;
+{ EditorView } = require &#39;atom&#39;
+{ compile } = require &#39;coffee-script&#39;
+
+
+compile(&#39;# coffeescript code here&#39;);
+</code></pre>
+<p>عند تحويل هذا النص إلى JavaScript الحالية، سنحصل على:</p>
+<pre><code class="lang-javascript">var EventEmitter = require(&#39;events&#39;).EventEmitter;
+var EditorView = require(&#39;atom&#39;).EditorView;
+var compile = require(&#39;events&#39;).compile;
+
+compile(&#39;# coffeescript code here&#39;);
+</code></pre>
+<p>من الاستخدامات المفيدة للإسناد بالتفكيك التبديل بين قيمتي متغيّرين بصورة سهلة، سنقتبس المثال من توثيق CoffeeScript ونُعيد كتابته بـJavaScript:</p>
+<pre><code class="lang-javascript">var theBait   = 1000;
+var theSwitch = 0;
+
+[theBait, theSwitch] = [theSwitch, theBait];
+</code></pre>
+<p>قبل ES6 كنا لنحتاج لكتابة مُتغيّر مؤقّت نخزن فيه قيمة إحدى المتغيّرين للاحتفاظ بها قبل التبديل بين القيمتين، وهو ما يفعله محوّل CoffeeScript بالفعل ليعطينا شفرة JavaScript متوافقة مع الإصدار الحالي (مع أنه يقوم بتخزين كلا القيمتين في مصفوفة، إلا أنّ الفكرة تبقى ذاتها):</p>
+<pre><code class="lang-javascript">var theBait, theSwitch, _ref;
+
+theBait = 1000;
+
+theSwitch = 0;
+
+_ref = [theSwitch, theBait], theBait = _ref[0], theSwitch = _ref[1];
+</code></pre>
+<h2 id="-iterators-for-of-">المُكرِّرات (Iterators) وحلقة <code>for... of</code></h2>
+<p>ما من لغة برمجة تخلو من وسيلة للمرور على عدد من القيم و<strong>تكرار</strong> تنفيذ عمليّة معيّنة على هذه القيم، من أبسط هذه الوسائل حلقة <code>for</code> التقليديّة الشّهيرة، وفي JavaScript يشيع استخدام حلقة <code>for... in</code> إلى جانبها للمرور على أسماء خصائص العناصر، إذ يمكننا معرفة كل خصائص العنصر <code>document</code> بسطرين فقط:</p>
+<pre><code class="lang-javascript">for (var propertyName in document) {
+    console.log(propertyName);
+}
+
+// &quot;body&quot;
+// &quot;addEventListener&quot;
+// &quot;getElementById&quot;
+// ...
+</code></pre>
+<p>لاحظ أن حلقة <code>for... in</code> تُعيد <strong>أسماء</strong> خصائص العنصر (كسلسة نصيّة String)، والأمر لا يستثني المصفوفات، فهي ليست سوى كائنات بأسماء خصائص توافق رقم الفهرس (Index):</p>
+<pre><code class="lang-javascript">for (var i in [1, 2, 3]) {
+  console.log(i);
+}
+
+// &quot;0&quot;
+// &quot;1&quot;
+// &quot;2&quot;
+</code></pre>
+<p>من عيوب حلقة <code>for... in</code> أن لا شيء في تعريف اللغة يُجبر مُفسّر اللّغة على إخراج العناصر بترتيب ثابت بالضّرورة، وهذا يعني أنها تصبح مباشرة غير صالحة للمرور على المصفوفات - التي تستخدم لحفظ عناصر <em>مُرتّبة</em> - بطريقة بديهيّة، ويحلّ محلّها حلقة <code>for</code> التقليديّة عندئذٍ، وأمّا عند استخدامها للمرور على الكائنات، فإنّها لا تُعيد إلّا الخصائص الّتي تُعرّف على أنها قابلة للتعداد (enumerable)، وهو شيء يُحدّد عند تعريف الخاصّة، كما أنّها تُعيد الخصائص القابلة للتعداد التي ورثها الكائن عن &quot;آباءه&quot; ضمن سلسلة الوراثة، وهو تصرّف قد لا يكون مرغوبًا دومًا، وغالبًا سترى المطوّرين يُجرون فحصًا للخاصّة قبل متابعة تنفيذ الشفرة لمعرفة ما إذا كانت تخصّ العنصر ذاته أمّ أنّه ورثها:</p>
+<pre><code class="lang-javascript">var obj = { a: 1, b: 2, c: 3 }; // كائن جديد لا يرث سوى النموذج Object
+
+for (var prop in obj) {
+  console.log(&quot;o.&quot; + prop + &quot; = &quot; + obj[prop]);
+}
+
+// &quot;o.a = 1&quot;
+// &quot;o.b = 2&quot;
+// &quot;o.c = 3&quot;
+</code></pre>
+<p>في هذا المثال (المنقول عن <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in">شبكة مطوّري موزيلا</a>) فرضنا كائنًا جديدًا بثلاث خصائص، وعند المرور عليه بحلقة <code>for... in</code> فإنّنا حصلنا على النتيجة المتوقّعة، ولم نحصل على خصائص إضافيّة لأنّ الكائن الذي فرضناه لا يرث أي كائن آخر سوى <code>Object</code> (الذي ترثه كل الكائنات افتراضًا). أما في المثال التالي، فقد احتجنا لإجراء اختبار <code>hasOwnProperty</code> على العنصر الوارث لكي لا تظهر سوى الخاصة <code>color</code> التي يملكها بذاته ولم يرثها:</p>
+<pre><code class="lang-javascript">var triangle = {a: 1, b: 2, c: 3};
+
+function ColoredTriangle() {
+  this.color = &quot;red&quot;;
+}
+
+ColoredTriangle.prototype = triangle;
+
+var obj = new ColoredTriangle();
+
+for (var prop in obj) {
+  if (obj.hasOwnProperty(prop)) {
+    console.log(&quot;o.&quot; + prop + &quot; = &quot; + obj[prop]);
+  } 
+}
+
+// Output:
+// &quot;o.color = red&quot;
+</code></pre>
+<p>حسنًا، لقد أطلنا الحديث عن حلقة <code>for... in</code> وهي ليست بالجديدة؛ لكنّنا أصبحنا نرى الحاجة لشيء جديد أكثر بساطة ومرونة، فهذا ما تبتغيه ES6 في النهاية، ولهذا نشأت فكرة المُكرّرات؛ التي تسمح لأي عنصر بأن يختار لنفسه الطّريقة التي يتصرّف بها عند المرور به في حلقة، ومع المُكرّرات لا بدّ من نوع جديد من الحلقات لتلبية هذه الحاجة والمحافظة على حلقة <code>for... in</code> للتوافق مع الإصدارات القديمة. من هنا نشأت حلقة <code>for... of</code> الجديدة.</p>
+<pre><code class="lang-javascript">for (var num of [1, 2, 3]) {
+    console.log(num);
+}
+
+// 1
+// 2
+// 3
+
+
+for (var node of document.querySelectorAll(&#39;a&#39;)) {
+  console.log(node);
+}
+
+// &lt;a class=&quot;title&quot; href=&quot;/&quot;&gt;
+// &lt;a class=&quot;contact&quot; href=&quot;/contact/&quot;&gt;
+</code></pre>
+<p>حصلنا في المثالين السابقين على <strong>قيمة</strong> الخاصّة وليس اسم الخاصّة، لكنّ هذا لا يعني أنّ حلقة <code>for... of</code> تُعيد قيم الخصائص دومًا، بل إنّها تستدعي <strong>مُكرّر</strong> الكائن (<code>Iterator</code>) وتطلب منه في كلّ دورة للحلقة تزويدها بشيء ما، وتترك للمُكرّر الحُريّة بإعادة أي قيمة يرغب بها، ولكن ولأنّنا نستدعي في مثالنا مصفوفة أولاً، وعنصر من نوع <code>NodeList</code> ثانيًا، وكلا النّوعين يُعيد مُكرُّرهما قيمَ العناصر في المصفوفة، فإنّنا نحصل على تلك النتيجة البديهيّة. بإمكاننا إنشاء أصناف بمُكرّرات خاصّة نُنشئها بأنفسنا، ولنفترض أن لدينا نوعًا لصفّ ضمن مدرسة ابتدائية، ونريد أن نحصل على تفاصيل الطلّاب على هيئة نص مُنسّق عند المرور على الصّفّ في حلقة <code>for... of</code>:</p>
+<pre><code class="lang-javascript">
+function SchoolClass(students) {
+   this.students = students;
+}
+
+SchoolClass.prototype[Symbol.iterator] = function*() {
+    for (let i = 0; i &lt; this.students.length; i++) {
+        let student = this.students[i];
+        yield `#${i+1} ${student.name} (${student.age} years old)`;
+    }
+}
+
+var ourClass = new SchoolClass([ { name: &quot;Ahmed&quot;, age: 10 }, { name: &quot;Alaa&quot;, age: 9 }/*, ...*/ ]);
+for (student of ourClass) {
+     console.log(student);
+}
+
+// &quot;#1 Ahmed (10 years old)&quot;
+// &quot;#2 Alaa (9 years old)&quot;
+// &quot;#3 ...&quot; ...
+</code></pre>
+<p>استخدمنا الرمز الخاص <code>Symbol.iterator</code> لإسناد دالّة مُولّد (Generator function) التي تُعطينا عند استدعائها نسخة من مُكرّر الصنف المُخصّص الذي أنشأناه. سنتعرف بعد قليل على المُولّدات (Generators) وكذلك على الرموز (Symbols) في وقت لاحق. لاحظ أنّنا استخدمنا حلقة <code>for... of</code> للمرور على محتويات <code>ourClass</code>.</p>
+<p>تذكّر أنّنا استخدمنا هذه الحلقة في الجزء السابق مع Array Comprehension، كما في المثال:</p>
+<pre><code class="lang-javascript">let people = [&quot;Samer&quot;, &quot;Ahmed&quot;, &quot;Khalid&quot;];
+console.log([`Hello ${person}` for (person of people)]);
+</code></pre>
+<p>إن كانت الفقرة الأخيرة غامضة بعض الشيء فلا تقلق، سنتوسّع بشرح المولّدات بعد قليل.</p>
+<p>لكن دعونا نتوقّف قليلاً ولننتقل إلى الجانب الفلسفي لهذه الإضافات في JavaScript، قد تبدو للوهلة الأولى تعقيدات بلا طائل، خصوصًا وأنّ كثيرًا منها لا يهدف سوى للتسهيل، ولا يقدّم شيئًا يستحيل إنجازه بالإصدارات السابقة من اللغة؛ هنا يمكن الرّدّ بأنّ تطوّر اللغة متعلّق بكيفيّة استخدامها والخبرة التي تُكتسب مع مرور السّنين، حيث تظهر للمطوّرين حاجات جديدة وأفكار تطبّق مرارًا لدرجة أنها ترتقي لتصبح ضمن أساسات اللغة. سهولة كتابة الشفرة لم تعد رفاهية، بل هي ضرورة لإنجاز المشاريع الكبيرة لأنّها تتيح اختصار الوقت الذي كان سيضيع في كتابة متكرّرة ومُملّة، كما أنّها تُلبّي ما يتوقّعه المطوّرون من لغة أصبحت تؤخذ على محمل الجدّ وتُستخدم في تطوير تطبيقات ضخمة ومُعقّدة بعد أن كان جُلّ استخدامها تنفيذ بعض المهام البسيطة.</p>
+<h2 id="-generators-">المُولِّدات (Generators)</h2>
+<p>المولدات (Generators) ببساطة هي دوال يمكن إيقافها والعودة إليها في وقت لاحق مع الاحتفاظ بسياقها دون تغيير، صياغة دوال المولدات لا تختلف كثيرًا عن صياغة الدوال التقليدية، كل ما عليك هو إضافة إشارة * بعد <code>function</code> واستخدام <code>yield</code> بدل <code>return</code>، المثال التالي سيوضح فكرة المولدات أكثر:</p>
+<pre><code class="lang-javascript">function* getName() {
+  let names = [&#39;Muhammad&#39;, &#39;Salem&#39;, &#39;Abdullah&#39;];
+  for (name of names) {
+    yield name;
+  }
+}
+
+let nameGenerator = getName();
+nameGenerator.next().value; // &#39;Muhammad&#39;
+nameGenerator.next().value; // &#39;Salem&#39;
+nameGenerator.next().value; // &#39;Abdullah&#39;
+nameGenerator.next().value; // undefined
+
+}
+</code></pre>
+<p>ما الذي يحدث هنا؟ فرضنا دالّة مولّد (Generator function) (والتي تُميّز بإشارة النجمة <code>*</code>) سمّيناها <code>getName</code>، وفيها صرحنا عن مصفوفة فيها أسماء، وظيفة هذه الدالة أن تعطينا عند استدعائها نسخة من مُكرّر (Iterator) (الذي شرحناه لتوّنا)، يزوّدنا بالأسماء بالترتيب في كل مرة نستدعيه فيها ليعطينا النتيجة التالية (<code>next()</code>)، أولاً يجب حفظ نسخة المُكرّر ضمن متغير لكي نسمح له بحفظ حالته، ودون ذلك سيعطينا استدعاء دالّة المولد مباشرةً <code>getName().next()</code> دوماً النتيجة الأولى لأننا عملياً نُنشئ نسخة جديدة عنه في كل مرة نستدعيه، أما استدعاء نسخة عنه وحفظها في متغير مثل <code>myGenerator</code> فيسمح لنا باستدعاء <code>.next()</code> عليها كما هو متوقع. لا ترجع الدالة <code>.next()</code> القيمة التي نرسلها عبر <code>yield</code> فقط، بل ترجع كائناً يحوي القيمة المطلوبة ضمن الخاصة <code>value</code>، وخاصة أخرى <code>done</code> تسمح لنا بمعرفة ما إذا كان المولد قد أعطانا كل شيء.</p>
+<p>لنُعِدْ ترتيب أفكارنا:</p>
+<ol>
+<li><p>المولّدات تسمح <strong>بتوقّف تنفيذها مع الاحتفاظ بحالة التنفيذ</strong> (يحدث توقّف التنفيذ عند كلّ كلمة <code>yield</code>). فلو أنّنا كتبنا دالّة تقليديّة في المثال أعلاه مع <code>return</code> بدل <code>yield</code> لحصلنا في كلّ مرّة على الاسم الأول (Muhammad). وهذه الميزة في المولّدات يمكن <em>استغلالها لإنشاء حلقات لا نهائية</em> دون إعاقة متابعة البرنامج:</p>
+<pre><code class="lang-javascript"> function* numberGenerator() {
+   for (let i = 0; true; i++) {
+      yield i;
+   }
+ }
+
+ let numGen = numberGenerator();
+ numGen.next(); // { value: 0, done: false }
+ numGen.next(); // { value: 1, done: false }
+ numGen.next(); // { value: 2, done: false }
+ numGen.next(); // { value: 3, done: false }
+ // ...
+</code></pre>
+</li>
+<li><p>دوالّ المولّدات تُعطي عند استدعاءها <strong>مُكرّرات</strong>، وهذا يعني إمكانيّة استخدامها في حلقة <code>for... of</code> (احذر من تطبيق مثال كهذا على مولّد غير منتهٍ كما في المثال السابق!):</p>
+<pre><code class="lang-javascript"> for (let name of getName()) {
+   console.log(name);
+ }
+
+ // &quot;Muhammad&quot;
+ // &quot;Salem&quot;
+ // &quot;Abdullah&quot;
+</code></pre>
+</li>
+<li><p>لكلّ مُكرّر وظيفة <code>.next()</code> مهمّتها بدء تنفيذ الدّالّة أو متابعة تنفيذها ثم إيقافها مؤقّتًا عند كلّ كلمة <code>yield</code>.</p>
+</li>
+<li>استدعاء <code>next()</code> على المُكرّر يعيد لنا في كلّ مرة كائنًا ذا خاصّتين: الأولى <code>value</code> وهي أيّ شيء نُعيده بكلمة <code>yield</code>، والثّانية <code>done</code> وهي قيمة منطقيّة (Boolean) تشير إلى حالة انتهاء تنفيذ الدّالة.</li>
+</ol>
+<p>تقبل الوظيفة <code>.next()</code> للمُكرّرات مُعاملاً اختياريًّا تستقبله وتُرسله لدالّة المولّد بعد متابعة التنفيذ، ويمكن استخدامها لإرسال رسائل لدالّة المولّد بحيث نؤثّر في تنفيذه:</p>
+<pre><code class="lang-javascript">function* numberGenerator() {
+  for (let i = 0; true; i++) {
+     var reset = yield i;
+     if (reset) i = -1;
+  }
+}
+
+let numGen = numberGenerator();
+numGen.next(); // { value: 0, done: false }
+numGen.next(); // { value: 1, done: false }
+numGen.next(); // { value: 2, done: false }
+numGen.next(); // { value: 3, done: false }
+
+numGen.next(true); // { value: 0, done: false }
+</code></pre>
+<p>في هذا المثال مرّرنا القيمة <code>true</code> إلى الوظيفة <code>.next()</code> على المُكرّر، والذي بدوره يُرسلها لدالّة المولّد كنتيجة <code>yeild i</code> في الدّورة الموافقة للحلقة، لنقومَ بحفظها في متغيّر <code>reset</code> ونُجريَ فحصًا عند متابعة التنفيذ لإعادة تعيين قيمة <code>i</code>، التي ستزداد بمقدار واحد مع بدء الدورة التالية لحلقة <code>for</code> جاعلةً قيمة <code>i</code> مساوية للصّفر.</p>
+<p>خصائص المولّدات تجعلها مناسبة جدًا لكتابة شيفرة غير متزامنة بصورة أسهل تكاد تبدو فيها وكأنها شيفرة متزامنة خالية من الاستدعاءات الراجعة المتداخلة (Nested callbacks)؛ هذه الفكرة تحتاج إلى تركيز لأنها أساس لعدد من المكتبات مثل <a href="https://github.com/tj/co">co</a> و<a href="https://github.com/jmar777/suspend">suspend</a> التي ظهرت مؤخّرًا وتصاعدت شعبيّتها بسرعة لأنّها تحلّ مشكلة جوهرية في استخدام JavaScript، ألا وهي التعامل مع الدوال غير المتزامنة (asynchronous functions) وذلك بالاعتماد كُليًّا على المُولّدات.</p>
+<p>لنفترض أنّ لدينا موقعًا لقراءة الكتب يعرض ملفّ المستخدم الشّخصيّ مع عدد الكتب التي قرأها وعنوان آخر كتاب مع تقييم المستخدم له:</p>
+<pre><code class="lang-javascript">
+var list = document.querySelector(&quot;#book-list&quot;);
+
+getJSON(&quot;http://reading-website.com/users/fwz.json&quot;, function(err, user) {
+    if (err) return; // افعل شيئًا بما بخصوص الخطأ
+
+    var num_books = user.books.length;
+    var most_recent_book_id = user.books[num_books - 1];
+
+    getJSON(&quot;http://reading-website.com/users/fwz/ratings/&quot; + most_recent_book_id + &quot;.json&quot;, function(err, user_rating) {
+        getJSON(&quot;http://reading-website.com/books/&quot; + most_recent_book_id + &quot;.json&quot;, function(err, book) {
+            var fragment = document.createDocumentFragment();
+
+            var h2 = document.createElement(&quot;h2&quot;);
+            h2.textContent = user.full_name;
+
+            var h3 = document.createElement(&quot;h3&quot;);
+            h3.textContent = &quot;الكتب التي قرأها&quot;;
+
+            for (let book of books) {
+                let li = document.createElement(&quot;li&quot;);
+                li.textContent = book.title + (book.id == most_recent_book_id ? &quot; &quot; + user_rating : &quot;&quot;);
+                fragment.appendChild(li);
+            }
+
+            list.appendChild(fragment);
+        });
+    });
+
+})
+</code></pre>
+<p>في المثال السابق احتجنا إلى إرسال 3 طلبات AJAX يعتمد أحدها على الآخر، ولأنّنا لا نستطيع إرسال طلب بتقييم المستخدم للكتاب قبل معرفة مُعرّف الكتاب، فلا بدّ من أن يرسل الطلب الخاصّ بتقييم الكتاب ضمن الاستدعاء الرّاجع لطلب معلومات المستخدم، ثمّ يمكن جلب عنوان الكتاب ضمن الاستدعاء الرّاجع للطلب السّابق، وهذا يعني زيادة تعقيد الشفرة مع تداخل الاستدعاءات الرّاجعة لتبدو أشبه بسباغيتي لا تُعرف بدايته من نهايته.</p>
+<p>تخيّلوا -لغرض التّخيّل- لو أمكننا كتابة هذه الشفرة (وهي غير متزامنة) لتبدو لقارئها وكأنها نص برمجي يسير بترتيب متزامن وبديهيّ... ألن يكون هذا أعظم شيء منذ اختراع JavaScript؟</p>
+<pre><code class="lang-javascript">var list = document.querySelector(&quot;#book-list&quot;);
+
+try {
+   var user = getJSON(&quot;http://reading-website.com/users/fwz.json&quot;);
+
+   var num_books = user.books.length;
+   var most_recent_book_id = user.books[num_books - 1];
+
+   var user_rating = getJSON(&quot;http://reading-website.com/users/fwz/ratings/&quot; + most_recent_book_id + &quot;.json&quot;);
+   var book = getJSON(&quot;http://reading-website.com/books/&quot; + most_recent_book_id + &quot;.json&quot;);
+
+   var fragment = document.createDocumentFragment();
+
+   var h2 = document.createElement(&quot;h2&quot;);
+   h2.innerText = user.full_name;
+
+   var h3 = document.createElement(&quot;h3&quot;);
+   h3.innerText = &quot;الكتب التي قرأها&quot;;
+
+   for (let book of books) {
+       let li = document.createElement(&quot;li&quot;);
+       li.innerText = book.title + (book.id == most_recent_book_id ? &quot; &quot; + user_rating : &quot;&quot;);
+       fragment.appendChild(li);
+   }
+
+   list.appendChild(fragment);
+
+} catch (e) {
+   // افعل شيئًا بما بخصوص الخطأ
+   // Error
+}
+</code></pre>
+<p>نحن نعلم أن الأمور لا يمكن أن تكون بهذه الروعة، وأنّ الشفرة أعلاه لن تعمل... نحن نعلم أن شيفرتنا تحتاج تفاصيل المستخدم للحصول على الكتب، وأننا نحتاج للكتاب لجلب عنوانه وتقييمه، وتنفيذ هذه المهمّات بشكل غير متزامن لا يعني أنّه ليس علينا <strong>انتظار</strong> المهمّة الأولى قبل إطلاق الثانية - بل يعني فقط أن المتصفح يمكنه تنفيذ رسم العناصر الأخرى وعرض الصفحات وإرسال طلبات أخرى في هذا الوقت.</p>
+<p>حسنًا، لدي خبر جيّد وآخر سيئ: أمّا الجيّد فهو أنّنا كتابة شيفرة شبيه بهذه أصبحت قريبة المنال مع الدّوالّ غير المتزامنة (Async Functions)، وأمّا الخبر السيّئ فهو أنّ علينا الانتظار إلى الإصدار 7 من ECMAScript لنستطيع كتابتها! (مع العلم أن المتصفّحات لم تنتهِ من تطبيق ES6!).</p>
+<p>لكن هذا لا يعني أن نقف مكتوفي الأيدي إلى أن تصدر ES7، بل بإمكاننا إيجاد حلّ وسط لهذه المشكلة؛ لماذا نضطّر إلى تعقيد الأمور بالاستدعاءات الرّاجعة المتداخلة؟ ألا يتوفّر في اللّغة بنية برمجيّة تسمح بإيقاف شيفرتنا ريثما يتمّ أمر ما غير متزامن (<strong>الانتظار</strong> لإكمال طلب AJAX) ثمّ <strong>المتابعة</strong> بعد انتهاءه؟ يبدو هذا الحديث مألوفًا!</p>
+<p>نعلم حتى الآن أننا بحاجة لاستخدام مولّد، ولذلك سنحيط شيفرتنا بدالّة مولّد كخطوة أولى:</p>
+<pre><code class="lang-javascript">
+var list = document.querySelector(&quot;#book-list&quot;);
+
+function* displayUserProfile() {
+    // شيفرتنا هنا
+}
+</code></pre>
+<p>الآن نحتاج لتنفيذ طلب AJAX الأوّل والانتظار إلى انتهاءه قبل الانتقال إلى الطّلب الثّاني، نعلم أنّ <code>yield</code> توقف تنفيذ المولّد:</p>
+<pre><code class="lang-javascript">
+var list = document.querySelector(&quot;#book-list&quot;);
+
+function* displayUserProfile() {
+    yield getJSON(&quot;http://reading-website.com/users/fwz.json&quot;);
+    // ...
+}
+</code></pre>
+<p>عظيم! لكن كيف نُخبر المولّد بأنّ عليه متابعة التنفيذ؟</p>
+<pre><code class="lang-javascript">var list = document.querySelector(&quot;#book-list&quot;);
+
+function* displayUserProfile() {
+    yield getJSON(&quot;http://reading-website.com/users/fwz.json&quot;, resume);
+    // ...
+}
+</code></pre>
+<p>سنمرر دالة اسمها <code>resume</code> للدّالة <code>getJSON</code>، وهذه الدالة ستُستدعى عند انتهاء جلب جواب الطّلب الذي أرسلناه، وهي فرصتنا لإخبار المولّد بمتابعة التنفيذ... فكيف سيكون محتواها؟</p>
+<pre><code class="lang-javascript">var list = document.querySelector(&quot;#book-list&quot;);
+
+var resume = function(err, response) {
+     displayIterator.next(response);
+}
+
+function* displayUserProfile() {
+    var user = yield getJSON(&quot;http://reading-website.com/users/fwz.json&quot;, resume);
+    var num_books = user.books.length;
+    var most_recent_book_id = user.books[num_books - 1];
+
+    var user_rating = yield getJSON(&quot;http://reading-website.com/users/fwz/ratings/&quot; + most_recent_book_id + &quot;.json&quot;, resume);
+    var book = yield getJSON(&quot;http://reading-website.com/books/&quot; + most_recent_book_id + &quot;.json&quot;, resume);
+
+    var fragment = document.createDocumentFragment();
+
+    var h2 = document.createElement(&quot;h2&quot;);
+    h2.innerText = user.full_name;
+
+    var h3 = document.createElement(&quot;h3&quot;);
+    h3.innerText = &quot;الكتب التي قرأها&quot;;
+
+    for (let book of books) {
+        let li = document.createElement(&quot;li&quot;);
+        li.innerText = book.title + (book.id == most_recent_book_id ? &quot; &quot; + user_rating : &quot;&quot;);
+        fragment.appendChild(li);
+    }
+
+    list.appendChild(fragment);
+}
+
+var displayIterator = displayUserProfile();
+displayIterator.next();
+</code></pre>
+<p>حفظنا نسخة عن المكرّر في متغيّر ثم استدعينا وظيفته <code>next()</code> في دالّة المتابعة، ممرّرين لها جواب الطّلب ليمكننا تخزينه ضمن المتغيّر <code>user</code>. الدّالة resume تستطيع الوصول إلى <code>displayIterator</code> لأنّه يكون معرّفًا قبل استدعاءها حتمًا، ولا ننسَ أن تعريف المتغيّرات في JavaScript يخضع لعملية <a href="http://www.w3schools.com/js/js_hoisting.asp">الرّفع إلى أعلى النّطاق (variable hoisting)</a> ممّا يجعل المتغيّر <code>displayIterator</code> موجودًا (وإن كان بلا قيمة) منذ بداية تنفيذ الشيفرة.</p>
+<p>للتأكّد من فهم هذه الشيفرة، سنعيد تحليلها خطوة بخطوة: في طلب AJAX الأوّل تستدعى الدالة <code>resume</code> ويمرّر إليها جواب الطّلب (<code>response</code>)، الذي يمرّر بدوره إلى المُكرّر ليُحفظ في المتغيّر <code>user</code> الذي سيُستخدم في الخطوة التّالية للمولّد لإرسال الطّلب الثّاني. تُكرّر العمليّة ذاتها للطلبين الآخرين ثمّ تُعرض النتائج في الصّفحة. الفائدة التي جنيناها من استخدام المولّدات هي التخلّص من تعقيد الاستدعاءات الرّاجعة نهائيًّا وتحويل شيفرة غير متزامنة وجعلها تبدو وكأنّها متزامنة. ذكرنا القليل عن مكتبات مثل co وsuspend، لكنّها باختصار تعمل بطريقة مماثلة جدًا لمثالنا الأخير:</p>
+<pre><code>var suspend = require(&#39;suspend&#39;),
+    resume = suspend.resume;
+
+suspend(function*() {
+    var data = yield fs.readFile(__filename, &#39;utf8&#39;, resume());
+    console.log(data);
+})();
+</code></pre><p>هذه المكتبات خطوة نحو مستقبل JavaScript، الذي بدأ يتشكل مع مشروع الدّوال غير المتزامنة باستخدام الكلمتين المفتاحيتين الجديدتين <code>async</code> و<code>await</code> اللّتان ستتوفّران في الإصدار السّابع وتستندان في عملهما إلى أرضيّة الوعود (Promises) الّتي تتوفّر اليوم في ES6. سيكون بإمكاننا كتابة هذه الشيفرة بدل الاعتماد على المولّدات:</p>
+<pre><code class="lang-javascript">async function displayUserProfile() {
+   var user = await getJSON(&quot;http://reading-website.com/users/fwz.json&quot;);
+
+   var num_books = user.books.length;
+   var most_recent_book_id = user.books[num_books - 1];
+
+   var user_rating = await getJSON(&quot;http://reading-website.com/users/fwz/ratings/&quot; + most_recent_book_id + &quot;.json&quot;);
+   var book = await getJSON(&quot;http://reading-website.com/books/&quot; + most_recent_book_id + &quot;.json&quot;);
+
+   var fragment = document.createDocumentFragment();
+
+   var h2 = document.createElement(&quot;h2&quot;);
+   h2.innerText = user.full_name;
+
+   var h3 = document.createElement(&quot;h2&quot;);
+   h2.innerText = &quot;الكتب التي قرأها&quot;;
+
+   for (let book of books) {
+       let li = document.createElement(&quot;li&quot;);
+       li.innerText = book.title + (book.id == most_recent_book_id ? &quot; &quot; + user_rating : &quot;&quot;);
+       fragment.appendChild(li);
+   }
+
+   list.appendChild(fragment);
+}
+</code></pre>
+<p>في هذا المثال يجب على <code>getJSON</code> أن تُعيد وعدًا <code>Promise</code> ليستطيع مُفسّر اللّغة انتظاره إلى أن يُحقّق (resolve) أو يُرفض (reject)، والقيمة الّتي تُحقّق تُحفظ ضمن المُتغيّر <code>user</code>، وأما عند رفض الوعد يُرمى خطأ (<code>throw</code>) يمكن تلقّيه (<code>catch</code>) كما في الشيفرة غير المتزامنة.</p>
+<h2 id="-rest-parameter-spread-">مُعامِل البقيّة (Rest parameter) والناشرة (Spread)</h2>
+<p>بعد كلّ هذا الكلام المُعقّد عن الأشياء غير المتزامنة التي نريد جعلها تبدو متزامنة وما إلى ذلك، سنختم الجزء الثّاني بفكرتين بسيطتين أُضيفتا إلى ECMAScript في الإصدار السّادس وتحلّان مشكلتين شائعتين في كثير من اللّغات البرمجيّة:</p>
+<p>أمّا الأولى فهي الحاجة إلى تنفيذ نصّ برمجيّ ضمن دالة على عدد غير معروف من المُعاملات، فلنفترض أنّ لدينا دالة تجمع عددين:</p>
+<pre><code class="lang-javascript">function add(n1, n2) {
+    return n1 + n2;
+}
+
+add(1)
+// 1
+add(1, 2)
+// 3
+</code></pre>
+<p>ونظرًا لكوننا مبرمجين أذكياء فقد قرّرنا جعل الدّالة تقبل أي عددين أو ثلاثة أو أكثر... لنجعلها تقبل عددًا لا نهائيًّا من الأعداد؛ في الإصدار الحالي سنلجأ إلى استخدام الكائن الخاصّ <code>arguments</code> المتوفّر ضمن نطاق كلّ دالّة تلقائيًا:</p>
+<pre><code class="lang-javascript">function add() {
+   return [].reduce.call(arguments, function(memo, n) { return memo + n; });
+}
+
+add(1)
+// 1
+add(1, 2)
+// 3
+add(1, 2, 3)
+// 6
+</code></pre>
+<p>حسنًا لقد اضطررنا إلى &quot;استعارة&quot; دالة الاختزال من مصفوفة فارغة لتطبيقها على الكائن الخاص <code>arguments</code> الذي يُعتبر &quot;شبيه مصفوفة&quot; ولا يملك ما تمتلكه المصفوفة من دوالّ، لماذا لا يمكننا كتابة هذا فحسب:</p>
+<pre><code class="lang-javascript">function add(...numbers) {
+    return numbers.reduce(function(memo, n) { return memo + n; });
+}
+
+add(1)
+// 1
+add(1, 2)
+// 3
+add(1, 2, 3)
+// 6
+</code></pre>
+<p>وأمّا الفكرة الثّانية فهي تكاد تكون عكس السّابقة، فإذا كانت الأولى تجمع بقيّة المعاملات في كائن مُفرَد، فإنّ هذه &quot;تَنشر&quot; محتويات المصفوفة إلى عناصرها المكوّنة لها، ماذا لو لم نكن أذكياء وعجزنا عن الإتيان بدالة تجمع عددًا غير منتهٍ من الأرقام:</p>
+<pre><code class="lang-javascript">function addThreeNumbers(n1, n2, n3) {
+     return n1 + n2 + n3;
+}
+
+var myNumbers = [1, 2, 3];
+addThreeNumbers(...myNumbers);
+
+// 6
+</code></pre>
+<p>لاحظ أن صياغة النشر (Spread) تطابق تمامًا صياغة البقيّة (Rest)، والاختلاف في السّياق فقط. لاحظ أيضًا أنّ معامل البقيّة، وكما يوحي اسمه، يمكن استخدامه لتجميع <em>ما تبقى</em> من مُعاملات الدّالة فقط:</p>
+<pre><code class="lang-javascript">function addThreeOrMoreNumbers(n1, n2, ...numbers) {
+    return n1 + n2 + numbers.reduce(function(memo, n) { return memo + n; });
+}
+
+addThreeOrMoreNumbers(1, 2, 3);
+// 6
+</code></pre>
+<p>في الجزء القادم سنتعرف بمشيئة الله على الوحدات (Modules) التي تُعتبر طريقة جديدة لتنظيم الشفرة اُستلهمَت من عالم Node.js وrequire.js، وسُنلقي نظرة على الأصناف (Classes)، المكوّن البرمجيّ الذي وجد طريقه أخيرًا إلى JavaScriptّ!</p>
+<h3 id="-">المصادر</h3>
+<ol>
+<li><a href="https://developer.mozilla.org">شبكة مطوّري موزيلّا</a></li>
+<li><a href="http://davidwalsh.name/async-generators">Going Async With ES6 Generators</a></li>
+<li><a href="http://modernweb.com/2014/02/10/replacing-callbacks-with-es6-generators">Replacing callbacks with ES6 Generators </a></li>
+<li><a href="http://jakearchibald.com/2014/iterators-gonna-iterate/">Iterators gonna iterate</a></li>
+</ol>
+

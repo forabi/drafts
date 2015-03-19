@@ -1,0 +1,228 @@
+<p>لم نشرح الكثير في الجزء الأول من هذه السلسلة، ولكن في هذا الجزء سنشرح النظام الشبكي وآلية استخدامه وكافة التفاصيل المُتعلقة به وبالأمثلة الحية، وسوف نتعرّف على النظام الشبكي العام والنظام الشبكي باستخدام الرزم والإزاحة ومفهوم &quot;ترتيب المصدر&quot; وأخيرًا سوف نتعرف على أصناف الظهور.</p>
+<h2 id="-foundation">النظام الشبكي في Foundation</h2>
+<p>يُمَكّنك Foundation من إنشاء تصاميم صفحات إنترنت مُتجاوبة مع جميع الشاشات والأجهزة بسرعة عالية، وذلك باستخدام نظامٍ شبكي يَعتمد على اثني عشر عمودًا بشكل مبدئيّ قابلة للتعديل، وهذه الشبكات يُمكن أن تكون مُتداخلة (nestable)، أي اثنا عشر عمودًا داخل اثني عشر عمودًا آخر.</p>
+<p>يُعرَّف كل صفّ بإضافة الصنف <code>row</code> إلى <code>&lt;div&gt;</code>، وداخل كل صفّ يُحدَّد توزع الأعمدة باستخدام الأصناف <code>small-x</code> و<code>medium-x</code> و<code>large-x</code> حيث <code>x</code> هي من 1 حتى 12، وهي دائمًا تُعرف داخل صفّ (row)، وبعد تحديد توزّع الأعمدة في الصفّ عليك إضافة الصنف <code>column</code> (عمود) أو <code>columns</code>، لا فرقَ بين الصنفين ولكنّ صيغة الجمع هي الشائعة، ومُهمة هذا الصنف هي إضافة الطوفان (float) والحشو (padding).</p>
+<p>يُعرّف Foundation نقاط الفصل (breakpoints) التي تُحدّد كل قياس من قياسات النظام الشبكي كما يلي:</p>
+<ul>
+<li>الشاشات الصغيرة small تبدأ من 0 بكسل إلى 640 بكسلًا.</li>
+<li>الشاشات المتوسطة medium تبدأ من 641 بكسلًا إلى 1024 بكسلًا.</li>
+<li>الشاشات الكبيرة large تبدأ من 1025 بكسلًا إلى 1440 بكسلًا.</li>
+</ul>
+<p>عند حدود هذه النقاط تتغير استجابة المُتصفّح في عرضه لمُحتويات الموقع لتبدو بأفضل صورةٍ مُمكنة.</p>
+<p>بُني إطار العمل Foundation ليستهدف شاشات الأجهزة المحمولة أوّلًا ومنها إلى الأجهزة ذات الشاشات الكبيرة ويَستخدم في ذلك الصنف (class) المُسمى <code>small</code>، عند استخدام هذا الصنف، فإنّ تَوزع الأعمدة في الصفحة لن يختلف أبدًا مهما كانت قياس شاشة العرض، بمعنى أنّه في حال وجود عمودين في الصفحة سيبقى هذان العمودان مهما كان حجم الشاشة سواءٌ كانت متوسطة أو كبيرة، وعند استخدام الصنف المتوسط <code>medium</code>، والذي أُضيف في الإصدار الخامس، فإنّ توزع الأعمدة المُحدد على هذا الصنف سوف يتم استخدامه مع الشاشات الكبيرة أيضًا، ولكن في حالة الشاشات الصغيرة فسوف تصطف العناصر بعضها فوق بعض.</p>
+<p>يجب أن يحتوي كل صفّ row اثني عشر عمودًا دومًا، في صفحة التسجيل في المتجر تتضمّن الصفحة صفًّا رئيسيًّا باثني عشر عمودًا داخل اثني عشر عمودًا آخر، حيث تكون النماذج (forms) ثمانية أعمدة والشريط الجانبي أربعة أعمدة، وعند تعريف النماذج يتم التعامل مع كل صفّ على أساس اثني عشر عمودًا داخل اثني عشر عمود، حيث يتم تعريف المُدخل الخاص بالاسم الأوّل على أنّه ستّة أعمدة والمُدخل الخاص بالاسم الأخير على أنه ستّة أعمدة.</p>
+<pre><code class="lang-html">    &lt;div class=&quot;row&quot;&gt; &lt;!--صفّ رئيسي--&gt;
+      &lt;div class=&quot;medium-4 columns&quot;&gt; &lt;!--أربعة أعمدة للشريط الجانبي--&gt;
+        &lt;aside&gt;
+          &lt;div class=&quot;panel&quot;&gt;
+            &lt;h5&gt;Features&lt;/h5&gt;
+            &lt;a href=&quot;#&quot;&gt;Read More →&lt;/a&gt;
+          &lt;/div&gt;
+        &lt;/aside&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;medium-8 columns&quot;&gt; &lt;!--ثمانية أعمدة للنماذج--&gt;
+        &lt;form&gt;
+          &lt;div class=&quot;row&quot;&gt; &lt;!--صفّ داخل الصف الرئيسي--&gt;
+            &lt;div class=&quot;large-6 columns&quot;&gt;
+              &lt;input type=&quot;text&quot; placeholder=&quot;First name&quot; /&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;large-6 columns&quot;&gt;
+              &lt;input type=&quot;text&quot; placeholder=&quot;last name&quot; /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;!-- بقية النماذج --&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/col-in-col.png" alt=""></p>
+<h3 id="-offset-">الإزاحة (Offset)</h3>
+<p>يُقدم Foundation مفهوم &quot;الإزاحة&quot; لزيادة المرونة في استخدام النظام الشبكي، حيث بإمكانك تحريك أي عمود إلى جهة اليمين مستهدفًا أي حجم شاشة دون الآخر، وذلك عن طريق الأصناف <code>small-offset-x</code> و<code>medium-offset-x</code> و<code>large-offset-x</code> حيث x هي رقمٌ من 1 حتى 11، ومن المُمكن الجمع بين جميع القياسات الثالثة السابقة ولكن من واقع الخبرة العملية، الأكثر استخدامًا إمّا الصنف <code>small</code> مع <code>medium</code> أو <code>small</code> مع <code>large</code>.</p>
+<p>يُطوّف Foundation العمود الأخير إلى جهة اليمين، على عكس ما يفعل إطار العمل <code>Bootstrap</code> عند إنشاء صفّ بأعمدة لا تُجمع إلى اثني عشر، ولكن بإمكانك إضافة الصنف <code>end</code> إلى العمود المُطوّف لجعله يصطف بجانب العمود السابق.</p>
+<p>يُنسّق النظام الشبكي الأعمدةَ بإضافة حشو (padding) بينها، ولكن هناك حالات لاترغب بظهور هذا الحشو في قياس شاشة مُعين، ولذلك يُقدم لك Foundation أصنافًا مثلَ <code>large-collapse</code> لإزالة هذا الحشو من الشاشات الكبيرة على سبيل المثال.</p>
+<p>يُقدم لك Foundation أصنافًا خاصة لتوسيط العمود في منتصف الصف، ولتوسيط العمود في الشاشات الصغيرة بإمكاننا استخدام الصنف <code>small-centered</code>، ويَشمل تأثير هذا الصنف الشاشات المتوسطة والكبيرة، ولكن بالإمكان استخدام صنف معاكس لتغيير هذا السلوك، حيث يَقومُ الصنف <code>large-uncentered</code> والصنف <code>medium-uncentered</code> بإلغاء تأثير الصنف <code>small-centered</code> في الشاشات الكبيرة والمتوسطة.</p>
+<p>في الصفحة الرئيسة في المتجر لدينا صفّ يحتوي على ثلاثة عناصر، في الشاشات الصغيرة نريد لهذه العناصر أن يصطف بعضها فوق بعض وكلُ عنصر يأخُذ عرضَ الصفحة بالكامل ولذلك يجب أنّ نستخدم الصنف <code>small-12</code>، أمّا في الشاشات المتوسطة والكبيرة نُريد من العناصر الثلاثة أن تُعرض بجانب بعضها البعض وبالتالي كل عنصرٍ سيكونُ له أربعة أعمدة (12/3) من أصلِ اثني عشر عمودًا لتظهر الصناديق الثلاثة على مُستوى واحد وعلى عرض الصفحة بالكامل ولذلك سوف نستخدم الصنف <code>medium-4</code> الذي يقوم بترتيب العناصر على مستوى الشاشات المُتوسطة والكبيرة.</p>
+<pre><code class="lang-html">    &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;small-12 medium-4 columns&quot;&gt;
+        &lt;div class=&quot;panel&quot;&gt;
+          &lt;h3&gt;Shoot&lt;/h3&gt;
+          &lt;p&gt;...&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;small-12 medium-4 columns&quot;&gt;
+        &lt;div class=&quot;panel&quot;&gt;
+          &lt;h3&gt;Upload&lt;/h3&gt;
+          &lt;p&gt;...&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;small-12 medium-4 columns&quot;&gt;
+        &lt;div class=&quot;panel&quot;&gt;
+          &lt;h3&gt;Sell&lt;/h3&gt;
+          &lt;p&gt;...&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/grid.png" alt=""></p>
+<p>لاحظ أنّ الصناديق ليست على سويّةٍ واحدة ويعود ذلك إلى المُحتوى الخاص بها. يُقدم Foundation مفهوم المُسوّي لحل هذه المُشكلة والذي سيجعل من هذه الصناديق على سويّة واحدة مهما اختلف المُحتوى بينها، والذي سوف نتحدث عنه بمزيد من التفصيل في الجزء الأخير من السلسلة.</p>
+<p>@TODO: embed this
+<a href="http://codepen.io/anon/pen/ogBQao">http://codepen.io/anon/pen/ogBQao</a></p>
+<p>أيضًا في الصفحةِ الرئيسة لدينا صفّ يَعرض الصور الأكثر مبيعًا في المتجر، نُريد عرض ثلاثة صورٍ في الصف الواحد في الشاشات الكبيرة ولذلك سوف نستخدم الصنف <code>large-4</code> وفي الشاشات الصغيرة والمتوسطة نريد عرض صورتين فقط في الصفّ الواحد ولذلك سوف نستخدم الصنف <code>small-6</code>.</p>
+<pre><code class="lang-html">    &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;small-6 large-4 columns&quot;&gt;
+        ...
+      &lt;/div&gt;
+      &lt;div class=&quot;small-6 large-4 columns&quot;&gt;
+        ...
+      &lt;/div&gt;
+      &lt;div class=&quot;small-6 large-4 columns&quot;&gt;
+        ...
+      &lt;/div&gt;
+    &lt;/div&gt;
+</code></pre>
+<p>الصورة التالية لتوزع الأعمدة في الشاشات الكبيرة:</p>
+<p><img src="imgs/best-sellers.png" alt=""></p>
+<p>أمّا في الشاشات المُتوسطة والصغيرة سوف تتوزع الصور كما في الصورة التالية مع ملاحظة طوفان الصورة الأخيرة إلى جهة اليمين، ويُمكنك استخدام الصنف <code>end</code> لجعل الصورة تطوف إلى جهة اليسار.</p>
+<p><img src="imgs/best-sellers-small.png" alt=""></p>
+<p>ويستخدم Foundation في ذلك الطوفان &quot;الصّنف الزّائف&quot; (pseudo-class) المُسمى &quot;العنصر الأخير&quot; <code>last-child</code>.</p>
+<p><img src="imgs/last-child.png" alt=""></p>
+<p>أيضًا في الصفحة الرئيسة لدينا الشيفرة التالية والتي تتضمّن صفّين: الأول يحتوي على اقتباسين (blockquote) كل منهما ستة أعمدة، أمّا في الصف الثاني لدينا اقتباس وحيد سنجعله يتوسط الصفّ الذي ينتمي إليه في الشاشات الكبيرة والمتوسطة دون الشاشات الصغيرة باستخدام أصناف الإزاحة <code>medium-offset-3</code> و الصنف <code>large-offset-3</code>.</p>
+<pre><code class="lang-html">    &lt;div class=&quot;row&quot;&gt;
+      &lt;blockquote class=&quot;small-6 columns text-center&quot;&gt;...&lt;cite&gt;..&lt;/cite&gt;&lt;/blockquote&gt;
+      &lt;blockquote class=&quot;small-6 columns text-center&quot;&gt;...&lt;cite&gt;..&lt;/cite&gt;&lt;/blockquote&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;row&quot;&gt;
+      &lt;blockquote class=&quot;large-6 medium-6 medium-offset-3 large-offset-3 columns&quot;&gt;...&lt;cite&gt;..&lt;/cite&gt;&lt;/blockquote&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/quote-grid.png" alt=""></p>
+<p>@TODO: embed this
+<a href="http://codepen.io/anon/pen/rayBgg">http://codepen.io/anon/pen/rayBgg</a></p>
+<h3 id="-source-ordering-">ترتيب المصدر (Source Ordering)</h3>
+<p>من خلالِ تعامُلك مع النظام الشبكي لا بدَّ أن المشكلة التالية واجهتك: تُريد ظُهور المُحتوى على المُتصفح بترتيب معين عند عرضه، وبترتيب آخر مُختلفٍ في نصّ مُستند HTML، رُبما لأسبابٍ تتعلقُ بالتحسينِ لمُحركات البحث (SEO)، أو أنّك تُريد عرضَ المُحتوى بترتيبٍ مُعين في شاشات سطح المكتب وبترتيبٍ مُغاير في الأجهزة المحمولة، ولهذا يُقدم Foundation حلًا لتلك المشكلة وذلك باستخدام أصناف الدفع والسحب (push and pull)، حيثُ يقوم الصنف <code>large-push-4</code> بدفع العنصر أربعة أعمدةٍ باتجاه اليمين، ويَسحب الصنف <code>large-pull-8</code> العُنصر ثمانية أعمدةٍ إلى اليسار.</p>
+<p>في صفحةِ التسجيل الخاصة بالمتجر عمودان رئيسيان في الصفحة، فيهما ثمانية أعمدة للنماذج وأربعة أعمدة خاصة بعرض مزايا التسجيل في الموقع، التصميم يبدو مقبولًا على الشاشات المتوسطة والكبيرة ولكن عندَ عرض الصفحة على أجهزة الشاشات الصغيرة ستُعرض النماذج قبل العمود الخاص بالمزايا (features)، وهذا ما لا نُريده.</p>
+<pre><code class="lang-html">    &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;medium-8 columns&quot;&gt; &lt;!--عمود النماذج يُعرض أولًا في الشاشات الصغيرة وعلى يسار الصفحة في الشاشات المُتوسطة والكبيرة--&gt;
+        &lt;form&gt;
+          &lt;div class=&quot;row&quot;&gt;
+            &lt;div class=&quot;large-6 columns&quot;&gt;
+              &lt;input type=&quot;text&quot; placeholder=&quot;First name&quot; /&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;large-6 columns&quot;&gt;
+              &lt;input type=&quot;text&quot; placeholder=&quot;last name&quot; /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;!-- بقية النماذج --&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;medium-4 columns&quot;&gt; &lt;!--عمود المزايا يُعرض بعد النماذج في الشاشات الصغيرة وعلى يمين الصفحة في الشاشات المُتوسطة والكبيرة--&gt;
+        &lt;aside&gt;
+          &lt;div class=&quot;panel&quot;&gt;
+            &lt;h5&gt;Features&lt;/h5&gt;
+            &lt;a href=&quot;#&quot;&gt;Read More →&lt;/a&gt;
+          &lt;/div&gt;
+        &lt;/aside&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/src-order-before.png" alt=""></p>
+<p><img src="imgs/src-order-before-small.png" alt=""></p>
+<p>سنُعيدُ تصميم الصفحة لتكونَ مُتوافقة مع الهاتف المحمول أولًا، حيثُ يتمُ عرضُ المحتوى الخاص بالمزايا ثم النماذج لاستكمالِ التسجيل.</p>
+<pre><code class="lang-html">    &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;medium-4 columns&quot;&gt; &lt;!--عمود المزايا يُعرض أولًا وعلى يسار الصفحة--&gt;
+        &lt;aside&gt;
+          &lt;div class=&quot;panel&quot;&gt;
+            &lt;h5&gt;Features&lt;/h5&gt;
+            &lt;a href=&quot;#&quot;&gt;Read More →&lt;/a&gt;
+          &lt;/div&gt;
+        &lt;/aside&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;medium-8 columns&quot;&gt; &lt;!-- عمود النماذج يُعرض بعد عمود المزايا وعلى يمين الصفحة--&gt;
+        &lt;form&gt;
+          &lt;div class=&quot;row&quot;&gt;
+            &lt;div class=&quot;large-6 columns&quot;&gt;
+              &lt;input type=&quot;text&quot; placeholder=&quot;First name&quot; /&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;large-6 columns&quot;&gt;
+              &lt;input type=&quot;text&quot; placeholder=&quot;last name&quot; /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;!-- بقية النماذج --&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/src-order-after-small.png" alt=""></p>
+<p>والآن بعد أن تمّ تعديل التصميم ليكون مُناسبًا لأجهزة الشاشات الصغيرة، أصبح التصميم على الشاشات الكبيرة والمتوسطة مُغايرًا تمامًا لما نُريده، حيثُ النماذج إلى جِهة اليمين والعمود الجانبي إلى اليسار.</p>
+<p><img src="imgs/src-order-after-large.png" alt=""></p>
+<p>لتصحيحِ العرض على الشاشات الكبيرة والمُوسطة سوف نستخدام أصناف السحب والدفع، سنقوم بدفع عمود المزايا ثمانية أعمدة إلى اليمين باستخدام الصنف <code>medium-push-8</code>، وسحب عمود النماذج أربعة أعمدة إلى اليسار باستخدام الصنف <code>medium-pull-4</code>، وذلك يجعلُ من التصميم كما كان سابقًا على الشاشات الكبيرة والمتوسطة.</p>
+<pre><code class="lang-html">    &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;medium-4 columns medium-push-8&quot;&gt; &lt;!-- أيها الشريط الجانبي الرجاء التكرّم بالانتقال ثمانية أعمدة إلى اليمين في الشاشات المتوسطة والكبيرة --&gt;
+        &lt;aside&gt;
+          &lt;div class=&quot;panel&quot;&gt;
+            &lt;h5&gt;Features&lt;/h5&gt;
+            &lt;p&gt;Registration is free&lt;/p&gt;
+            &lt;p&gt;&lt;span data-tooltip class=&quot;has-tip&quot; title=&quot;Just important notifications&quot;&gt;No spam&lt;/span&gt;&lt;/p&gt;
+            &lt;a href=&quot;#&quot;&gt;Read More →&lt;/a&gt;
+          &lt;/div&gt;
+        &lt;/aside&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;medium-8 columns medium-pull-4&quot;&gt; &lt;!-- أيتها النماذج الرجاء التكرّم بالانتقال أربعة أعمدة إلى اليسار في الشاشات المتوسطة والكبيرة--&gt;
+        &lt;form&gt;
+          ...
+        &lt;/form&gt;
+      &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/src-order-after.png" alt=""></p>
+<p>لم نستطع استخدام أصناف السحب والدفع من البداية، بل كان علينا ترتيب المُحتوى كما نريده على أجهزة الشاشات الصغيرة أولًا (تذكّر أنّ Foundation يستهدف أجهزة الهاتف المحمول أولًا (mobile-first)) ثم استخدام أصناف السحب والدفع ثانيًا.</p>
+<h3 id="-block-grid-">النظام الشبكي باستخدام القِطَع Block Grid:</h3>
+<p>وهو نظامٌ شبكيٌ آخر يُقدمه Foundation للتعامل مع توزع الأعمدة بأقلِ قدر مُمكن من الكتابة، وهو شائع الاستخدام مع الصّور المُصغّرة (thumbnails)، ويقوم هذا النظام الشبكي بتوزيع عناصر القوائم (<code>&lt;li&gt;</code>) بشكل مُتساوي على عرض الصفحة مهما كان حجم الشاشة، على عكسِ ما يفعل النظام الافتراضي باستخدام <code>max-width</code> لكل صفّ، حيث يُوزع الصنف <code>large-block-grid-3</code> ثلاثة عناصر على عرض الصفحة في الشاشات الكبيرة، ويُمَكنك هذا النظام من تحديد عدد العناصر كيفما تشاء في الصفّ الواحد والجمع بين الأصناف الثلاثة <code>small</code> و<code>medium</code> و<code>large</code>، والأصناف تُطبق على قائمة غير مرتبة <code>&lt;ul&gt;</code>.</p>
+<p>المثالُ التالي يُوضح استخدام نظام Block Grid في صفحة المعرض الخاصة بالمتجر، لاحظ أنه ما زال علينا استخدام نظام الأعمدة وذلك فقط لكي لا يأخذ النظام عرض الصفحة وليكون التنسيق مُتجانسًا مع بقيّة عناصر الصفحة.</p>
+<p>عرض الصور في الشاشات الكبيرة والمتوسطة والصغيرة سوف يظهر كما في الصور اللاحقة وهي على الترتيب، أما بالنسبة للشيفرة فسوف نستخدم ثلاثة أصناف هي كالتالي:</p>
+<ul>
+<li>الصنف <code>large-block-grid-4</code> يعرض أربعة عناصر بجانب بعضها البعض في الشاشات الكبيرة.</li>
+<li>الصنف <code>medium-block-grid-3</code> يعرض ثلاثة عناصر بجانب بعضها البعض في الشاشات المتوسطة.</li>
+<li>وأخيرًا الصنف <code>small-block-grid-2</code> يعرض عنصرين فقط بجانب بعضهم البعض في الشاشات الصغيرة.</li>
+</ul>
+<p>الشيفرة بشكلها الأخير المُستخدمة في صفحة المعرض ستكون على النحو التالي:</p>
+<pre><code class="lang-html">    &lt;div class=&quot;row&quot;&gt;
+      &lt;div class=&quot;large-12 columns&quot;&gt;
+        &lt;ul class=&quot;small-block-grid-2 medium-block-grid-3 large-block-grid-4&quot;&gt;
+          &lt;li&gt;&lt;a href=&quot;img/th1.jpg&quot; class=&quot;th&quot;&gt;&lt;img src=&quot;img/th1.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;img/th2.jpg&quot; class=&quot;th&quot;&gt;&lt;img src=&quot;img/th2.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;img/th3.jpg&quot; class=&quot;th&quot;&gt;&lt;img src=&quot;img/th3.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;img/th4.jpg&quot; class=&quot;th&quot;&gt;&lt;img src=&quot;img/th4.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;img/th5.jpg&quot; class=&quot;th&quot;&gt;&lt;img src=&quot;img/th5.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;img/th6.jpg&quot; class=&quot;th&quot;&gt;&lt;img src=&quot;img/th6.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;img/th7.jpg&quot; class=&quot;th&quot;&gt;&lt;img src=&quot;img/th7.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;img/th8.jpg&quot; class=&quot;th&quot;&gt;&lt;img src=&quot;img/th8.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+</code></pre>
+<p><img src="imgs/block-grid.png" alt=""></p>
+<p><img src="imgs/block-grid-medium.png" alt=""></p>
+<p><img src="imgs/block-grid-small.png" alt=""></p>
+<h3 id="-visibility-classes">أصناف الظهور Visibility Classes</h3>
+<p>تُقدم أصناف الظهور إمكانية إظهار أو إخفاء مُحتوى مُعين بناءً على معايير عدّة مثل حجم الشاشة واتجاه الجهاز هل هو في الوضع العموديّ (portrait) أم الأفقيّ (landscape) وهل تعمل شاشة الجهاز باللمس أم لا.</p>
+<p>الأصناف المُستخدمة في التحكم بالظهور سهلة الحفظ والاستخدام، فلإظهار المُحتوى للشاشات الصغيرة سوف نستخدم الصنف <code>show-for-small-only</code>، ولإظهار المُحتوى للشاشات المُتوسطة والأكبر سنستخدم الصنف <code>show-for-medium-up</code>، وللإخفاء استخدم الكلمة <code>show</code> بدل <code>hide</code>، حيثُ سيُخفي الصنف <code>hide-for-small-only</code> المُحتوى للشاشات الصغيرة فقط.</p>
+<p>وللتحكم بالظهور بناءً على اتجاه الشاشة نستخدم الصنفين <code>show-for-landscape</code> و<code>show-for-portrait</code>، وللشاشات اللمسية نستخدم الصنفين <code>show-for-touch</code> و<code>hide-for-touch</code>.</p>
+<p>في متجرنا وفي صفحة المُنتج بالتحديد، لدينا نُبذة عن المُصور ووسائل الاتصال الخاصة به، من بريد الكتروني ورقم هاتف. ما نريده هو عدم ظهور رقم الهاتف في الأجهزة اللوحية وأجهزة سطح المكتب، والابقاء على الرقم في أجهزة الجوّال، ولتحقيقِ ذلك سوف نستخدم الصنف <code>hide-for-medium-up</code>.</p>
+<pre><code class="lang-html">      &lt;h2&gt;About the photographer&lt;/h2&gt;
+      &lt;p&gt;Mohamad Abras is the best photographer on earth.&lt;/p&gt;
+      &lt;p&gt;&lt;a href=&quot;mailto:mohamad.abras@sawrha.com&quot;&gt;Email me&lt;/a&gt;&lt;/p&gt;
+      &lt;p class=&quot;hide-for-medium-up&quot;&gt;&lt;a href=&quot;tel:+33333333&quot;&gt;Call me&lt;/a&gt;&lt;/p&gt;
+</code></pre>
+<p>النّبذة على الأجهزة اللوحية وأجهزة سطح المكتب كما في الصورة التالية:</p>
+<p><img src="imgs/vc-email.png" alt=""></p>
+<p>النّبذة على أجهزة الهاتف ستكون كما في الصورة التالية:</p>
+<p><img src="imgs/vc-call.png" alt=""></p>
+<p>@TODO: embed this
+<a href="http://codepen.io/anon/pen/PwWXZv">http://codepen.io/anon/pen/PwWXZv</a></p>
+<p>أصناف الظهور ملائمة جدًا للتحكم بالمُحتوى الكتابي، ولكنها ليست مناسبة للتحكم بالصور، فعلى الرّغم من أنّك تستطيع استخدام الصنف <code>hide-for-small-only</code> مع صورة ما، فإنّ هذه الصورة سوف تُنزّل في الخلفيّة وستُحسب تكلفة حجمها المستخدم رغم عدم ظهورها على المتصفح، قد يُغريك سهولة التعامل مع هذه الأصناف ولكن المُطوّر المُحترف سوف يتعاملُ مع هذه المُشكلة باستخدام مفهوم &quot;التبادل&quot; (Interchange) والذي قدّمه Foundation في الإصدار الخامس والذي سوف نتحدث عنه في الجزء الأخير من السلسلة.</p>
+<p>مُلاحظة بإمكانك اختبار اتجاه الجهاز وشاشة اللمس باستخدام محاكي أدوات المُطوّرين الخاص بالمتصفح Chrome.</p>
+<p><img src="imgs/google-emu.png" alt=""></p>
+<p>تعرفنا من خلال الجزء الثاني من السلسلة على كل ما يتعلق بالنظام الشبكي، بعد الانتهاء من هذا الجزء وتطبيق بعض الأمثلة العملية من المُفترض أن تكون على درايةٍ كاملةٍ بالنظام الشبكي في Foundation، وفي الجزء الثالث من السلسلة سوف نتعرف على كل ما بتعلق بنظام التنقل (navigation)، بدءًا من الشريط العلوي وانتهاءً بتجزئة المحتوى على صفحات (pagination).</p>
+

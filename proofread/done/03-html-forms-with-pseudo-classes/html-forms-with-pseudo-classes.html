@@ -1,0 +1,78 @@
+<h1 id="-html5-pseudo-classes-css3">استخدام النماذج في HTML5 مع الأصناف الزّائفة (pseudo-classes) في CSS3</h1>
+<p>سنتحدّث في هذه المقالة عن جزء مهمّ في CSS3 يعمل بشكل مُنسجم مع HTML5 وبالتحديد مع النماذج (forms)، تُشترط لهذا المقال معرفة مُسبقة بلغة HTML وCSS ومبادئ JavaScript، الموضوع ليس صعبًا وسنتناوله بشكل مُبسط.</p>
+<h2 id="-">نبذة عن الأصناف الزائفة</h2>
+<p>لكي لا يلتبس عليك الأمر أودُ الإشارة إلى أنّ كلمة pseudo (التي تعني &quot;زائف&quot;) تُلفظ &quot;سودو&quot; وذلك لكي تَستطيعَ تمييزها في حال سماعك لها في شرح ما.</p>
+<p>يُشير الصّنف الزائف إلى عنصر (element) موجود في البناء الهيكلي لمُستند HTML ولكن لا يُمكن الوصول إليه مباشرةً عبر خواص (attributes) محددة سابقًا، فمثلًا: يستهدف الصنف الزائف <code>‎:first-child</code> العنصر الأول الذي يلي العنصر الأب، وقد يكون العنصر الأول <code>&lt;h1&gt;</code> أو<code>&lt;p&gt;</code>، لذلك لا تستطيع استهدافه بشكل مباشر ولكن المتصفّح يَعرف طريقه إليه.</p>
+<p>قدّم الإصدار 2.1 من CSS عددًا قليلًا من الأصناف الزّائفة، من بينها أوضاع الوصلات (link states)، وأيضًا تلك التي تُعبر عن أفعال المستخدم مثل <code>‎:active</code> و<code>‎:hover</code>؛ أمّا في الإصدار الثالث فقد ازداد عددها، وتوفّر منها ما هو مُرتبط بهيكل مُستند HTML مثل <code>‎:nth-of-type</code> و<code>‎:nth-child</code> ، وكذلك ما هو مرتبط مع الواجهة المرئيّة مثل <code>‎:checked</code> و<code>‎:enabled</code>، ومنها أيضًا ما يتعلّق بتدقيق النّماذج (form validation)، وهي موضوع مقالنا هذا.</p>
+<h2 id="-javascript">تدقيق صلاحية النموذج بدون استخدام JavaScript</h2>
+<p>قدمت لنا HTML5 إمكانيّة تدقيق النّماذج ضمن المتصفّح (خلافًا للتّدقيق على الخادوم) بدون الاستعانة بلغة JavaScript، عندما تُحاول إرسال النموذج، سيُدقّق المتصفح كافة الحقول ويُظهر رسالة خطأ عند تعبئتها بشكل غير صحيح، هذا التصرّف تلقائيّ من المتصفّح إذا كان يدعم ذلك، وقد تختلف رسائل الخطأ هذه من متصفح إلى آخر ومن نظام تشغيل إلى آخر، وتعديلها ليس سهلًا نسبيًا، ولكن بإمكانك تغيير طريقة ظهور رسائل الخطأ على العناصر نفسها باستخدام الأصناف الزّائفة والتي تُصنّف ضمن <a href="http://www.w3.org/TR/css3-ui/">وحدة واجهة المستخدم الأساسية في CSS3‏</a> (‏CSS Basic User Interface Module) وفق مواصفات W3C، تجد في الصور التالية كيف يعرض كل متصفح تنسيقًا مُختلفًا عن الآخر.</p>
+<p><img src="chrome.jpg" alt="عرض رسالة الخطأ في Chrome‏"></p>
+<p><img src="firefox.jpg" alt="عرض رسالة الخطأ في فيرفُكس"></p>
+<p><img src="opera.jpg" alt="عرض رسالة الخطأ في Opera‏"></p>
+<p>سأركز على دعم المتصفحات في القسم الأخير من المقالة ولكن باختصار أغلب المتصفحات تدعم تدقيق النماذج، والأمثلة في الصور التوضيحية التالية مأخوذة من متصفح Chrome، ويُفضل دائمًا متابعة التحديثات التي تطرأ على دعم المتصفحات بالاطلاع على على الموقع هنا، لنُباشر بالأمثلة العملية.</p>
+<h2 id="-">العناصر المطلوبة والاختيارية</h2>
+<p>إن القيم المطلوبة (الإلزاميّة) واحدة من أشكال التدقيق الأكثر شيوعًا، وتُستخدم لتمييز الحقول التي يتحتّم على المستخدم تعبئتها لكي يتسنى له المتابعة، لجعل عنصر في نموذج مطلوبًا، أضف الخاصّة <code>required</code> إليه:</p>
+<pre><code class="lang-html">&lt;input type=&quot;text&quot; required&gt;
+</code></pre>
+<p>من ناحية المظهر، استخدم الصّنف الزائف <code>‎:required</code> الذي يستهدف العنصر الذي يملك الخاصة <code>required</code>، على سبيل المثال لِوضع علامة النجمة (*) بجانب عنوان الحقل، والتي عادةً ما تستخدم لتُشير إلى أن هذا الجزء من النموذج مطلوب وليس اختياريًّا اكتب التالي:</p>
+<pre><code class="lang-css">input:required + label::after { content: &quot;*&quot;; }
+</code></pre>
+<p>تطبيق التنسيق السابق يعتمد على كيفية بناء مستند HTML فالمثال السابق يخص التالي:</p>
+<pre><code class="lang-html">&lt;input type=&quot;text&quot; required id=&quot;foo&quot;&gt;
+&lt;label for=&quot;foo&quot;&gt;Foo&lt;/label&gt;
+</code></pre>
+<p>يُستهدف الحقل الاختياري بالصّنف الزّائف <code>‎:optional</code> وبُطبق تأثيره على على كل عنصر لا يملك الخاصة <code>required</code>، مثلًا لجعلٍ حقل اختياري ذا حدود فاتحة نُطبق التنسيق التالي:</p>
+<pre><code class="lang-css">input:optional { border-color: silver; }
+</code></pre>
+<p><img src="optional-required.jpg" alt="شكل التنسيق عند استخدام `‎:required` و`‎:optional`‏"></p>
+<h2 id="-">العناصر السليمة وغير السليمة</h2>
+<p>لتدقيق النماذج أشكال أخرى بجانب <code>required</code> و<code>optional</code> تُمكنك من استخدام مطابقة الأنماط (pattern matching)، فمثلًا لِتدقيق عنوان البريد الإلكتروني:</p>
+<pre><code class="lang-html">&lt;input type=&quot;email&quot;&gt;
+</code></pre>
+<p>عندما يقوم المُستخدم بإرسال مدخلات لا تُطابق نمطًا مُحدًدًا، يُعتبر المُدخل غير سليم، ولِتَنسيق عناصر النموذج السليمة وغير السليمة، تُستخدم الصّنفان الزائفان <code>:valid</code> و<code>:invalid</code> بالتّرتيب، وتُرسم إشارة تبعًا لسلامة المُدخل كما يلي:</p>
+<pre><code class="lang-css">input:invalid + label::after { content: &#39; ⨉&#39;; }
+input:valid + label::after { content: &#39; ✓&#39;; }
+</code></pre>
+<p>لاحظ أن هذا التنسيق يُطبقُ عند تحميل الصفحة لذلك يجب استخدام JavaScript لتطبيق التأثيرات عند إرسال النموذج، وذلك بإضافة صنف (class) إليه، في مثالنا سوف نضيف الصنف <code>submitted</code>:</p>
+<pre><code class="lang-javascript">document.forms[0].addEventListener(&#39;submit&#39;, function(e) {
+  e.currentTarget.classList.add(&#39;submitted&#39;);
+});
+</code></pre>
+<p>قد يختلف النّص البرمجيّ الذي ستكتبه، ولكن كلّ ما عليك فعله هو تنسيق الصنف كما في التالي:</p>
+<pre><code class="lang-css">.submitted input:invalid + label::after { content: &#39; ⨉&#39;; }
+</code></pre>
+<p><img src="valid-invalid.jpg" alt="شكل التنسيق عند استخدام أشباه الأصناف `‎:valid` و`‎:invalid`‏"></p>
+<h2 id="-">مجالات الأرقام</h2>
+<p>تسمح بعض أنواع الحقول مثل <code>number</code> بتحديد مجال من القيم باستخدام الخاصيات <code>min</code> و<code>max</code> كما في التالي:</p>
+<pre><code class="lang-html">&lt;input type=&quot;number&quot; max=&quot;10&quot; min=&quot;1&quot;&gt;
+</code></pre>
+<p>في الحالة الطبيعية سيحدّ المتصفح مجال الأرقام تلقائيًّا بحيث لا يسمح للمستخدم بتجاوزه، ولكن إن أمكن تعديل هذه القيمة (باستعمال JavaScript مثلًا) لتتجاوز هذا المجال، فيمكن أن يُستخدم تنسيق خاص لإظهار الخطأ:</p>
+<pre><code class="lang-html">&lt;input type=&quot;number&quot; max=&quot;10&quot; min=&quot;1&quot; value=&quot;11&quot;&gt;
+</code></pre>
+<p>يُستخدم عندها الصنف الزائف <code>‎:out-of-range</code> وتنسيقه:</p>
+<pre><code class="lang-css">input[type=&#39;number&#39;]:out-of-range { border-color: red; }
+</code></pre>
+<p>بعكس<code>‎:out-of-range</code> لدينا <code>‎:in-range</code> وتنسيقه:</p>
+<pre><code class="lang-css">input[type=&#39;number&#39;]:in-range { border-color: green; }
+</code></pre>
+<p><img src="number-ranges.jpg" alt="شكل التنسيق للصنفين الزائفين`‎:out-of-range` و`‎:in-range`‏"></p>
+<h2 id="-">القراءة والكتابة</h2>
+<p>يكون لديك في بعض الأحيان حقل نموذج مُدخل مسبقًا بقيمة لاتريد من المستخدم التعديل عليها كما في حقل <code>textarea</code> في اتفاقية الاستخدام مثلاً، يمكنك عندها إضافة الخاصة للقراءة فقط <code>readonly</code>.</p>
+<pre><code class="lang-html">&lt;textarea readonly&gt;Lorem ipsum&lt;/textarea&gt;
+</code></pre>
+<p>لتنسيق العناصر التي تحمل الخاصة <code>readonly</code> يُستخدم الصّنف الزّائف <code>‎:read-only</code> وبإمكانك أيضًا إضافة الخاصة <code>user-select</code> لِتمنع المستخدم من تحديد النص.</p>
+<pre><code class="lang-css">textarea:read-only { user-select: none; }
+</code></pre>
+<p>ويُستخدم الصّنف الزّائف <code>‎:read-write</code> للعناصر الأخرى المسموح بتعديلها ويُنسق بالشكل التالي:</p>
+<pre><code class="lang-css">textarea:read-write { user-select: text; }
+</code></pre>
+<p>لاحظ أنه قد تم تنسيق الحواف للتمييز، حيث بشكل افتراضي لا يوجد فرق في التنسيق بين الصّنفين الزّائفين <code>‎:read-only</code> و<code>‎:read-write</code></p>
+<p><img src="readonly.jpg" alt="الصندوق الأيمن مُنسق باستخدام `‎:read-only` والأيسر مُنسق باستخدام `‎:read-write`‏"></p>
+<h2 id="-">دعمُ المتصفحات</h2>
+<p>يُوضح الجدول التالي دعم المتصفحات لِتدقيق الموذج، تجد آخر تحديث للجدول <a href="http://caniuse.com/#search=form-validation">هنا</a>، حيث يُلاحظ أن أغلب المتصفحات في آخر إصداراتها تدعم هذه الخاصة.</p>
+<p><img src="form-validation-table.jpg" alt="توافقية المتصفحات مع إمكانيّة تدقيق النّماذج"></p>
+<p>أما الجدول التالي فيُوضح دعم المتصفحات للأصناف الزّائفة، بالنسبة للدّعم الجزئي (partial support) لأشباه الأصناف، فيعني أنه عند استخدامها يجب إضافة البادئة <code>moz</code> لفيرفُكس و<code>ms</code> لـِIE و<code>webkit</code> لباقي المتصفحات، تجد آخر تحديث للجدول <a href="http://caniuse.com/#search=pseudo-class">هنا</a></p>
+<p><img src="pseudo-class-table.jpg" alt="توافقية المتصفحات مع الأصناف الزّائفة تُشير إلى توافقية جزئية مع المتصفحات"></p>
+<p>‏HTML وCSS لغتان في تطوّر مُستمر وذلك من شأنه أن يُقلل من اعتمادنا على JavaScript، مما يُقلل حجم ملف <code>.js</code> (على حِساب ملف <code>.css</code>) المُرسل للمستخدم ومنه إلى سرعة نسبية في التصفح وتجربة استخدام أفضل، أرجو أنّ أكون قد وفقت في الشرح وقدّمت الفائدة المرجوّة من هذه المقالة، أنصحكَ بالتطبيق العملي لتركيز المعلومة، ولا تنسَ مشاركة المقالة.</p>
+<p><em>ترجمة -وبتصرف- للمقال: <a href="http://html5doctor.com/css3-pseudo-classes-and-html5-forms">CSS3 Pseudo-Classes and HTML5 Forms‏</a> لصاحبه <a href="http://twitter.com/stopsatgreen">Peter Gasston‏</a>.</em></p>
+

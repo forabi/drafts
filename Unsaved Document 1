@@ -1,0 +1,17 @@
+Arch Installation:
+* Get ISO
+* Burn ISO
+* Boot
+* Paritioning
+    * UEFI + GPT
+    * BIOS + MBR
+    * Swap
+* Mounting paritions
+* Pacstrap
+* xorg-xinit and ~/.xinitrc
+* Creating users
+* Installing apps
+* Performance
+    * Swappiness
+    * NVIDIA Optimus/Bubmlebee
+* Tips

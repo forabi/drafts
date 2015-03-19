@@ -1,0 +1,412 @@
+<h1 id="-javascript-">كتابة JavaScript يسهل اختبارها</h1>
+<p>مررنا جميعًا بموقف كهذا: بضع سطور JavaScript كُتبت لتؤدّي وظيفة صغيرة ثمّ تضخمت مع الوقت لتبلغ بضع عشرات من السطور، ثم مئات السطور... أصبحت تقبل معاملات أكثر، وتختبر شروطًا أكثر، ثم أتى ذلك اليوم: تقرير بعلّة، التطبيق لا يعمل كما ينبغي! وحينئذ يكون فكّ غموض هذه السطور المتشابكة مسؤوليّتنا.</p>
+<p>مع تزايد الأعباء الّتي نُلقيها على مشروعنا من جهة المتصفّح، يتّضح أمامنا أمران: أوّلهما: تجربة التطبيق بالنقر على الأزرار والروابط سريعًا ليس حلًّا عمليًّا، بل لا بدّ من الاختبارات المُؤتمتة حتّى نثق باستقرار مشروعنا؛ وثانيهما: علينا (غالبًا) أن نُغيّر كيفيّة كتابة برامجنا بما يُتيح لنا كتابة الاختبارات.</p>
+<p>هل أنا جادّة؟ نعم! لأنّنا وإن علمنا فائدة الاختبارات المؤتمتة، فإنّ أكثرنا اليوم لا يكتبون سوى اختبارات التكامل (integration tests). لا يُقلّل هذا من أهمّيّة اختبارات التكامل، فهي تُركّز على كيفيّة عمل أجزاء التّطبيق سويّةً، إلّا أنّها لا تستطيع إخبارنا إن كانت <em>الوحدات</em> المنفصلة لتطبيقنا تعمل كما ينبغي لها.</p>
+<p>هنا تبرز ضرورة اختبارات الوحدات (unit tests)، وستكون <em>كتابة اختبارات الوحدات</em> صعبة جدًّا إن لم يكن <em>نصّ JavaScript الّذي كتبناه ملائمًا للاختبار</em>.</p>
+<h2 id="-">ما الفرق بين اختبارات الوحدات واختبارات التكامل؟</h2>
+<p>كتابة اختبارات التكامل أمر بسيط عادةً: كل ما نفعله كتابة برنامج بسيط يصف كيف يتفاعل المُستخدم مع تطبيقنا، وما يجب أن يتوقّعه المستخدم عندئذٍ. إحدى برامج أتمتة المُتصفّحات الشّهيرة <a href="http://docs.seleniumhq.org">Selenium‏</a>. وفي Ruby يُسهل <a href="https://github.com/jnicklas/capybara">Capybara‏</a> التّعامل مع Selenium، وتتوفّر أدوات مشابهة كثيرة للغات الأخرى.</p>
+<p>فيما يلي اختبار تكامل لجزء من تطبيق بحث:</p>
+<pre><code class="lang-ruby">def test_search
+  fill_in(&#39;q&#39;, :with =&gt; &#39;cat&#39;)
+  find(&#39;.btn&#39;).click
+  assert( find(&#39;#results li&#39;).has_content?(&#39;cat&#39;), &#39;Search results are shown&#39; )
+  assert( page.has_no_selector?(&#39;#results li.no-results&#39;), &#39;No results is not shown&#39; )
+end
+</code></pre>
+<p>إذن فاختبار التكامل يهتمّ بتفاعل المستخدم مع التّطبيق، أمّا اختبار الوحدات فتركيزه ضيّق ويقتصر على جزء صغير من البرنامج:</p>
+<blockquote>
+<p>عندما أستدعي دالّةً (function) بمُدخلات معيّنة، فما المُخرجات المُتوقّعة؟</p>
+</blockquote>
+<p>يصبح إخضاع التّطبيقات المكتوبة بأسلوب إجرائي (procedural) تقليديّ لاختبار الوحدات أمرًا شديد الصعوبة، وكذلك صيانتها وتنقيحها والبناء عليها. ولكن عندما نكتب نصوص برامجنا وفي ذهننا الحاجة لإجراء اختبارات الوحدات في المستقبل، فسنجد أنّ كتابة هذه الاختبارات أمر يسير، وسينعكس ذلك بالإيجاب على نصوصنا البرمجية كذلك.</p>
+<p>لنفهم ما أتحدّث عنه، دعنا نُلقِ نظرةً على تطبيق بحث بسيط:</p>
+<p><img src="app.png" alt="تطبيق Srchr‏"></p>
+<p>عندما يكتب المستخدم عبارة للبحث عنها، يُرسل التّطبيق طلب <code>XMLHttpRequest</code> للخادوم يطلب منه البيانات المُوافقة. يُجيبه الخادوم بالبيانات، مُصاغاة بـJSON، ليتلقّاها التطبيق ويعرضها في الصّفحة مُستخدمًا أدوات القولبة المُتوفّرة للمتصفّحات. يستطيع المستخدم أن ينقر على إحدى نتائج البحث ليُشير &quot;بإعجابه&quot; بها؛ وعندما يفعل ذلك، يُضاف اسم الشّخص الّذي أعجبه إلى قائمة &quot;الإعجابات&quot; على يمين الصّفحة.</p>
+<p>يمكن كتابة هذا البرنامج بأسلوب تقليدي كما يلي:</p>
+<pre><code class="lang-javascript">var tmplCache = {};
+
+function loadTemplate (name) {
+  if (!tmplCache[name]) {
+    tmplCache[name] = $.get(&#39;/templates/&#39; + name);
+  }
+  return tmplCache[name];
+}
+
+$(function () {
+
+  var resultsList = $(&#39;#results&#39;);
+  var liked = $(&#39;#liked&#39;);
+  var pending = false;
+
+  $(&#39;#searchForm&#39;).on(&#39;submit&#39;, function (e) {
+    e.preventDefault();
+
+    if (pending) { return; }
+
+    var form = $(this);
+    var query = $.trim( form.find(&#39;input[name=&quot;q&quot;]&#39;).val() );
+
+    if (!query) { return; }
+
+    pending = true;
+
+    $.ajax(&#39;/data/search.json&#39;, {
+      data : { q: query },
+      dataType : &#39;json&#39;,
+      success : function (data) {
+        loadTemplate(&#39;people-detailed.tmpl&#39;).then(function (t) {
+          var tmpl = _.template(t);
+          resultsList.html( tmpl({ people : data.results }) );
+          pending = false;
+        });
+      }
+    });
+
+    $(&#39;&lt;li&gt;&#39;, {
+      &#39;class&#39; : &#39;pending&#39;,
+      html : &#39;Searching &amp;hellip;&#39;
+    }).appendTo( resultsList.empty() );
+  });
+
+  resultsList.on(&#39;click&#39;, &#39;.like&#39;, function (e) {
+    e.preventDefault();
+    var name = $(this).closest(&#39;li&#39;).find(&#39;h2&#39;).text();
+    liked.find(&#39;.no-results&#39;).remove();
+    $(&#39;&lt;li&gt;&#39;, { text: name }).appendTo(liked);
+  });
+
+});
+</code></pre>
+<p>يحلو لصديقنا <a href="https://twitter.com/ajpiano">Adam Sontag‏</a> أن يُسمّي هذا الأسلوب <em>&quot;اختر مغامرتك الخاصّة&quot;</em>، ويحقّ له ذلك! ففي أيّ سطر ممّا سبق، قد نتعامل مع كيفيّة عرض البيانات، أو مع البيانات ذاتها، أو مع تفاعل المستخدم مع الصّفحة، أو مع حالة التّطبيق في لحظة معيّنة! من يدري!؟ هذا الأسلوب لا يجعل كتابة اختبارات التكامل صعبًا، ولكنّ اختبار المهامّ المختلفة للبرنامج تصبح معه غايةً في التعقيد.</p>
+<p>كيف ذلك؟ لنرَ:</p>
+<ul>
+<li>غياب كامل لبنية واضحة؛ فكلّ شيء يحدث ضمن <code>‎$(document).ready()‎</code> ثمّ في دوالّ مجهولة لا يمكن اختبارها لأنّها مُغلّفة ضمن الدّالة السّابقة ولا يمكن الوصول إليها.</li>
+<li>دوالّ معقدة؛ فعندما تتجاوز دالّة مُفردة 10 سطور، كما في دالّة إرسال النّموذج، فهذا يعني غالبًا أنّها تفعل أشياء أكثر مما ينبغي لها أن تفعل!</li>
+<li>حالة (state) مخفيّة أو مُشتركة؛ كالمتغيّر <code>pending</code> المُعرّف ضمن دالّة مُغلقة (closure)، لا سبيل لاختبار قيمته والتأكّد من كونها عُينت إلى قيمة صحيحة في لحظة ما.</li>
+<li>اعتماد شديد للأجزاء بعضها على بعض؛ فمثلاً: لا تحتاج دالّة نجاح طلب <code>‎$.ajax</code> وصولًا مباشرًا إلى عناصر الصّفحة.</li>
+</ul>
+<h2 id="-">تنظيم النّصّ البرمجيّ</h2>
+<p>الخطوة الأولى لحلّ المشكلة السابقة هي إزالة هذا التّشابك، وفصل المهامّ السابقة إلى عدّة أجزاء:</p>
+<ul>
+<li>العرض والتفاعل</li>
+<li>إدارة البيانات وتخزينها</li>
+<li>حالة التطبيق العامّة</li>
+<li>ربط الأجزاء السّابقة مع بعضها لتعمل سويّةً!</li>
+</ul>
+<p>في الأسلوب التّقليديّ الّذي بيّناه سابقًا، تتشابك هذه المهمّات الأربع، ففي سطرٍ نتعامل مع العرض، وبعده ببضع سطور نتواصل مع الخادوم.</p>
+<p><img src="code-lines.png" alt="سطور البرنامج المكتوب بالأسلوب التّقليديّ"></p>
+<p>يمكننا كتابة اختبار تكامل للبرنامج السابق بلا شكّ (بل ينبغي أن نفعل!)، ولكن كتابة اختبارات الوحدات أمرٌ صعب. في اختبارات التكامل، يمكننا افتراض عبارات من نحو &quot;عندما يبحث المستخدم عن شيءٍ ما، يُتوقّع أن يرى النّتائج المُناسبة&quot;، ولكن لا يمكننا التعمّق في التّفاصيل، وإن حدثت مشكلةٌ ما، ينبغي علينا تحديد موقع المشكلة بالضّبط، ولن تساعدنا اختبارات التكامل في ذلك.</p>
+<p>ولكنْ، إن أعدنا التفكير في كيفيّة كتابة نصّ البرنامج يمكننا كتابة اختبارات للوحدات تُسهِّل لنا تحديد موقع المشكلة، وتسمح بتسهيل صيانة النّصّ النهائي للبرنامج وتحسينه واستخدامه ثانيةً.</p>
+<p>سيتَّبع برنامجنا الجديد المبادئ التّالية:</p>
+<ul>
+<li>مثّل كلّ مهمّة ضمن كائن مُنفصل يقع تنصيفه في واحدة من المناطق الأربعة الّتي سبق ذكرها، دون أن يكون هذا الكائن في حاجة لمعرفة وجود الكائنات الأخرى. هذا يُجنّنبا تشابك النّص البرمجيّ.</li>
+<li>ادعم إمكانية الضّبط، بدلًا من كتابة قيم ثابتة. هذا سيُجنّبنا الحاجة لمحاكاة كامل بيئة HTML عند إجراء الاختبارات.</li>
+<li>أبقِ وظائف الكائنات بسيطة ومُوجزة. سيؤدّي هذا إلى نصّ برمجيّ أبسط وأسهل قراءةً.</li>
+<li>استخدم دوالّ مُشيّدة (constructors) لإنشاء نسخ من الكائنات، هذا يُتيح إنشاء نُسخ &quot;نظيفة&quot; من كلّ جزء من البرنامج لغرض الاختبار.</li>
+</ul>
+<p>بدايةً، علينا أن نكتشف كيف سنفصل تطبيقنا لعدّة أجزاء. سيكون لدينا 3 أجزاء مُخصّصة للعرض والتفاعل: نموذج البحث ونتائج البحث ومساحة الإعجابات.</p>
+<p><img src="app-views.png" alt="طُرق العرض في التطبيق"></p>
+<p>سيكون لدينا أيضًا جزء مُخصّص لجلب البيانات من الخادوم، وجزء آخر يربط بين تلك الأجزاء كلها.</p>
+<p>لنبدأ بالنّظر في واحد من أبسط أجزاء التطبيق: مساحة الإعجابات. في الإصدار السّابق من برنامجنا، كان النّصّ التّالي مسؤولًا عن تحديث هذه المساحة:</p>
+<pre><code class="lang-javascript">var liked = $(&#39;#liked&#39;);
+
+var resultsList = $(&#39;#results&#39;);
+
+
+// ...
+
+
+resultsList.on(&#39;click&#39;, &#39;.like&#39;, function (e) {
+  e.preventDefault();
+
+  var name = $(this).closest(&#39;li&#39;).find(&#39;h2&#39;).text();
+
+  liked.find( &#39;.no-results&#39; ).remove();
+
+  $(&#39;&lt;li&gt;&#39;, { text: name }).appendTo(liked);
+
+});
+</code></pre>
+<p>لاحظ كيف يتداخل جزء نتائج البحث في جزء مساحة الإعجابات وكيف يحتاج أن يعلم الكثير عن عناصره في الصّفحة. إن أردنا كتابة هذا الجزء بأسلوب أسهل اختبارًا، فعلينا إنشاء كائن لمساحة الإعجابات مسؤولٍ عن تعديل عناصر الصّفحة المُتعلّقة بقائمة الإعجابات:</p>
+<pre><code class="lang-javascript">var Likes = function (el) {
+  this.el = $(el);
+  return this;
+};
+
+Likes.prototype.add = function (name) {
+  this.el.find(&#39;.no-results&#39;).remove();
+  $(&#39;&lt;li&gt;&#39;, { text: name }).appendTo(this.el);
+};
+</code></pre>
+<p>يوفّر هذا النّصّ دالّة تشييد (constructor function) تُعطي نسخة جديدة من مساحة الإعجابات. للنسخة المُنشأة وظيفة <code>.add()‎</code> يمكن استخدامها لإضافة نتائج جديدة. ولإثبات صحّة عملها، يمكننا كتابة بضعة اختبارات:</p>
+<pre><code class="lang-javascript">var ul;
+
+setup(function(){
+  ul = $(&#39;&lt;ul&gt;&lt;li class=&quot;no-results&quot;&gt;&lt;/li&gt;&lt;/ul&gt;&#39;);
+});
+
+test(&#39;constructor&#39;, function () {
+  var l = new Likes(ul);
+  assert(l);
+});
+
+test(&#39;adding a name&#39;, function () {
+  var l = new Likes(ul);
+  l.add(&#39;Brendan Eich&#39;);
+
+  assert.equal(ul.find(&#39;li&#39;).length, 1);
+  assert.equal(ul.find(&#39;li&#39;).first().html(), &#39;Brendan Eich&#39;);
+  assert.equal(ul.find(&#39;li.no-results&#39;).length, 0);
+});
+</code></pre>
+<p>ليس الأمر صعبًا كما ترى! استخدمنا <a href="http://visionmedia.github.io/mocha">Mocha‏</a> كإطار عمل للاختبار و<a href="http://chaijs.com">Chai‏</a> كمكتبة لإنشاء الافتراضات (assesrtions). ‏Mocha توفّر <code>test</code>  و<code>setup</code>، وChai توفّر <code>assert</code>. تتوفّر أطر عمل ومكتبات للافتراضات كثيرة، ولكنّ السابقتين ملائمتان تمامًا للمُبتدئين. عليك اختيار ما يناسبك ويناسب مشروعك. اطّلع على <a href="http://qunitjs.com">QUnit‎‏</a> و<a href="http://theintern.io">Intern‎‏</a> (الأخيرة تبدو واعدة).</p>
+<p>يبدأ برنامج الاختبا بإنشاء عنصر في الصّفحة سنستخدمه لاحتواء مساحة الإعجابات، ثمّ ينطلق اختباران: الأول للتأكّد من إمكانيّة إنشاء مساحة الإعجابات، والآخر للتأكد من أن وظيفة <code>.add()‎</code> تعطينا النتيجة المرغوبة. بعد إنشاء هذين الاختبارين، يمكننا إعادة صياغة النصّ البرمجي لمساحة الإعجابات، مطمئنين إلى أنّ الأخطاء الّتي نرتكبها عندئذٍ ستُكتشف فورًا في الاختبار.</p>
+<p>يبدو تطبيقنا الآن كما يلي:</p>
+<pre><code class="lang-javascript">var liked = new Likes(&#39;#liked&#39;);
+var resultsList = $(&#39;#results&#39;);
+
+
+
+// ...
+
+
+
+resultsList.on(&#39;click&#39;, &#39;.like&#39;, function (e) {
+  e.preventDefault();
+
+  var name = $(this).closest(&#39;li&#39;).find(&#39;h2&#39;).text();
+
+  liked.add(name);
+});
+</code></pre>
+<p>جزء نتائج البحث أشدّ تعقيدًا من مساحة الإعجابات، لكن لنجرّب إعادة صياغته أيضًا. نريد أن نُنشئ وظائف للتفاعل مع نتائج البحث كما أنشأنا الوظيفة <code>.add()‎</code> لمساحة الإعجابات. نريد طريقةً لإضافة نتائج جديدة، وكذلك طريقة &quot;لبثّ&quot; التّغيرات الّتي تطرأ على النّتائج لبقيّة أجزا التّطبيق (كأن يُعجب المستخدم بنتيجة مثلاً).</p>
+<pre><code class="lang-javascript">var SearchResults = function (el) {
+  this.el = $(el);
+  this.el.on( &#39;click&#39;, &#39;.btn.like&#39;, _.bind(this._handleClick, this) );
+};
+
+SearchResults.prototype.setResults = function (results) {
+  var templateRequest = $.get(&#39;people-detailed.tmpl&#39;);
+  templateRequest.then( _.bind(this._populate, this, results) );
+};
+
+SearchResults.prototype._handleClick = function (evt) {
+  var name = $(evt.target).closest(&#39;li.result&#39;).attr(&#39;data-name&#39;);
+  $(document).trigger(&#39;like&#39;, [ name ]);
+};
+
+SearchResults.prototype._populate = function (results, tmpl) {
+  var html = _.template(tmpl, { people: results });
+  this.el.html(html);
+};
+</code></pre>
+<p>الآن يمكن لنصّنا البرمجيّ القديم المسؤول عن إدارة التفاعلات بين نتائج البحث ومساحة الإعجابات أن يصبح كما يلي:</p>
+<pre><code class="lang-javascript">var liked = new Likes(&#39;#liked&#39;);
+var resultsList = new SearchResults(&#39;#results&#39;);
+
+
+// ...
+
+
+$(document).on(&#39;like&#39;, function (evt, name) {
+  liked.add(name);
+})
+</code></pre>
+<p>وهذا أبسط وأقل تشابكًا، لأنّنا نستخدم <code>document</code> كممرّ عامّ للرّسائل المُتبادلة بين الأجزاء بحيث لا يضطرّ أحدها إلى أن يعلم وجود الآخر. (ملاحظة: في تطبيق حقيقيّ، ربّما يُستخدم شيء مثل <a href="http://backbonejs.org">Backbone‏</a> أو مكتبة <a href="https://github.com/tildeio/rsvp.js">RSVP‏</a> لإدارة الأحداث، استخدمنا <code>document</code> للتبسيط.) كذلك أخفينا كل التّفاصيل المُعفّدة (كإيجاد اسم الشّخص الّذي أُعجب المستخدم به) داخل كائن نتائج البحث، بدل أن نترك هذه التّفاصيل تُلوّث نصّ تطبيقنا. أفضل ما في الأمر هو أنّ بإمكاننا الآن كتابة اختبارات للتأكّد من عمل كائن نتائج البحث كما يجب:</p>
+<pre><code class="lang-javascript">var ul;
+var data = [ /* fake data here */ ];
+
+setup(function () {
+  ul = $(&#39;&lt;ul&gt;&lt;li class=&quot;no-results&quot;&gt;&lt;/li&gt;&lt;/ul&gt;&#39;);
+});
+
+test(&#39;constructor&#39;, function () {
+  var sr = new SearchResults(ul);
+  assert(sr);
+});
+
+test(&#39;display received results&#39;, function () {
+  var sr = new SearchResults(ul);
+  sr.setResults(data);
+
+  assert.equal(ul.find(&#39;.no-results&#39;).length, 0);
+  assert.equal(ul.find(&#39;li.result&#39;).length, data.length);
+  assert.equal(
+    ul.find(&#39;li.result&#39;).first().attr(&#39;data-name&#39;),
+    data[0].name
+  );
+});
+
+test(&#39;announce likes&#39;, function() {
+  var sr = new SearchResults(ul);
+  var flag;
+  var spy = function () {
+    flag = [].slice.call(arguments);
+  };
+
+  sr.setResults(data);
+  $(document).on(&#39;like&#39;, spy);
+
+  ul.find(&#39;li&#39;).first().find(&#39;.like.btn&#39;).click();
+
+  assert(flag, &#39;event handler called&#39;);
+  assert.equal(flag[1], data[0].name, &#39;event handler receives data&#39; );
+});
+</code></pre>
+<p>التفاعل مع الخادم جزء آخر يجب إنشاؤه، وقد احتوى النّص البرمجيّ القديم على طلب <code>‎$.ajax()‎</code> فيه استدعاء راجع (callback) يتعامل مباشرةً مع عناصر الصّفحة:</p>
+<pre><code class="lang-javascript">$.ajax(&#39;/data/search.json&#39;, {
+  data : { q: query },
+  dataType : &#39;json&#39;,
+  success : function( data ) {
+    loadTemplate(&#39;people-detailed.tmpl&#39;).then(function(t) {
+      var tmpl = _.template( t );
+      resultsList.html( tmpl({ people : data.results }) );
+      pending = false;
+    });
+  }
+});
+</code></pre>
+<p>مُجدّدًا أقول: من الصعب كتابة اختبار وحدات للنّصّ السابق لأن أشياء كثيرةً تحدث في بضع سطور. يمكننا إعادة صياغة القسم المسؤول عن البيانات في صورة كائن مُنفصل:</p>
+<pre><code class="lang-javascript">var SearchData = function () { };
+
+SearchData.prototype.fetch = function (query) {
+  var dfd;
+
+  if (!query) {
+    dfd = $.Deferred();
+    dfd.resolve([]);
+    return dfd.promise();
+  }
+
+  return $.ajax( &#39;/data/search.json&#39;, {
+    data : { q: query },
+    dataType : &#39;json&#39;
+  }).pipe(function( resp ) {
+    return resp.results;
+  });
+};
+</code></pre>
+<p>وعندها يمكن تعديل النّصّ البرمجيّ لجلب النّتائج إلى الصّفحة:</p>
+<pre><code class="lang-javascript">var resultsList = new SearchResults(&#39;#results&#39;);
+
+var searchData = new SearchData();
+
+// ...
+
+searchData.fetch(query).then(resultsList.setResults);
+</code></pre>
+<p>لاحظ كم بسّطنا نصّ تطبيقنا، وكيف عزلنا التّعقيدات ضمن كائن بيانات البحث، بدلًا من تركه حُرًّا ضمن نصّ تطبيقنا العامّ. قمنا أيضًا بجعل واجهة البحث قابلةً للاختبار. ولكن هناك بضعة أمور يجب النّظر فيها عندما نختبر جزءًا من برنامج يتفاعل مع الخواديم.</p>
+<p>أوّل هذه الأمور: لا نريد أنّ نتفاعل مع الخادوم <em>حقيقةً</em>، ففعل ذلك يعني العودة إلى عالم اختبارات التّكامل، ولأنّنا مُطوّرون أكفاء، فقد انتهينا من كتابة تلك، صحيح؟ ما نريده الآن هو &quot;محاكاة&quot; التّفاعل مع الخادوم، الأمر الّذي يمكن إنجازه بمكتبة <a href="http://sinonjs.org/">Sinon‏</a>. ثانيًا: يجب أيضًا اختبار المسارات غير المُتوقّعة للتطبيق، كعبارة بحث فارغة مثلًا.</p>
+<pre><code class="lang-javascript">test(&#39;constructor&#39;, function () {
+  var sd = new SearchData();
+  assert(sd);
+});
+
+suite(&#39;fetch&#39;, function () {
+  var xhr, requests;
+
+  setup(function () {
+    requests = [];
+    xhr = sinon.useFakeXMLHttpRequest();
+    xhr.onCreate = function (req) {
+      requests.push(req);
+    };
+  });
+
+  teardown(function () {
+    xhr.restore();
+  });
+
+  test(&#39;fetches from correct URL&#39;, function () {
+    var sd = new SearchData();
+    sd.fetch(&#39;cat&#39;);
+
+    assert.equal(requests[0].url, &#39;/data/search.json?q=cat&#39;);
+  });
+
+  test(&#39;returns a promise&#39;, function () {
+    var sd = new SearchData();
+    var req = sd.fetch(&#39;cat&#39;);
+
+    assert.isFunction(req.then);
+  });
+
+  test(&#39;no request if no query&#39;, function () {
+    var sd = new SearchData();
+    var req = sd.fetch();
+    assert.equal(requests.length, 0);
+  });
+
+  test(&#39;return a promise even if no query&#39;, function () {
+    var sd = new SearchData();
+    var req = sd.fetch();
+
+    assert.isFunction( req.then );
+  });
+
+  test(&#39;no query promise resolves with empty array&#39;, function () {
+    var sd = new SearchData();
+    var req = sd.fetch();
+    var spy = sinon.spy();
+
+    req.then(spy);
+
+    assert.deepEqual(spy.args[0][0], []);
+  });
+
+  test(&#39;returns contents of results property of the response&#39;, function () {
+    var sd = new SearchData();
+    var req = sd.fetch(&#39;cat&#39;);
+    var spy = sinon.spy();
+
+    requests[0].respond(
+      200, { &#39;Content-type&#39;: &#39;text/json&#39; },
+      JSON.stringify({ results: [ 1, 2, 3 ] })
+    );
+
+    req.then(spy);
+
+    assert.deepEqual(spy.args[0][0], [ 1, 2, 3 ]);
+  });
+});
+</code></pre>
+<p>سأترك ما تبقّى من إعادة صياغة نموذج البحث لغرض الاختصار، وقد قمت بتبسيط بعض الاختبارات والنّصوص أعلاه مُجدّدًا، ويمكنك الاطّلاع على الإصدار النّهائي للتطبيق <a href="https://github.com/rmurphey/testable-javascript">هنا</a> إن كنت مُهتمًّا.</p>
+<p>عندما ننتهي من كتابة تطبيقنا بأسلوب يسمح بإجراء الاختبارات، سيكون مشروعنًا أكثر نظافةً ممّا بدأنا به:</p>
+<pre><code class="lang-javascript">$(function() {
+  var pending = false;
+
+  var searchForm = new SearchForm(&#39;#searchForm&#39;);
+  var searchResults = new SearchResults(&#39;#results&#39;);
+  var likes = new Likes(&#39;#liked&#39;);
+  var searchData = new SearchData();
+
+  $(document).on(&#39;search&#39;, function (event, query) {
+    if (pending) { return; }
+
+    pending = true;
+
+    searchData.fetch(query).then(function (results) {
+      searchResults.setResults(results);
+      pending = false;
+    });
+
+    searchResults.pending();
+  });
+
+  $(document).on(&#39;like&#39;, function (evt, name) {
+    likes.add(name);
+  });
+});
+</code></pre>
+<p>والأهمّ من ذلك أنّنا ننتهي ولدينا مشروعٌ أُخضع لاختبارات دقيقة، وهذا يعني أنّ بإمكاننا إعادة كتابة الأجزاء ونحن مطمئنون إلى أنّ ذلك لن يسيئ إلى عمل التطبيق. بإمكاننا أيضًا إضافة اختبارات جديدةً عندما نكتشف مشكلات جديدة، ثمّ كتابة النّصّ الّذي يجعل هذه الاختبار تنجح.</p>
+<h2 id="-">اختبار البرامج يُسهّل حياتك على المدى البعيد</h2>
+<p>من السهولة أن تنظر إلى ما سبق وتقول لنفسك: &quot;مهلًا! أتريدين منّي كتابة برامج أطول لأداء المهمّة ذاتها؟&quot;</p>
+<p>عندما يتعلّق الأمر ببناء المشاريع على الإنترنت، فإنّه لا مفرّ من هذه الحقيقة: لا بدّ من وقتٍ كافٍ لتصميم منهجٍ لحلّ مشكلة. لا بدّ من تجربة الحلّ، سواءٌ كانت التّجربة يدويّة تقوم بها بنفسك في المتصفّح، أو مؤتمتة، أو أن تترك مستخدميك يجرّبوا مشروعك بعد نشره (فكرة مرعبة!). ستُغيّر نصوصك البرمجيّة، ثمّ سيستخدمها آخرون، وفي النّهاية ستبقى العلل موجودة مهما بلغ عدد الاختبارات الّتي تكتبها.</p>
+<p>صحيحٌ أنّ الاختبارات تتطلّب وقتًا عند كتابتها أوّل مرّة، ولكنّها ستوفّر وقتك في المدى البعيد، سترضى عن نفسك عندما يفشل أحد الاختبارات الّتي كتبتها كاشفًا عن علّة قبل أن يصل النّص البرمجيّ إلى مرحلة الإنتاج، وكذلك عندما يكون لديك نظامٌ يُثبت أنّ العلل قد حلّت بالفعل قبل أن تجد طريقها إلى المُستخدمين!</p>
+<h2 id="-">مصادر إضافيّة</h2>
+<p>كلّ ما كتبته أعلاه ليس إلّا أقلّ القليل من موضوع اختبارات JavaScript، فإن أردت المزيد:</p>
+<ul>
+<li>شاهد <a href="http://lanyrd.com/2012/full-frontal/sztqh">العرض</a> الذي قدّمته في مؤتمر Full Frontal عام 2012 في برايتون في المملكة المتحدة.</li>
+<li>أو جرّب  <a href="http://gruntjs.com/">Grunt‏</a>، وهي أداة تُساعدك في أتمتة عمليّة الاختبارات وأشياء أخرى كثيرة.</li>
+<li>أو اقرأ كتاب <em><a href="http://www.amazon.com/Test-Driven-JavaScript-Development-Developers-Library/dp/0321683919/ref=sr_1_1?ie=UTF8&amp;qid=1366506174&amp;sr=8-1&amp;keywords=test+driven+javascript+development">Test-Driven JavaScript Development</a></em> لمؤلّفه Christian Johansen، صاحب مكتبة Sinon. هذا الكتاب مرجع ثمينٌ وضخم في موضوع اختبارات JavaScript.</li>
+</ul>
+

@@ -1,0 +1,380 @@
+<h1 id="-node-js-express-">إنشاء مدوّنة باستخدام Node.js وExpress (الجزء الخامس)</h1>
+<p>بعد أن أنشأنا نظام المستخدمين والجلسات، أصبحنا جاهزين الآن لبناء نظام التّعليقات، ثم إتاحة إمكانية إنشاء تدوينة جديدة وتعديل التّدوينات السّابقة.</p>
+<h2 id="-">إتاحة التّعليق</h2>
+<p>لحفظ التّعليقات نحتاج أولًا إلى جدول جديد يحفظ نصّ التعليق وتاريخه وكاتبه والتّدوينة التي أُضيف إليها، افتح صدفة MySQL واتصّل بقاعدة البيانات ثم نفّذ هذا الاستعلام:</p>
+<pre><code class="lang-sql">CREATE TABLE `comments` (id INT PRIMARY KEY AUTO_INCREMENT, post_id INT NOT NULL, user_id INT NOT NULL, body VARCHAR(500) NOT NULL, created TIMESTAMP, FOREIGN KEY (post_id) REFERENCES `posts` (id), FOREIGN KEY (user_id) REFERENCES `users` (id), INDEX (post_id));
+</code></pre>
+<p>سنُعدّل قالب صفحة التّدوينة <code>post.jade</code> ونضيف حقلاً يسمح للمستخدم المُسجّل دخوله بإضافة التّعليق، ويعرض للزوّار إمكانيّة تسجيل الدّخول:</p>
+<pre><code class="lang-jade">doctype html
+html(lang=&quot;ar&quot;, dir=&quot;rtl&quot;)
+    head
+        title مُدوّنتي!
+    body
+        style
+            :css
+                body {
+                    font-family: Arial, sans-serif;
+                }
+
+        h1 مُدوّنتي
+        hr
+        h2 #{ post.title }
+        p #{ post.body }
+        small كُتِبَت #{ formatDate(post.date) }
+        #comments
+            h3 التعليقات
+            if post.comments
+                for comment in post.comments
+                    p يقول 
+                        b #{ comment.full_name }: 
+                        br
+                        | #{ comment.body }
+                    small #{ formatDate(comment.created) }
+                    hr
+            else
+                p لا تعليقات إلى الآن
+
+        if user
+            form(action=&quot;/posts/&quot; + post.id + &quot;/comments&quot;, method=&quot;POST&quot;)
+                textarea(name=&quot;comment&quot;, placeholder=&quot;أكتب تعليقك&quot;)
+                input(type=&quot;submit&quot;, value=&quot;أرسل التّعليق&quot;)
+        else
+            span لإضافة تعليقاتك، 
+            a(href=&quot;/login&quot;) سجّل دخولك
+            |  أو 
+            a(href=&quot;/signup&quot;) أنشئ حسابًا جديدًا
+</code></pre>
+<p>لقد استبقنا الأمور قليلاً، سيرسل النّموذج الذي يشمل التّعليق إلى الرّابط <code>‎/posts/:post_id/comments</code>، لنقم بتوجيه هذا الرّابط:</p>
+<pre><code class="lang-javascript">app.post(&quot;/posts/:post_id/comments&quot;, parseBody, function(request, response) {
+    var body = request.body.comment;
+    var user_id = request.user.id;
+    var post_id = request.params.post_id;
+    var created = new Date();
+
+    connection.query(&quot;INSERT INTO `comments` (post_id, user_id, body, created) VALUES (?, ?, ?, ?)&quot;, [ post_id, user_id, body, created ], function(err) {
+        if (err) {
+            response.status(500);
+            response.send(&quot;تعذّرت إضافة التّعليق، حاول مجدّدًا.&quot;);
+            return;
+        }
+
+        response.status(201);
+        response.send(&quot;أُضيف التعليق&quot;);
+    })
+})
+</code></pre>
+<p>ملاحظة: اخترنا أن يُرسل الرّابط إلى النّمط <code>‎/posts/:post_id/comments</code> بدل <code>‎/posts/:slug/comments</code> على سبيل تبسيط الأمور، لا يُميّز Express بين <code>‎:slug</code> و<code>‎:post_id</code> فكلاهما بالنّسبه له متُغيّران لا يخضعان لأيّة شروط، يمكننا التأكد من كون <code>‎:post_id</code> رقمًا باستخدام الوظيفة <code>param()‎</code> على التّطبيق والّتي نشترط بها أن يطابق المُتغيّر <code>post_id</code> التعبير النظامي (regular expression) التّالي: </p>
+<pre><code class="lang-javascript">app.param(&#39;post_id&#39;, /^[0-9]+$/);
+</code></pre>
+<p>وعندها لن تتلقّى هذا الدّالة سوى الرّوابط التي تحمل رقمًا في موقع <code>‎:post_id</code>.</p>
+<p>هذه الشّيفرة تكفي لإضافة التّعليق، لكنّنا بحاجة إلى تعديل دالّة توجيه رابط التّدوينة لإضافة التّعليقات إلى الصّفحة:</p>
+<pre><code class="lang-javascript">app.get(&quot;/posts/:slug&quot;, function(request, response, next) {
+
+    var slug = request.params.slug;
+
+    connection.query(&quot;SELECT * from `posts` WHERE slug = ?&quot;, [ slug ], function(err, rows) {
+        if (err || rows.length == 0) return next();
+        var post = rows[0];
+        connection.query(&quot;SELECT * FROM `comments` JOIN `users` ON comments.user_id=users.id WHERE post_id=?&quot;, [ post.id ], function(err, comments) {
+            if (err) return next(err);
+            post.comments = comments;
+            response.render(&quot;post&quot;, { post: post, formatDate: formatDate, user: request.user });
+        })
+    });
+
+})
+</code></pre>
+<p>لنُجرّب أولًا زيارة صفحة التّدوينة <a href="http://localhost:3000/posts/hello-world">http://localhost:3000/posts/hello-world</a> دون تسجيل الدّخول وقبل إضافة أيّ تعليق:</p>
+<p><img src="comments-none.jpg" alt="لا تعليقات، نموذج إضافة التّعليق غير متاح قبل تسجيل الدّخول"></p>
+<p>لنقم الآن بتسجيل الدّخول باسم admin وكلمة مرور 123456، ولنعُد للصفحة ونُحدّثها:</p>
+<p><img src="comments-signed-in.jpg" alt="نموذج إضافة التّعليق أصبح متاحًا"></p>
+<p>لنجرّب إضافة تعليق:</p>
+<p><img src="comments-added.jpg" alt="أرسلنا أوّل تعليق!"></p>
+<p>لنعُد لصفحة التّدوينة ونُعد تحميلها:</p>
+<p><img src="comments-first-comment.jpg" alt="أوّل تعليق!"></p>
+<p>رائع جدًا! لقد أنشأنا نظام تعليق بسيطًا بخطوات بسيطة بعد أن أتممنا القسم الأكبر من العمل عندما أنشأنا الجلسات ونظام المستخدمين.</p>
+<h2 id="-">إتاحة كتابة التّدوينات وتعديلها لمدير المُدوّنة</h2>
+<p>لنبدأ أوّلاً بصفحة إنشاء تدوينة جديدة، ولنُنشئ رابطًا جديدًا <code>‎/new</code> لعرض القالب <code>views/post-editor.jade</code>:</p>
+<pre><code class="lang-jade">doctype html
+html(lang=&quot;ar&quot;, dir=&quot;rtl&quot;)
+    head
+        title تدوينة جديدة
+    body
+        style
+            :css
+                body {
+                    font-family: Arial, sans-serif;
+                }
+
+        h1 مُدوّنتي
+        hr
+        h2 تسجيل الدخول
+        form(action=&quot;/posts&quot;, method=&quot;POST&quot;)
+            label(for=&quot;title&quot;) عنوان التدوينة: 
+            input(type=&quot;text&quot;, name=&quot;title&quot;, required)
+            br
+            label(for=&quot;slug&quot;) الرابط الفرعي: 
+            input(type=&quot;text&quot;, name=&quot;slug&quot; required)
+            br
+            label(for=&quot;body&quot;) نص التّدوينة: 
+            textarea(name=&quot;body&quot;)
+            br
+            input(type=&quot;submit&quot;, value=&quot;أرسل التّدوينة&quot;)
+</code></pre>
+<pre><code class="lang-javascript">app.get(&quot;/new&quot;, function(request, response, next) {
+    if (request.user &amp;&amp; request.user.is_author) {
+        response.render(&quot;post-editor&quot;, { user: request.user });
+    } else {
+        response.status(403);
+        response.send(&quot;ليس لديك صلاحيات إضافة تدوينة.&quot;);
+    }
+})
+
+app.post(&quot;/posts&quot;, parseBody, function(request, response) {
+    if (request.user &amp;&amp; request.user.is_author) {
+        var title = request.body.title,
+            body = request.body.body,
+            date = new Date(),
+            author_id = request.user.id,
+            slug = request.body.slug;
+
+        connection.query(&quot;INSERT INTO `posts` (title, body, date, author_id, slug) VALUES (?, ?, ?, ?, ?)&quot;, [ title, body, date, author_id, slug ], function(err) {
+            if (err) {
+                response.status(500);
+                response.send(&quot;تعّذرت إضافة التّدوينة&quot;);
+                return;
+            }
+
+            response.status(201);
+            response.send(&quot;أضيفت التّدوينة.&quot;);
+        })
+    } else {
+        response.status(403);
+        response.send(&quot;ليس لديك صلاحيات إضافة تدوينة.&quot;);
+    }
+})
+</code></pre>
+<p>الجزء الأكثر أهمّيّة في شفرتنا هو التّحقق من كون المستخدم يحمل صلاحيات الكتابة، فإن لم يكن كذلك، نُرسل الرّمز <code>‎403 Forbidden</code> (محظور). بإمكاننا تجاوز التّحقق قبل عرض القالب ونترك عرض الرسالة المناسب للقالب ذاته، لكنّ المهمّ هو إجراء التّحقّق عند إدخال التّدوينة في فاعدة البيانات.</p>
+<p>سنتيح تعديل التّدوينة على رابط التّدوينة ذاته متبوعًا بـ<code>‎/edit</code>:</p>
+<pre><code class="lang-javascript">app.get(&quot;/posts/:slug/edit&quot;, function(request, response, next) {
+    var user_id = request.user.id;
+    var slug = request.params.slug;
+
+    connection.query(&quot;SELECT * FROM `posts` WHERE author_id=? AND slug=?&quot;, [ user_id, slug ], function(err, rows) {
+        if (!err &amp;&amp; rows[0]) {
+            response.render(&quot;post-editor&quot;, { post: post });
+        } else {
+            response.status(&quot;401&quot;);
+            response.send(&quot;إمّا أن التّدوينة غير موجودة، أو أنّك لا تملك الصلاحيات للوصول إليها&quot;);
+        }        
+    })
+})
+</code></pre>
+<p>الجزء المهمّ من شفرتنا هو اشتراط أن يكون مؤلف التّدوينة المطلوب تعديلها هو صاحب الجلسة ذاته وهو ما كتبناه في استعلام MySQL، وإلّا سيكون بإمكان أن شخص أن يضيف <code>‎/edit</code> إلى نهاية التّدوينات ويجري ما يشاء من التغييرات عليها. لنقم بتعديل القالب <code>post-editor.jade</code> لجعله يتعامل مع التّدوينات الموجودة مسبقًا بالإضافة إلى التّدوينات الجديدة:</p>
+<pre><code class="lang-jade">doctype html
+html(lang=&quot;ar&quot;, dir=&quot;rtl&quot;)
+    head
+        title تدوينة جديدة
+    body
+        style
+            :css
+                body {
+                    font-family: Arial, sans-serif;
+                }
+
+        h1 مُدوّنتي
+        hr
+        - var editMode = post &amp;&amp; post.id
+        h2 #{editMode ? &quot;تعديل التّدوينة&quot; : &quot;تدوينة جديدة&quot; }
+        form(action= editMode ? (&quot;/posts/&quot; + post.slug + &quot;?_method=PUT&quot;) : &quot;/posts&quot;, method=&quot;POST&quot;)
+            label(for=&quot;title&quot;) عنوان التدوينة: 
+            input(type=&quot;text&quot;, name=&quot;title&quot;, required, value= editMode ? post.title : &quot;&quot;)
+            br
+            if !editMode
+                label(for=&quot;slug&quot;) الرابط الفرعي: 
+                input(type=&quot;text&quot;, name=&quot;slug&quot; required)
+                br
+            label(for=&quot;body&quot;) نص التّدوينة: 
+            textarea(name=&quot;body&quot;) #{ editMode ? post.body : &quot;&quot; }
+            br
+            input(type=&quot;submit&quot;, value=&quot;أرسل التّدوينة&quot;)
+</code></pre>
+<p>سيُرسل طلب التّعديل باستخدام الفعل <code>PUT</code> الّذي يُستخدم للطلب من الخادوم &quot;تحديث&quot; محتوى موجود لديه، خلافًا لـ<code>POST</code> المستخدم لإضافة محتوى جديد. المشكلة أنّ المتصفّحات لا تدعم استخدام سوى فعلين ضمن نماذج HTML هما <code>POST</code> و<code>GET</code>، ولذلك سنضطر إلى إيجاد طريقة &quot;ملتوية&quot; لتجاوز هذه المشكلة. استخدمنا الفعل <code>POST</code> ذاته في حالة التّعديل مع إضافة حقل إلى رابط <code>action</code> في النّموذج، سيستخدم هذا الحقل من قبل وحدة <code>method-override</code> الّتي تقرأه وتغيّر من فعل الطّلب إلى <code>PUT</code> ليمرّ عبر دالّة التّوجيه الّتي كتبناها:</p>
+<pre><code class="lang-javascript">var methodOverride = require(&#39;method-override&#39;);
+app.use(methodOverride(&#39;_method&#39;));
+
+/*
+...
+*/
+
+app.put(&quot;/posts/:slug&quot;, parseBody, function(request, response) {
+    if (!requestest.user) {
+        response.status(403);
+        response.send(&quot;يجب تسجيل الدخول لتعديل التدوينات.&quot;);
+        return;
+    }
+
+    var slug = request.params.slug;
+    var new_title = request.body.title;
+    var new_body = request.body.body;
+    var user_id = request.user.id;
+
+    connection.query(&quot;UPDATE `posts` SET title=?, body=? WHERE slug=? AND author_id=?&quot;, [ new_title, new_body, slug, user_id ], function(err) {
+        if (err) {
+            console.log(err);
+            response.status(&quot;500&quot;);
+            response.send(&quot;حدث خطأ أثناء تعديل التدوينة&quot;);
+            return;
+        }
+
+        response.send(&quot;حُدِّثت التّدوينة.&quot;);
+    })
+})
+</code></pre>
+<p>تأكد من اشتراطك كون مؤلّف التّدوينة هو ذاته صاحب الجلسة مرّة ثانية قبل إدخال البيانات.</p>
+<p>قلنا أنّ أفعال HTTP تستخدم استخدامًا دلاليًّأ (semantic) ولا شيء يُجبرك على استخدام <code>PUT</code>، بل يمكنك استخدام <code>POST</code> للحصول على نفس النّتيجة، لكنّه العرف المتّفق عليه، والذي ستعتاد على اتّباعه عندما تتقدّم في مستويات أعلى كبناء واجهة برمجيّة للمدوّنة (RESTful API) الّتي يتوقّع الطّرف الذي يتعامل معها هذا الأسلوب الدّلاليّ.</p>
+<p>يحقّ لنا الاحتفال الآن، فقد أنشأنا مدوّنة حقيقيّة من الصّفر! لنقم الآن بتحسين مظهرها وتنظيف شيفرتنا!</p>
+<h2 id="-">تنظيف الشّيفرة</h2>
+<p>حسنًا، قد تبدو شيفرتنا طويلة في الملفّ <code>index.js</code> طويلة بعض الشيء وفيها الكثير من التّكرار، وحالما نُشاهد سطورًا مكرّرة في شيفرة برمجيّة، نعلم أنّ بإمكاننا كتابة شيفرة أفضل. لقد أهملنا ذلك قليلًا لنحصل على برنامج يعمل بأسرع وقت ممكن، لكن علينا الآن أن نعود لنلقي نظرة أكثر إمعانًا في برنامجنا.</p>
+<p>تكرّر في كثير من المواضع استخدامنا للدّالة <code>parseBody</code> لتفسير متن طلبات POST، وحدة <code>body-parser</code> هي واحدة من البرامج الوسيطة التي يمكن استعمالها على مستوى التّطبيق أيضًا، لنقم بحذف عبارة <code>parseBody</code> من كل طلبات POST ولننقل تفسير متن الطّلب إلى مستوى التّطبيق، ذكرنا أنّه بإمكاننا استخدام <code>app.use()‎</code> لذلك:</p>
+<pre><code class="lang-javascript">/*
+...
+
+*/
+
+var app = express();
+
+var parseBody = bodyParser.urlencoded({ extended: true });
+
+app.use(session({
+    secret: &quot;my top secret&quot;,
+    resave: true,
+    saveUninitialized: true
+}));
+
+app.use(parseBody);
+
+app.use(cookieParser());
+
+// ...
+</code></pre>
+<p>سيكون من المفيد بعد إضافة تدوينة جديدة أو تعديلها أو تعليق جديد على تدوينة العودة مجدًّدا إلى هذه التّدوينة بدل عرض رسالة تفيد بنجاح العمليّة فقط، يوفّر Express الوظيفة <code>redirect()‎</code> على الكائن <code>response</code> التي تُخبر المتصفّح بالانتقال إلى صفحة أخرى كجواب على الطّلب الّذي أُرسل. سأدع لك تنفيذ هذه المهمّات:</p>
+<ul>
+<li>عند كتابة تدوينة جديدة، انتقل إلى صفحة هذه التّدوينة.</li>
+<li>عند إضافة تعليق جديد، عُد إلى صفحة التّدوينة المعنيّة.</li>
+<li>عند إنشاء مستخدم جديد، انتقل إلى صفحة تسجيل الدّخول.</li>
+<li>عند تسجيل الدّخول، انتقل إلى صفحة الملفّ الشّخصيّ.</li>
+</ul>
+<p>في معظم دوالّ التّوجيه التي كتبناها، قمنا بالتّحقّق من الخطأ وإرسال رسالة مناسبة مع رمز حالة مثل <code>404</code> و<code>403</code>... من الأفضل أن نُصمّم صفحة خطأ خاصّة تتلقّى الخطأ ورسالته وتعرضه للمستخدم بأسلوب موحّد، سنحذف كلّ عبارات <code>response.send()‎</code> الّتي ترسل رسالة خطأ ونبدلها بالتّوجيه إلى الدّالة التّالية <code>next()‎</code> الّتي ستعرض قالب صفحة الخطأ <code>views/error.jade</code>:</p>
+<pre><code class="lang-jade">doctype html
+html(lang=&quot;ar&quot;, dir=&quot;rtl&quot;)
+    head
+        title مُدوّنتي! - خطأ
+    body
+        style
+            :css
+                body {
+                    font-family: Arial, sans-serif;
+                }
+
+        h1 مُدوّنتي
+        hr
+        h2 خطأ #{ response.statusCode }
+        p #{ error.message || error.toString() }
+</code></pre>
+<p>هذا مثال عن تعديل دالّة التّوجيه للرّابط <code>‎/new</code>:</p>
+<pre><code class="lang-javascript">app.get(&quot;/new&quot;, function(request, response, next) {
+    if (request.user &amp;&amp; request.user.is_author) {
+        response.render(&quot;post-editor&quot;, { user: request.user });
+    } else {
+        response.status(403);
+        return next(new Error(&quot;ليس لديك صلاحيات إضافة تدوينة.&quot;));
+    }
+})
+</code></pre>
+<p>تقبل الدّالة <code>next</code> معاملاً اختياريًّا يشير إلى وجود خطأ، وهي الطّريقة المناسبة لتمرير الخطأ عبر دوالّ التّوجيه، عدم تمرير الخطأ يعني أنّ التّوجيه يسير من دالّة إلى أخرى بشكل سليم، يستفيد Express من وجود هذا المعامل لعرض الخطأ في حال انتهت عمليّة التّوجيه دون توفير دالّة تتعامل معه. سيلجأ Express إلى الدّالة التّالية الّتي يجب أن نُضيفها إلى نهاية شيفرتنا:</p>
+<pre><code class="lang-javascript">app.use(function(err, request, response, next) {
+    response.render(&quot;error&quot;, { error: err, statusCode: response.statusCode })
+})
+</code></pre>
+<p>لاحظ أنّه خلافًا لدوالّ التّوجيه السّابقة، فقد استخدمنا 4 معاملات، قد تتساءل كيف يمكن لدالّة واحدة أن تتلقّى عددًا مختلفًا من المعاملات وتتصرّف بطريقة مختلفة، أو كيف تعرف الدّالة أن العنصر الأوّل هو كائن الخطأ وليس كائن الطّلب، الجواب هو أنّ Express يُجري تحقّقًا من عدد المعاملات في دالّة التّوجيه ويغيّر تصرّفه، وهذا الأمر متاح لأن JavaScript توفّر الكائن <code>arguments</code> بشكل تلقائيّ لكلّ الدّوالّ، والذي يمكن التّحقّق من طوله (<code>length</code>) بجملة شرطيّة وتغيير سلوك الدّالة. الهدف النّهائي من هذا أن يكون Express سهل الاستعمال وبديهيًّا، وهذا الأسلوب ستجده كثيرًا في Node.js. من الضّروري استخدام 4 معاملات ليستطيع Express التفريق بين: <code>err, request, response</code> و<code>request, response, next</code>.</p>
+<p>لنجرّب الآن زيارة بعض الصّفحات الّتي نتوقّع حدوث خطأ عندها:</p>
+<p><img src="cleaning-up-error-403.jpg" alt="صفحة إنشاء تدوينة جديدة دون تسجيل الدّخول"></p>
+<p><img src="cleaning-up-error-404.jpg" alt="صفحة تدوينة غير موجودة"></p>
+<p>هذا أفضل! توحيد صفحة الخطأ سيجعلنا نفكّر في تقديم حلول لهذا الخطأ بناء على رمز الحالة، مثلاً نستطيع تقديم مربّع بحث في حال كان الرّمز <code>404</code> (غير موجود)، أو نستطيع أن نطلب من المستخدم تسجيل الدّخول في حال كان <code>403</code>... إلخ.</p>
+<p>شيفرة JavaScript نظيفة الآن، لنلقِ نظرةً على القوالب الّتي أنشأناها، يتكرّر في معظمها استخدام ترويسة للصّفحة مع استخدام تنسيق موحّد، قد يبدو تضمين CSS في الصّفحة مقبولًا الآن، لكنّنا سنحتاج إلى نقله إلى ملفّ منفصل عندما نتوسّع في إضافة الأنماط لكي لا نحتاج لتكرارها في كلّ القوالب. لنُنشئ ملفًا للأنماط <code>style.css</code> في مجلّد جديد ضمن المشروع نُسمّيه <code>public</code>، ولننقل إليه شيفرة CSS من أحد القوالب:</p>
+<pre><code class="lang-css">body {
+    font-family: Arial, sans-serif;
+}
+</code></pre>
+<p>لنحذف الآن شيفرة CSS من القوالب ونكتب بدلاً منها رابطًا لملفّنا:</p>
+<pre><code class="lang-jade">head
+    title إنشاء مستخدم جديد
+    link(rel=&quot;stylesheet&quot;, href=&quot;/style.css&quot;)
+body
+    h1 مُدوّنتي
+    //- ...
+</code></pre>
+<p>حسنًا، لن يعثر الخادوم على الملفّ <code>style.css</code> عندما يطلبه المتصفّح، لأنّنا نحتاج لتوفيره صراحةً. من الشّائع استضافة كلّ الملفّات الثّابتة (static) مثل ملفّات CSS وJavaScript للمتصفّح   ضمن مجلّد <code>public</code>، ثمّ توفير هذا المجلّد بكامل محتوياته على الخادوم. تتوفّر آليّة مُدمجة في Express للقيام بذلك:</p>
+<pre><code class="lang-javascript">app.use(express.static(__dirname + &#39;/public&#39;));
+</code></pre>
+<p>تتوفّر أيضًا وحدات خارجيّة يمكنها القيام بالمهمّة ذاتها وبخيارات أكثر مثل تحديد لواحق الملفّات وأذوناتها...</p>
+<p>مُلاحظة: المُتغيّر <code>‎__dirname</code> توفّره Node.js وهو يشير إلى المجلّد الذي يحوي الملفّ الحاليّ (<code>index.js</code>).</p>
+<p>سنستفيد من هذا المجلّد في استضافة ملفّات favicon وJavaScript الّتي تعمل في المتصفّح عندما نطوّر مدوّنتنا لتستخدم AJAX.</p>
+<h2 id="-">تحسين مظهر المدوّنة</h2>
+<p>سنحتاج إلى إجراء تغييرات في القوالب كإضافة بعض المُعرّفات (IDs) والأصناف (classess) لنقوم بتنسيقها وفق القواعد الّتي نكتبها في ملفّ <code>style.css</code> الّذي أنشأناه للتّوّ. يوفّر Express صياغتين مختصرتين للتّعبير عن الأصناف والمُعرّفات لكونهما شديدتي الشّيوع، لإضافة صنفين ومُعرّف على عنصر <code>div</code> ما، يمكن كتابة:</p>
+<pre><code class="lang-jade">#comments.post-comments.card
+</code></pre>
+<p>وهي مكافئة لكتابة:</p>
+<pre><code class="lang-jade">div(class=&quot;post-comments card&quot;, id=&quot;comments&quot;)
+</code></pre>
+<p>والتي ستُترجم إلى HTML الّتالي:</p>
+<pre><code class="lang-html">&lt;div class=&quot;post-comments card&quot; id=&quot;comments&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>لاحظ أنّك لست بحاجة لكتابة <code>div</code>، لأنّ Jade يفهم المغزى من هذا الأسلوب على أنّه كائن <code>div</code> تلقائيًّا، لأنّه الكائن الأكثر استخدامًا لإضافة الأصناف والمعرّفات بهدف تنسيق مكوّنات الصّفحة.</p>
+<p>قد تلاحظ أثناء العمل الحاجة لتكرار أجزاء معيّنة من الشّيفرة في كلّ القوالب مثل إظهار عنوان المدوّنة وروابطها على المواقع الاجتماعيّة ومربّع البحث ضمن ترويسة (header) في كلّ الصّفحات، مع تذييل (footer) يحوي بعض الرّوابط الإضافيّة في نهاية كلّ صفحة، يمكنك التّخلصّ من عناء التّكرار باستخدام الكلمة المفتاحية <code>extends</code> لبناء قالب على قالب آخر، فلنقم ببناء قالب يتضمّن الهيكل العامّ لكلّ الصّفحات، ولنسمّه <code>_layout.jade</code> (اجعل اسمّ هذه الملفّات يبدأ بالرّمز <code>_</code> لتستطيع فيما بعد تمييزها بسرعة بين ملفّات القوالب):</p>
+<pre><code class="lang-jade">doctype html
+html(lang=&quot;ar&quot;, dir=&quot;rtl&quot;)
+    head
+        title مُدوّنتي!
+        link(rel=&quot;stylesheet&quot;, href=&quot;/style.css&quot;)
+    body
+        header
+            h1#blog-title مُدوّنتي
+            ul#blog-nav
+                li: a(href=&quot;/&quot;) الرئيسية
+                li: a(href=&quot;/login&quot;) تسجيل الدخول
+                li: a(href=&quot;/signup&quot;) إنشاء حساب
+        block content
+        footer
+            hr
+            p جميع الحقوق غير محفوظة
+</code></pre>
+<p>العبارة <code>block</code> متبوعةً باسم نختاره نحن كما نشاء، تسمح لنا ببناء قوالب تشترك جميعها في الهيكل العّام لهذا الملفّ وتختلف فقط في هذا الجزء، مثلاً يمكننا الآن إعادة كتابة الصّفحة الرئيسيّة (<code>home.jade</code>) لتصبح:</p>
+<pre><code class="lang-jade">extends _layout
+block content
+    for post in posts
+        .post
+            h2.post-title #{ post.title }
+            p.post-body #{ post.body }
+            small.post-date كُتِبَت #{ formatDate(post.date) }
+</code></pre>
+<p>سيبحث Jade عن القطعة المُسمّاة <code>content</code> ويضيفها في المكان المناسب للقالب. لا داع لإرفاق لاحقة الملفّ فهي معروفة بالنّسبة لـJade.</p>
+<p>ملاحظة: التّعبير <code>li: a(href=...</code> هو اختصار تتيحه Jade للاستغناء عن الحاجة لكتابة الوسمين على سطرين.</p>
+<p>كثيرًا ما تحتاج إلى إدخال أجزاء  متكرّرة من HTML مع إجراء بعض التّعديلات عليها، وهذا ما يمكن تنفيذه من خلال الدّوالّ في Jade والّتي تُسمّى mixins، وهي تشبه كثيرًا الدّوال في أي لغة برمجة، لتوضيح المفهوم أكثر، لنفترض أنّنا نريد توحيد مظهر التّدوينات بين صفحة التّدوينة والصّفحة الرئيسيّة، مع فارق بسيط هو جعل نصّ التّدوينة في الصّفحة الرئيسية محدودًا بمئتي حرف مثلاً، يمكن فعل هذا بنقل شيفرة التّدوينة المفردة إلى دالّة في ملفّ منفصل نُسمّيه <code>_mixins.jade</code>:</p>
+<pre><code class="lang-jade">mixin post(post, full)
+    h2.post-title: a(href=&quot;/posts/&quot; + post.slug) #{ post.title }
+    p.post-body #{ full ? post.body : (post.body.substr(0, 199) + &quot;...&quot;) }
+    small.post-date كُتِبَت #{ formatDate(post.date) }
+</code></pre>
+<p>لاحظ كم تشبه هذه الصّياغة صياغة الدّوالّ في لغات البرمجة، حيث يمكن إمرار مُعاملات لها بين قوسين. يمكن استدعاءها في قوالبنا بالرّمز <code>+</code> بعد تضمين الملفّ <code>_mixins.jade</code> بالكلمة المفتاحية <code>include</code> الّتي تشبه استدعاء وحدة خارجية بـ<code>require</code> في Node.js:</p>
+<pre><code class="lang-jade">extends _layout
+include _mixins
+block content
+    for post in posts
+        .post
+            +post(post, false)
+</code></pre>
+<p>سأقوم الآن بتنسيق المُدوّنة بأسلوبي الخاصّ، وسأترك المجال لك لتفعل الأمر ذاته! إذا أردت استلهام بعض الأفكار، أنصحك بالاطّلاع على مواقع مثل <a href="http://tympanus.net/codrops/">Codrops</a>.</p>
+<p>في الدّرس القادم سنطّلع على بعض المواضيع الّتي يجب أخذها بالحُسبان قبل نشر المدوّنة على الويب.</p>
+
