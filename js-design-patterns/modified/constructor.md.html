@@ -144,7 +144,7 @@ console.log(a.setAt);
         set: function(newValue) {
             _hidden_value = new Date(newValue);
             if (this.timeout) {
-                delete this.timeout;
+                this.disable();
                 console.log(&quot;Alarm changed to &quot; + newValue);
                 console.log(&quot;You need to re-enable the alarm for changes to take effect&quot;);
             }

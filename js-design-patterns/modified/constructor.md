@@ -177,7 +177,7 @@ function Alarm(when) {
         set: function(newValue) {
             _hidden_value = new Date(newValue);
             if (this.timeout) {
-                delete this.timeout;
+                this.disable();
                 console.log("Alarm changed to " + newValue);
                 console.log("You need to re-enable the alarm for changes to take effect");
             }
