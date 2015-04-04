@@ -1,0 +1,280 @@
+<h1 id="-jquery-1-javascript">تعلّم jQuery‏ (1): أساسيّات JavaScript</h1>
+<p>بُنيت jQuery على لغة JavaScript، وهي لغةٌ غنيّة وقويّة في حدّ ذاتها. يُغطّي هذا القسم أساسيّات لغة JavaScript، وبعض الأخطاء الشّائعة الّتي يرتكبها المبتدئون بها. يُفيد هذا القسم القادمين الجدد إلى عالم البرمجة، ويفيد أيضًا المبرمجين بلغات أخرى الّذين لم يسبق لهم الاطّلاع على الجوانب المميّزة لـJavaScript.</p>
+<p>فيما يلي برنامج JavaScript بسيط يُضيف رسالةً إلى صفحة ويب:</p>
+<pre><code class="lang-javascript">// أنشئ دالّة لإلقاء التّحية على شخص
+// وأسندها إلى المُتغيّر `greet`
+var greet = function( person, message ) {
+  var greeting = &#39;Hello, &#39; + person + &#39;!&#39;;
+  log( greeting + &#39; &#39; + message );
+};
+
+// استخدم الدالّة لتحيّة Jory، بإمرار اسمها ورسالة التّحيّة
+greet( &#39;Jory&#39;, &#39;Welcome to JavaScript&#39; );
+
+// استخدم الدالّة لتحيّة Rebecca، بإمرار اسمها ورسالة مختلفة
+greet( &#39;Rebecca&#39;, &#39;Thanks for joining us&#39; );
+</code></pre>
+<p><em>مُلاحظة: في المثال السابق، استخدمنا الدّالّة <code>log</code>. وهي دالّة مُساعِدة متوفّرة في الأمثلة في هذه السّلسلة فقط، وليست متوفّرة تلقائيًّا في JavaScript، يمكن استخدام <code>log</code> في محرّر النّصوص البرمجيّة في هذه السّلسلة، ولكن ستحتاج إلى استخدام <code>console.log</code> محلّها في النّصوص البرمجيّة خارج السّلسلة، وعندها ستُطبع نتائج النّصّ إلى طرفيّة المتصفّح الّذي تستعمله.</em></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/giqudi/3/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>المثال السابق يعرض نتيجة تنفيذ النّص البرمجيّ ضمن قسم Console، يمكنك إعادة ضبط المثال باستخدام الزر Clear ثمّ تعديل النصّ إن رغبت بالتجربة وإعادة تنفيذه بنقر Run. لا بأس إن بدت بعض الأشياء غير مفهومة الآن؛ ففي الفقرات التّالية سنطّلع على مفاهيم المتغيّرات والدوالّ والمكوّنات الأساسيّة الأخرى لـJavaScript.</p>
+<h2 id="-">ملاحظة عن التعليقات</h2>
+<p>تفيد التّعليقات في شرح ما يفعله كل جزء من النصّ البرمجيّ، ولا تؤثّر التعليقات في عمل البرنامج على الإطلاق. بعض المُبرمجين يحبّون الإكثار من التعليقات في برامجهم، بينما يفضّل آخرون كتابتها فقط عندما تكون بعض الأجزاء من النّصّ غامضة ولا تتضّح بسهولة.</p>
+<p>تسمح JavaScript بنوعين من التعليقات: مفردة السّطر، ومتعدّدة السّطور، ويبدأ الشّكل الأوّل بالحرفين <code>//</code>؛ بينما يبدأ الثّاني بالحرفين ‎<code>/*</code>‎ وينتهي بـ‎<code>*/</code>‎.</p>
+<pre><code class="lang-javascript">// هذا تعليق مُفرد السّطر
+var foo;
+
+/*
+  هذا تعليقٌ متعدّد السّطور
+  يمكن أن يمتدّ على أكثر من سطر، كما ترى.
+ */
+</code></pre>
+<p>يمكن أيضًا استخدام التّعليقات متعدّدة السّطور مُضمّنة ضمن سطرٍ من النّصّ البرمجيّ:</p>
+<pre><code class="lang-javascript">function cornify( unicorns /* عدد صحيح */, rainbows /* عدد صحيح */ ) {
+
+}
+</code></pre>
+<h2 id="-javascript">المكوّنات الأساسيّة لـJavaScript</h2>
+<h3 id="-variables-">المُتغيِّرات (Variables)</h3>
+<p>المُتغيّرات هي الطّريقة الّتي نخزّن بها القيم الّتي نريد استخدامها في وقت لاحقٍ. يمكن أن تكون المتغيّرات على عدّة أنواع من نصوصٍ أو أعداد أو بياناتٍ أخرى كالمصفوفات والكائنات، أو حتى نصوصًا برمجيّة (بصورة دالّة مُخزّنة في متغيّر). يُصرّح عن المتغيّر بجملة <code>var</code>:</p>
+<pre><code class="lang-javascript">var myName = &#39;Rebecca&#39;;
+</code></pre>
+<p>يمكن اختيار أي اسم للمتغيّر بشرط ألّا يبدأ الاسم برقمٍ وألّا يحوي إشارة النّاقص &quot;-&quot;.</p>
+<p>بإمكانك التّصريح عن متغيّر واحدٍ في كلّ جملة:</p>
+<pre><code class="lang-javascript">var a = 1;
+var b = &#39;two&#39;;
+</code></pre>
+<p>أو التّصريح عن عدّة متغيّرات في جملة واحدة بفصلها بفواصل لاتينيّة:</p>
+<pre><code class="lang-javascript">var a = 1,
+    b = &#39;two&#39;;
+</code></pre>
+<p>بعد إسناد قيمة للمتغيّر، يمكن استخدام هذا المتغيّر للوصول إلى القيمة المُخزّنة فيه:</p>
+<pre><code class="lang-javascript">log( myName ); // يطبع &#39;Rebecaa&#39;
+</code></pre>
+<p>المتغيّرات مكوّن ضروريّ للالتزام بمبدأ &quot;لا تكرّر نفسك&quot; (Don&#39;t Repeat Yourself)، فإذا أردت استخدام قيمة واحدة أكثر من مرّة، فالغالب أنّك ترغب في تخزينها في مُتغيّر.</p>
+<p>سنتحدّث عن المتغيّرات بتفصيل أكبر في الفقرة القادمة.</p>
+<h3 id="-functions-">الدّوالّ (Functions)</h3>
+<p>الدّوال مكوّن أساسيّ في برامج JavaScript لأنّها توفّر وسيلة لتهيئة وظائف صغيرة في البرنامج بصورة جزء مستقلّ ومنظّم. افترض مثلًا دالّة تجمع عددين:</p>
+<pre><code class="lang-javascript">function(a, b) {
+    return a + b;
+}
+</code></pre>
+<p>تأخذ هذه الدّالة <strong>مُعاملين</strong> اثنين هما <code>a</code> و<code>b</code>، تجمعهما ثمّ تعيد المجموع كنتيجة الدّالّة.</p>
+<p>المثال السّابق هو برنامج JavaScript سليم الصّياغة، لكنّه لا يفعل شيئًا على الإطلاق، لأنّه ما من طريقة تسمح لنا بأن نطلب من هذه الدّالة أن تجمع أي عددين بعدُ. علينا إذًا إيجاد طريقة <em>لاستدعاء</em> الدّالّة، ويمكننا فعل ذلك بإسنادها أولًّا إلى متغيّر:</p>
+<pre><code class="lang-javascript">var addTwoNumbers = function(a, b) {
+  return a + b;
+}
+</code></pre>
+<p>ما فعلناها في المثال الأخير هو أنّنا أخذنا <strong>تعبيرًا عن دالّة (function expression)</strong> وأسندناه إلى مُتغيّر. يمكننا الآن استدعاء هذه الدّالة باستخدام اسم المتغيّر:</p>
+<pre><code class="lang-javascript">log( addTwoNumbers(1, 1) ); // تطبع 2
+</code></pre>
+<p>يمكننا بدلاً من ذلك استخدام <strong>تصريح عن دالّة (function declaration)</strong> لإعطاء دالّتنا اسمًا:</p>
+<pre><code class="lang-javascript">function addTwoNumbers(a, b) {
+  return a + b;
+}
+</code></pre>
+<p>وكلا الطّريقتين تسمحان لنا باستدعاء دالّتنا بالأسلوب نفسه، ولكن يجب الحذر عند اعتماد الأسلوب الأخير لأسباب تشرحها <a href="http://javascriptweblog.wordpress.com/2010/07/06/function-declarations-vs-function-expressions/">هذه التّدوينة</a>.</p>
+<p>الخلاصة: تسمية الدّوالّ بالتّصريح عن الدّالّة قد تؤدّي إلى نتائج غير مُتوقّعة إن لم تفهم بدقّة إحدى ميّزات JavaScript المعروفة باسم &quot;الرّفع إلى أعلى النّطاق&quot; (hoisting). تفصيل هذه الميزة موضوعٌ خارج عن نطاق هذه السّلسلة، ولكنّنا سنعتمد إسناد الدّوال إلى المُتغيّرات في الوقت الحاليّ.</p>
+<h3 id="-variable-scope-">الدّوال ونطاق المُتغيّرات (Variable scope)</h3>
+<p>تكون المُتغيّرات الّتي تُعرَّف ضمن دالّة بجملة <code>var</code> مُتاحة فقط من داخل هذه الدّالّة، وهذا أمر مرغوبٌ عادةً، ولذا يجب التّصريح عن كلّ المُتغيّرات في البرنامج باستخدام جمل <code>var</code> ما لم يُقصد جعلها عامّة (global)، أي متاحةً عبر كامل البرنامج وفي أيّ موضع منه. ليس هذا ما نُريده عادةً إلّا إذا أردنا تغيير قيمة المُتغيّر من نصّ برمجيّ آخر.</p>
+<p>ولكن ما معنى أن تكون المُتغيّرات مُتاحةً فقط داخل الدّالّة؟ جرّب هذا البرنامج:</p>
+<p><strong>تحذير: نصّ برمجيّ خاطئ</strong></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/3/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>لو أنّنا حاولنا في المثال السّابق استخدام قيمة <code>foo</code> خارج الدّالة (بدل الاكتفاء بفحص نوعها)، لأبلغنا المُتصفّح بوجود خطأ، ولن يتابع البرنامج العمل فيما يلي الموضع الّذي استخدمنا  <code>foo</code> عنده.</p>
+<p>المثال التّالي يبيّن كيف يمكن لمُتغيّرين مختلفين أن يوجدا باسمٍ واحد طالما أنّ كلًّا منهما موجود في نطاق منفصل عن الآخر. في هذا المثال نُصرّح عن المُتغيّر <code>foo</code> ونسند إليه القيمة <code>&#39;qux&#39;</code>، ثم نُصرّح عن مُتغيّر آخر داخل دالّة، ونُسمّيه <code>foo</code> أيضًا، ونُسند إليه القيمة <code>&#39;bar&#39;</code>. لاحظ أنّ المُتغيّر <code>foo</code> خارج الدّالة لا يتغيّر حتّى بعد أن نُنشئ المُتغيّر <code>foo</code> داخل الدّالة.</p>
+<pre><code class="lang-javascript">var foo = &#39;qux&#39;;
+var myFunction = function() {
+  var foo = &#39;bar&#39;;
+};
+
+log( foo ); // تطبع &#39;qux&#39;
+myFunction();
+log( foo ); // تطبع &#39;qux&#39; أيضًا
+</code></pre>
+<p>على الرّغم من تشارك المُتغيّرين اسمًا واحدًا، إلّا أنّ JavaScript تعتبرهما شيئين مختلفين بالكامل، وهذا واحد من عدّة أسباب تدفعك لإعطاء مُتغيّراتك أسماء مُعبّرة.</p>
+<p>نطاق المُتغيّرات مفهوم جوهريّ في JavaScript، ولعلّه يسبّب بعض الارتباك للمبتدئين. تذكّر:</p>
+<ul>
+<li>في الأغلبية السّاحقة من الحالات، صرّح عن المُتغيّرات بجملة <code>var</code></li>
+<li>لا يمكن الوصول إلى المُتغيّرات المفروضة داخل دالّة بجملة <code>var</code> من خارج هذه الدّالّة</li>
+<li>المُتغيّرات الّتي تُفرض بلا جملة <code>var</code> تكون عامّةً دائمًا</li>
+</ul>
+<p>انتبه إلى أنّ المُتغيّرات الّتي يُصرَّح عنها بلا الكلمة <code>var</code> تكون ضمنيًّا عامّةً. في المثال التّالي لدينا المُتغيّر <code>a</code> المتاح خارج الدّالة لأنّ عُرِّف بدون الكلمة <code>var</code> (وهذا أمرٌ غير مرغوب في معظم الحالات).</p>
+<p><strong>تحذير: نصّ برمجيّ غير آمن</strong></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/4/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h3 id="-objects-">الكائنات (Objects)</h3>
+<p>الحقيقة أنّ معظم ما نتعامل معه في JavaScript ليس سوى كائنات، وليس في اللّغة إلّا 5 أنواع من القيم الّتي <em>لا</em> تُعتبر كائنات:</p>
+<ul>
+<li>السلاسل النّصيّة (strings)</li>
+<li>القيم المنطقية (true/false)</li>
+<li>الأعداد</li>
+<li><code>undefined</code> (غير مُعرّف)</li>
+<li><code>null</code> (معدوم)</li>
+</ul>
+<p>تُسمّى القيم السّابقة <strong>بالأنواع الأوّليّة (primitives)</strong>، ويمكن حتّى لبعض هذه القيم أن تُعامل كما لو أنّها كائنات (سنشرح هذا بعد قليل). ولكن ما الكائن؟ لنُلقِ نظرةً على كائنٍ بسيط:</p>
+<pre><code class="lang-javascript">var person = {
+  firstName: &#39;Boaz&#39;,
+  lastName: &#39;Sender&#39;
+};
+</code></pre>
+<p>للكائن الّذي أنشأناه أعلاه <strong>خاصّتان</strong> اثنتان <strong>(properties)</strong>:‏ <code>firstName</code> و<code>lastName</code>. أنشأنا الكائن بصياغة &quot;الكائن الحرفيّ (object literal)&quot; أي بإحاطة مجموعة من أزواج مفتاح/قيمة بقوسين معكوفين <code>{}</code>. لاحظ أنّ نقطتين (<code>:</code>) تفصلان بين المفتاح والقيمة وأنّ فاصلة لاتينيّة (<code>,</code>) تفصل بين كلّ زوجين. لاحظ أنّه ما من فاصلة بعد الزّوج الأخير، وإن أضفتها سهوًا فستقع أخطاء عند تنفيذ البرنامج في المتصفّحات القديمة.</p>
+<h4 id="-">الوصول إلى الخصائص</h4>
+<p>حفظنا الكائن في مُتغيّر أسميناه <code>person</code>، ممّا يُسهّل الوصول إلى خصائصه، إمّا باستخدام <em>أسلوب النّقاط (dot notation)</em> أو <em>أسلوب الأقواس المُربّعة (bracket notation)</em>.</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/5/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>ستلاحظ أنّنا استخدمنا سلسلة نصّيّة (string) للوصول إلى اسم الخاصّة الّتي نريدها عند اعتماد أسلوب الأقواس المُربّعة. أمّا عند اعتماد الأسلوب الآخر، أسلوب النّقاط، فقد استخدمنا اسم الخاصّة نفسه دون علامتي الاقتباس. يفيد أسلوب الأقواس المُربّعة عندما نريد الوصول إلى خاصّة يُحفَظ اسمها ضمن مُتغيّر:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/6/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>بعد أن أنشأنا الكائن، يمكننا تعديل خصائصه:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/7/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>هذا الجانب في JavaScript هو نعمة ونقمة في الوقت ذاته، فهو يعني أنّ الكائنات مرنة بصورة فائقة، ولكنّه أيضًا يعني أنّه ما من &quot;خصوصيّة&quot; للكائنات، فيمكن لأيّ نصّ برمجيّ أن يُسند قيمةً جديدة إلى أيّ خاصّة في أيّ كائن يمكنه الوصول إليه؛ وهذا سبب آخر يدفعك للاحتفاظ بالمُتغيّرات معزولةً عن النّطاق العامّ إلّا إذا كنت تريد فعلًا للبرامج الأخرى أن تُغيّر تلك الخصائص.</p>
+<h4 id="-object-methods-">وظائف الكائنات (Object methods)</h4>
+<p><strong>الوظائف (methods)</strong> هي خصائص في الكائن قيمها دوالّ (functions)، لنُضِف وظيفة ‎<code>.greet()</code>‎ إلى كائن <code>person</code>:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/8/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>استقبلت الوظيفة  ‎<code>.greet()</code>‎ في المثال السّابق النّصّ <code>name</code> كُمعامِل لها. عند استدعاء هذه الدّالة، أرسلنا قيمة الخاصّة <code>firstName</code> لكائن <code>person</code> ببساطة. لو أردنا وظيفة فائقة المُرونة تُلقي التّحيّة على أيّ شخص، فلرّبما يكون ما كتبناه صحيحًا. ولكن الغالب أنّنا نريد لوظيفتنا أن تُلقي التّحيّة على الشّخص المُحدّد في الكائن <code>person</code> فقط.</p>
+<h4 id="-this-">معنى <code>this</code></h4>
+<p>داخل كلّ وظيفة (وداخل كلّ دالّة) تتوفّر كلّمة مفتاحيّة خاصّة: <code>this</code>، وهي تُشير إلى الكائن الّذي يُمثِّل السّياق الّذي اُستدعيت فيه الدّالة.</p>
+<p>عندما نستدعي <code>person.greet()‎</code> يكون السّياق هو الكائن <code>person</code> ذاته. معنى هذا أنّ بإمكاننا استخدام <code>this</code> للوصول إلى إحدى خصائص الكائن <code>person</code> مباشرة من داخل الوظيفة ‎<code>.greet()</code>‎.</p>
+<p><em>ملاحظة: معنى <code>this</code> قد يُسبّب ارتباكًا شديدًا لمطوّري JavaScript المُبتدئين، يمكنك الاطمئنان إن لم تفهم بدقّة معناها، لأنّ jQuery تُحسن استغلالها بحيث لا تضطّر للدّخول في تفاصيلها؛ ومع ذلك فلا يكتمل الحديث عن الكائنات ووظائفها دون الإشارة إلى <code>this</code> وإن قليلًا. سأترك لك حرّيّة الانتقال إلى فقرة &quot;الكائنات في jQuery&quot; من هذه المقالة إن شئت، ثمّ عُد إلى هنا عندما تشعر أنّك جاهز لفهمها تمامًا.</em></p>
+<p>لنحاول فهم كيف يمكن استخدام <code>this</code> في وظيفتنا:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/9/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>ليست مُعقّدةً كثيرًا حتى الآن... صحيح؟ منشأ التّعقيد هو أنّ <em>معنى <code>this</code> يمكن أن يتغيّر</em>، فالأمر كما قلنا يعتمد على السّياق الّذي استدعيت فيه الدّالة! لاحظ النّصّ التّالي:</p>
+<p><strong>تحذير: نصّ برمجيّ خاطئ</strong></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/10/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>عندما نحقظ الوظيفة  ‎<code>.greet()</code>‎ في مُتغيّر <code>sayIt</code> ثمّ نستدعي <code>sayIt()‎</code>، فإنّ السّياق يتغيّر ليُصبح الكائن العامّ <code>window</code>، <em>لا الكائن <code>person</code></em>. وبما أنّ ليس للكائن <code>window</code> خاصّة اسمها <code>firstName</code>، فإنّ النتيجة تكون <code>undefined</code> عندما نحاول الوصول إليها.</p>
+<p>ما الذي على المُبرمج فعله إذًا؟ أوّلًا: عليه أن يحذر من النّتائج غير المُتوقّعة لمعنى <code>this</code> عند تخزين وظائف الكائنات في متغيّرات. وثانيًا: عليه أن يعلم أنّ بإمكانه إجبار <code>this</code> أن تُشير إلى ما يشاء من الكائنات وذلك باستخدام إحدى الوظيفتين  ‎<code>.call()</code>‎ و‎<code>.apply()</code>‎ مع الدّالّة ذاتها.</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/11/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>كلا الوظيفتين المُتشابهتين ‎<code>.call()</code>‎ و‎<code>.apply()</code>‎ تُتيحان إمرار المُعاملات إلى الدّالّة الّتي تُستدعى بهما. تخيّل أنّ دالة التّحيّة تقبل بعض المعاملات، يمكن حينئذٍ إمرار هذه المُعاملات باستخدام ‎<code>.call()</code>‎ كما يلي:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/12/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>يمكن تنفيذ الأمر ذاته باستخدام ‎<code>.apply()</code>‎، ولكن سنحتاج معها إلى إمرار المُعاملات ضمن مصفوفة واحدة بدلًا من إمرارها مُنفصلة:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/13/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><em>مُلاحظة: لتفاصيل أكثر عن ‎<code>.call()</code>‎ و‎<code>.apply()</code>‎، راجع وثيقتي شبكة مُطوِّري موزيلّا <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/call">‎<code>.call()</code>‎</a> و<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/apply">‎<code>.apply()</code>‎</a>،</em></p>
+<h4 id="-jquery">الكائنات في jQuery</h4>
+<p>لم نتطرّق بعدُ إلى تفاصيل الكائنات في JavaScriptن لكنّك الآن تعرف الأساسيّات الّتي تُتيح لك التّعامل مع الكائنات خلال تعلّمك jQuery، ففيها ستستعمل الكائنات لضبط الخيارات، كتغيير عدّة خصائص  CSS لعنصر في الصّفحة مرّة واحدة:</p>
+<pre><code class="lang-javascript">$(&#39;#main&#39;).css({
+  color: &#39;red&#39;,
+  border: &#39;1px solid blue&#39;
+});
+</code></pre>
+<p>بخصوص <code>this</code>، فإنّ <code>jQuery</code> تُسيطر على معناها، وفي حالة مُتولّيات الأحداث (event handlers)، تُشير <code>this</code> إلى العنصر في الصّفحى الّذي ربطتّه بالمُتولّي، وفي حالة سرد مجموعة من الكائنات في تحديدٍ، تُشير <code>this</code> إلى العنصر الحاليّ في السّرد. ليس عليك الحرص على فهم <code>this</code> بدقّة في المراحل الأولى لتعلّمك، بل اكتفِ بإبقاء فكرتها في ذهنك أثناء تعلّمك.</p>
+<h4 id="-">تفاصيل أكثر</h4>
+<p>يتوسّع <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Working_with_Objects">دليل JavaScript في شبكة مُطوِّري موزيلّا</a> في شرح مواضيع مثل النّماذج البدئيّة للكائنات (object prototypes) والدّوال المُشيِّدة (constructor functions) وحذف خصائص الكائنات.</p>
+<h3 id="-arrays-">المصفوفات (Arrays)</h3>
+<p>المصفوفات نوعٌ من الكائنات تُستخدم لحفظ قائمة من القيم، وهي وسيلةٌ سهلة لتخزين مجموعة من العناصر المترابطة من نفس النّوع (كالسّلاسل النّصيّة)، مع أنّ الواقع أنّه لا شيء يمنع مصفوفةً من أن تحوي عدّة أنواع من العناصر، بما في ذلك مصفوفاتٍ أخرى.</p>
+<p>الطّريقة المُفضّلة لإنشاء مصفوفة استخدامُ أسلوب المصفوفات الحرفيّة:</p>
+<pre><code class="lang-javascript">var myArray = [ &#39;a&#39;, &#39;b&#39;, &#39;c&#39; ];
+</code></pre>
+<p><em>ملاحظة: ستقرأ من وقتٍ لآخر برامج تُنشئ المصفوفات بالأسلوب التالي: <code>new Array(&#39;a&#39;, &#39;b&#39;, &#39;c&#39;)</code> وهو أسلوب غير مقبولٍ وسط مُطوّري JavaScript لأنّه لا يختلف عن الأسلوب الأوّل سوى في أنّ له عيوبًا ليست في الأوّل! فمثلاً: كتابة <code>new Array(3)</code> تعني إنشاء مصفوفة فيها ثلاث عناصر كلّها غير مُعرّفة، بدلاً من إنشاء مصفوفة فيها العدد 3 (أي بدلًا من <code>[ 3 ]</code>).</em></p>
+<p>يمكن الوصول إلى خصائص المصفوفات (الّتي تُسمّى أحيانًا <strong>بعناصر المصفوفة</strong> (elements)) باستخدام صياغة الأقواس المربّعة ذاتها المستخدمة مع الكائنات، فكلّ عنصر يُعطى اسما تلقائيًّا بحسب موقعه في المصفوفة. ولكن عليك الحذر: فالأعداد تبدأ من الصّفر. لنُلق نظرة على مصفوفة فيها 3 عناصر:</p>
+<p><strong>تحذير: أسلوب غير مُفضّل</strong></p>
+<pre><code class="lang-javascript">var myArray = [ &#39;a&#39;, &#39;b&#39;, &#39;c&#39; ];
+var firstItem = myArray[ &quot;0&quot; ]; // الوصول إلى العنصر الأوّل
+</code></pre>
+<p>عند الوصول إلى عناصر المصفوفة، فإنّه من الأسهل استخدام الأعداد لتحديد موضع العنصر المطلوب في المصفوفة، والّذي يُسمّى <strong>الدّليل (index)</strong>:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/14/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>يمكننا معرفة عدد العناصر في مجموعة بالوصول إلى الخاصّة <code>length</code> في المصفوفة:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/15/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h4 id="-for-">حلقات <code>for</code>: سرد المصفوفات</h4>
+<p>بما أنّنا نعلم كيف نحدّد طول المصفوفة (عدد العناصر فيها)، وأنّ أوّل عناصرها يقع عند الدّليل <code>0</code>، يمكننا إذن سرد عناصر المصفوفة باستخدام حلقة <code>for</code>:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/16/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>يمكننا فعل الكثير من الأشياء بالمصفوفات، راجع <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/">وثيقة المصفوفات في شبكة مُطوِّري موزيّلا</a> للاطّلاع على الدّليل الكامل.</p>
+<h2 id="-">المنطق والتّحقّق من الصّحِّة</h2>
+<p>تُوفِّر JavaScript الكلمتين <code>if</code> و<code>else</code>، وكذلك المُعامل الثّلاثي، للسّماح بتنفيذ بعض الأوامر فقط عند تحقّق شروط معيّنة. تُحدّد JavaScript توفّر شرطٍ ما بتحرِّي &quot;صحِّة&quot; قيمة أو عبارة. ولأنّ JavaScript لُغةٌ متغيّرة الأنواع (dynamically typed)، فإنّ بإمكاننا استخدام أيّة قيمة أو أي تركيبٍ من القيّم، إلّا أنّ قواعد التّحقّق من كون قيمةٍ مُعيّنة أو عبارةٍ معيّنة صحيحةً (<code>true</code>) أو خاطئة (<code>false</code>) قد تُسبّب بعض الارتباك.</p>
+<p>فيما يلي مثال عن جملة شرطيّة (<code>if</code>) بسيطة في JavaScript. تتحرّى الجملة من صحِّة العدد <code>1</code>؛ ولأنّ <code>1</code> قيمة <strong>&quot;صائبة&quot; (truthy)</strong>، فسيُنفَّذ النّص البرمجيّ الواقع بين القوسين المعكوفين <code>{}</code> بعد جملة <code>if</code>.</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/17/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>الحقيقة أنّ معظم القيم في JavaScript &quot;صائبة&quot;، بل إنّ خمس قيمٍ فقط في اللّغة تُعتبر <strong>&quot;خاطئة&quot; (falsy)</strong>:</p>
+<ul>
+<li><code>undefined</code> (القيمة المبدئيّة لكّل مُتغيّر يُفرض دون إسناد قيمة إليه)</li>
+<li><code>null</code></li>
+<li><code>NaN</code> (ليس عددًا &quot;not a number&quot;)</li>
+<li><code>0</code> (العدد صفر)</li>
+<li><code>&#39;&#39;</code> (سلسلة نصّيّة فارغة)</li>
+</ul>
+<p>عندما نريد تحرّي &quot;خطأ&quot; قيمة ما، نستخدم المُعامل <code>!</code>:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/18/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>أمّا القيمة <code>NaN</code> فلها وضعٌ خاصّ، فعند تحرّيها في جملة شرطيّة بسيطة فإنّها خاطئة:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/19/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>أمّا عندما نقارن القيمة <code>NaN</code> مع <code>false</code>، فإنّنا نحصل على قيمة &quot;خاطئة&quot;:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/20/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>من المهمّ أن نتذكّر أنّ كلّ القيم الأخرى ما عدا الخمس السّابقة تُعتبر صائبة، بما في ذلك المصفوفات الفارغة والكائنات الفارغة وكل السّلاسل النّصيّة غير الفارغة (متضمّنة السلسلة النّصيّة <code>&#39;0&#39;</code>) وكلّ الأعداد ما عدا <code>0</code>.</p>
+<p><em>ملاحظة: من الممكن كتابة جملة شرطيّة فيها <code>if</code> و<code>else</code> في سطر واحدٍ دون استخدام الأقواس المعكوفة، ولكنّ هذه الممارسة غير مفضّلة لأنّها تجعل قراءة البرنامج وصيانته أصعب؛ وما ذكرناها هنا إلّا لأنّها قد تصادفك عند قراءة برامج مطوّرين آخرين.</em></p>
+<h2 id="-logical-operators-">المُعامِلات المنطقيّة (Logical Operators)</h2>
+<p>تسمح المُعاملات المنطقيّة بتقييم طرفيّ العمليّة المنطقيّة بتنفيذ عمليتيّ AND (<code>&amp;&amp;</code>) وOR (<code>||</code>).</p>
+<pre><code class="lang-javascript">var foo = 1;
+var bar = 0;
+var baz = 2;
+
+foo || bar;     // تُعيد 1 وهي قيمة صائبة
+bar || foo;     // تُعيد 1 وهي قيمة صائبة
+
+foo &amp;&amp; bar;     // تُعيد 0 وهي قيمة خاطئة
+foo &amp;&amp; baz;     // تُعيد 2 وهي قيمة صائبة
+</code></pre>
+<p>في حالة المُعامل <code>||</code>، تكون القيمة المُعادة هي أوّل قيمة تُثبت صحّة الجُملة، أو آخر قيمة. أمّا في حالة المُعامل <code>&amp;&amp;</code> فإنّ القيمة المُعادة تكون أوّل قيمة تُثبت خطأ الجملة، أو آخر قيمة.</p>
+<p>قد ترى المُعاملات المنطقيّة تُستخدم بأسلوب ذكيّ للتّحكّم بسير البرنامج:</p>
+<pre><code class="lang-javacript">foo &amp;&amp; bar();   // استدعِ الدالّة bar فقط عندما تكون foo صائبة
+
+var bar = baz || createBar();  // استخدم baz كقيمة لـbar إلّا إن كانت
+                               // خاطئة، وعندها أنشئ bar
+</code></pre>
+<p>هذا الأسلوب جميل ومُختصر، ولكنّه قد يزيد قراءة البرنامج صعوبةً، خصوصًا للمبتدئين. عليك أن تتعلّمه لتعرفه في برامج الآخرين، ولكننّني أنصحك بالنأي عن استخدامه في البداية، واستخدام <code>if</code> و<code>else</code> التّقليديّتين لأنّهما أوضح.</p>
+<h2 id="-ternary-operator-">المُعامِل الثّلاثي (Ternary Operator)</h2>
+<p>عادةً ما ترغب بتعيين قيمة مُتغيّر بحسب صحّة شرط معيّن أو خطئِه، بإمكانك بالطّبع استخدام <code>if</code> و<code>else</code>:</p>
+<p><strong>تحذير: أسلوب غير مُفضّل</strong></p>
+<pre><code class="lang-javascript">var propertyName;
+
+if (dim === &#39;width&#39;) {
+  propertyName = &#39;clientWidth&#39;;
+} else {
+  propertyName = &#39;clientHeight&#39;;
+}
+</code></pre>
+<p>إلّا أنّ المُعامل الثّلاثيّ يسمح بتحقيق الغاية ذاتها بطريقة بأسلوب أقصر وأوضح:</p>
+<pre><code class="lang-javascript">var propertyName = ( dim === &#39;width&#39; ) ? &#39;clientWidth&#39; : &#39;clientHeight&#39;;
+</code></pre>
+<p>تُتحرَّى الجملة قبل <code>?</code> لمعرفة صوابها، فإن كانت صائبة أُسندت القيمة الأولى (<code>clientWidth</code>) إلى المُتغيّر <code>propertyName</code>، وإلّا أُسنِدت القيمة الثّانية (<code>clientWidth</code>) إليه.</p>
+<h2 id="-javascript">عثرات JavaScript</h2>
+<p>بالإضافة إلى نطاقات المُتغيّرات والتّحرّي من الصّحة، هنالك العديد من العثرات الأخرى في JavaScript، وسنلقي نظرة على بعضها.</p>
+<h3 id="-">تسمية الأشياء</h3>
+<p>تبدأ الأسماء السّليمة في JavaScript بحرف أو برمز مُعيّن، متبوعٍ أو غير متبوع بحروف أو أرقام أو علامات _ أو رموز أخرى. لا يمكن أن تبدأ الأسماء بأرقام أو أن تتضمّن إشارة النّاقص (-). سمِّ المتغيرات بالأسماء الّتي تحلو لك طالما التزمت بهذه القواعد، وهذه الأسماء كلّها سليمة:</p>
+<ul>
+<li><code>a</code></li>
+<li><code>a1</code></li>
+<li><code>foo_bar</code></li>
+<li><code>fooBarBaz</code></li>
+<li><code>$fooBar</code></li>
+<li><code>_foo</code></li>
+<li><code>__foo__</code></li>
+</ul>
+<p>وضع مجتمع JavaScript بعض الأعراف الشّائعة لتسمية المُتغيّرات والخصائص في JavaScript، لكنّها مُجرَّد أعراف، فهي ليست إلزاميّة، ولا تؤثّر في عمل البرنامج:</p>
+<ul>
+<li>الأسماء الّتي تبدأ بـ<code>_</code> تُشير عادةً إلى قيم سرِّيَّة (private) (سنوضِّح ذلك لاحقًا).</li>
+<li>الأسماء الّتي تبدأ بحرف كبير هي عادةً دوال مُشيّدة (constructors) تُستخدم لإنشاء نُسخ جديدة من الكائنات (سنوضّح ذلك لاحقًا أيضًا).</li>
+<li>في البرامج الّتي تستخدم jQuery، الأسماء الّتي تبدأ بالرّمز <code>$</code> تُشير عادّة إلى كائنات jQuery.</li>
+</ul>
+<h3 id="-reserved-words-">الكلمات المحجوزة (Reserved words)</h3>
+<p>تحتفظ JavaScript لنفسها ببعض الكلمات الّتي يفضّل اجتنابها كأسماء لمكوّنات برامجك:</p>
+<pre><code class="lang-javascript">abstract boolean break byte case catch char class const continue debugger
+default delete do double else enum export extends false final finally float
+for function goto if implements import in instanceof int interface long
+native new null package private protected public return short static super
+switch synchronized this throw throws transient true try typeof var
+volatile void while with
+</code></pre>
+<p>فإنّ كان لا بدّ من استخدامها كاسم لخاصّة كائن، فعليك إحاطتها بعلامتي اقتباس:</p>
+<pre><code class="lang-javascript">var myObject = {
+  &#39;class&#39;: &#39;tasty&#39;
+};
+</code></pre>
+<h3 id="-">العمليّات على الأعداد والسّلاسل النّصيّة</h3>
+<p>التّعامل مع الأرقام في JavaScript قد يُعطي نتائج غير متوقّعة أحيانًا، بسبب طريقة تمثيل الأرقام داخليًّا في JavaScript، فمثلاً: عند جمع عددين عشريّين، تكون النّتيجة عدًدا قريبًا جدًّا من القيمة المتوقّعة، لكنّ غير مساوٍ تمامًا:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/21/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>لن تصادف هذا كثيرًا عند العمل مع jQuery، ولكنّها قضيّة مهمّة يجب الانتباه لها خصوصًا عندما تتعامل مع أرقامٍ عشريّة كالعملات. عندما تُجري عمليّات حسابيّة تحتاج دقّة تامّة، فعليك تحويل القيم إلى أعداد صحيحة قبل العمل بها، ثمّ تحويلها ثانيةً إلى أعداد عشريّة بعد الانتهاء.</p>
+<p>تتسامح JavaScript مع اختلاف الأنواع، فعند إجراء عمليات حسابية باستخدام قيم غير عدديّة، فلن تُبلغك JavaScript بوجود خطأ، بل ستُتابع العمليّة مُعطيةً نتائج قد لا تتوقّعها:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/22/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h2 id="-">مطالعة</h2>
+<p>لم نخض في أعماق لغة JavaScript بعدُ. شبكة مُطوّري موزيلّا (MDN) مصدر ممتاز (بالإنكليزيّة) لتعلّم JavaScript بتفاصيلها، وخصوصًا دليل JavaScript على الشّبكة. أكثر المواضيع أهمّيّة لك الآن:</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en/JavaScript/Guide/JavaScript_Overview">نظرة عامّة على JavaScript</a></li>
+<li><a href="https://developer.mozilla.org/en/JavaScript/Guide/Values%2C_Variables%2C_and_Literals">القيم والمتغيّرات والمكوّنات الحرفيّة</a></li>
+<li><a href="https://developer.mozilla.org/en/JavaScript/Guide/Functions">الدّوالّ</a></li>
+<li><a href="http://benalman.com/news/2010/11/immediately-invoked-function-expression/">عبارات الدّوالّ المُستدعاة فورًا</a></li>
+<li><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/">المصفوفات</a></li>
+</ul>
+
