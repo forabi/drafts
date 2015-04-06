@@ -29,21 +29,13 @@ _ملاحظة: من الآن فصاعدًا سنستخدم `$` بدلًا من `
 ##‏‎$(document).ready()‎
 قبل استخدام jQuery لفعل أيّ شيء في الصّفحة، علينا التأكّد من كون الصّفحة قد بلغت حالةً تسمح بتعديل محتوياتها. يمكن تنفيذ ذلك في jQuery بإحاطة برنامجنا ضمن دالّة ثمّ إمرار هذه الدّالة إلى ‎`$(document).ready()`‎.  كما ترى في المثال التّالي، يمكن للدّالّة الّتي نمرّرها أن تكون مجهولة (بلا اسم):
 
-```javascript
-$( document ).ready(function() {
-  console.log( 'ready!' );
-});
-```
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/2/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 هذا سيؤدّي إلى استدعاء الدّالّة الّتي مرّرناها إلى ‎`.ready()`‎ بعد أن يصبح المُستند (الصفحة) جاهزًا. ما الذي يحدث هنا؟ استخدمنا ‎`$(document)`‎ لإنشاء كائن jQuery من `document` في الصّفحة، ثمّ استدعينا الدّالّة ‎`.ready()`‎ على هذا الكائن، مُمرِّرين إليها الدّالّة الّتي نريد تنفيذها.
 
 بما أنّك ستجد نفسك تُعيد كتابة هذا النّصّ مرارًا، فإنّ jQuery تقدّم لك طريقةً مُختصرةً لإنجازه، إذ تقوم الدّالّة ‎`$()`‎ بمهمّة مُختلفة عند إمرار دالّة إليها بدلًا من مُحدِّد CSS، وعندها تتصرّف وكأنّها اسم بديلٌ للوظيفة  ‎`$(document).ready()`‎:
 
-```javascript
-$(function() {
-  console.log( 'ready!' );
-});
-```
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/3/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 _ملاحظة: من الآن فصاعدًا، سنفترض أنّ النّصوص الّتي ترد في هذه السّلسلة مُحاطة بالعبارة ‎`$(document).ready(function() { ... });`‎، وسنترك هذه العبارة بغرض الإيجاز._
 
@@ -120,11 +112,7 @@ var html = rawListItem.html();
 
 إن أردت العمل مع عنصر مُفرد في تحديد وأردت استخدام وظائف jQuery معه، فعليك إنشاء كائن jQuery جديد انطلاقًا منه باستخدام الدّالّة  ‎`.eq()`‎، وإمرار دليل العنصر الّذي تريده:
 
-```javascript
-var listItems = $( 'li' );
-var secondListItem = listItems.eq( 1 );
-secondListItem.remove();
-```
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/8/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 ##إنشاء كائنات جديدة
 للدّالّة `$` دورٌ ثالث أخير: إنشاء عناصر جديدة. إن مرّرت قصاصة HTML إلى `$()`‎، فستُنشئ كائنًا جديدًا في الذّاكرة، بمعنى أنّ الكائن يُنشأ ولكن لا يُضاف إلى الصّفحة إلى أن تفعل ذلك بنفسك.
@@ -167,29 +155,16 @@ $( 'li' ).eq( 1 ).is( '.special' ); // true
 
 لنفترض أنّنا نريد تغيير نصّ HTML في كل عناصر القوائم في الصّفحة، ولفعل ذلك علينا استخدام الوظيفة ‎`.html()`‎ الّتي تقوم بتغيير نصّ HTML في _كلّ_ عناصر القوائم المُحدّدة.
 
-```javascript
-$( 'li' ).html( 'New HTML' );
-```
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/9/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 بإمكانك أيضًا إمرار دالّة إلى وظائف الكتابة في jQuery، وستُستخدم القيمة المُعادة منها باعتبارها القيمة الجديدة، وتستقبل هذه الدّالة مُعاملين اثنين: دليل العنصر (index) في التّحديد، والقيمة القديمة للشّيء الذي تحاول تغييره، وهذا مُفيد في حال احتجت معلومات عن حالة العنصر الحاليّة لتعيين حالته الجديدة بشكل صحيح.
 
-```javascript
-$( 'li' ).html(function( index, oldHtml ) {
-  return oldHtml + '!!!'
-});
-```
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/10/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 ###السّرد الصّريح (Explicit Iteration)
 في بعض الأحيان، لن تلبّي وظائف jQuery الأصليّة المهمّة الّتي تريد إنجازها بدقّة، وسيكون عليك حينها المرور على العناصر في التّحديد بشكل صريح، وهذا ما تتيحه الوظيفة ‎`.each()`‎. في المثال التّالي نستخدمها لإضافة وسم `<b>` في بداية عنصر القائمة، يحوي دليل العنصر:
 
-```javascript
-$( 'li' ).each(function( index, elem ) {
-  // this: عنصر DOM الخام الحالي
-  // index: دليل العنصر الحالي في التّحديد
-  // elem: عنصر DOM الخام الحالي (مثل this)
-  $( elem ).prepend( '<b>' + index + ': </b>' );
-});
-```
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/11/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 _ملاحظة: ستلاحظ أنّ عنصر DOM الخام مُتاح ضمن الدّالّة الّتي نُمرّرها إلى ‎`.each()`‎ بطريقتين: الأولى عبر `this` والثّانية عبر `elem`. وكما ناقشنا في الجزء السّابق (أساسيّات JavaScript)، فإنّ `this` كلمة خاصّة في JavaScript تُشير إلى الكائن الّذي يُمثّل سياق الدّالّة الحاليّ. وفي jQuery فإنّ `this` تُشير في معظم الحالات إلى عنصر DOM الخام الّذي تعمل عليه الدّالّة الحاليّة. لذا فإنّها تُشير في حالة ‎`.each()`‎ إلى العنصر الحاليّ في مجموعة العناصر الّتي نسردها._
 
@@ -221,3 +196,7 @@ spans.attr( 'title', 'Hover over me' );
 
 ##خاتمة
 لدينا الآن معلومات ممتازة عن تفاصيل عمل jQuery؛ وسنستعرض في الجزء القادم كيف يمكننا تطبيق هذه المعلومات لإنجاز أشياء حقيقيّة بها!
+
+##مصادر إضافية
+* [وثائق الواجهة البرمجيّة لـjQuery](http://api.jquery.com/)
+* [وثائق المُحدّدات](http://api.jquery.com/category/selectors/)

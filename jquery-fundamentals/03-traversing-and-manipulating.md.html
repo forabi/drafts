@@ -1,0 +1,187 @@
+<h1 id="-jquery-3-">تعلّم jQuery‏ (3): وظائف الانتقال عبر الصّفحة والتّعديل على العناصر</h1>
+<p>توفّر jQuery أدوات قويّة لإيجاد العنصر أو العناصر التي تريدها في الصّفحة، ثمّ العمل بهذه العناصر للوصول إلى النّتيجة المرغوبة. تسهّل jQuery بأدواتها هذه عمليّات كانت لتكون أكثر تعقيدًا لو أردنا تنفيذها من خلال وظائف DOM الأصليّة.</p>
+<p>سنطّلع في هذا الجزء على بعض (لا كلّ) وظائف الانتقال عبر الصّفحة وتّعديل العناصر في jQuery. وقبل أن نبدأ، علينا فهم بعض المصطلحات الضّروريّة. لنفترض أنّ لدينا نصّ HTML التّالي:</p>
+<pre><code class="lang-html">&lt;ul&gt;
+  &lt;li&gt;
+    &lt;span&gt;
+      &lt;i&gt;Foo&lt;/i&gt;
+    &lt;/span&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Bar&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<ul>
+<li>نقول عن عنصر القائمة الأوّل (<code>&lt;li&gt;</code>) أنّه <strong>ابن (child)</strong> القائمة غير المرتّبة (<code>&lt;ul&gt;</code>).</li>
+<li>نقول عن القائمة غير المرتّبة (<code>&lt;ul&gt;</code>) أنّها <strong>والد (parent)</strong> عنصري القائمة الاثنين.</li>
+<li>نقول عن العنصر <code>&lt;span&gt;</code> أنّه <strong>خَلَفُ (descendant)</strong> القائمة غير المرتّبة.</li>
+<li>نقول عن القائمة غير المرتّبة أنّها <strong>سَلَفٌ (ancestor)</strong> لكلّ ما داخلها.</li>
+<li>نقول عن عنصري القائمة أنّهما <strong>شقيقان (siblings)</strong>.</li>
+</ul>
+<h2 id="-traversal-">الانتقال عبر الصّفحة (Traversal)</h2>
+<p>تسمح jQuery لنا بالانتقال عبر عناصر HTML الّتي تكوّن صفحتنا. إذ نُنشئ أوّلًا تحديدًا مبدئيًّا ثمّ ننتقل عبر DOM انطلاقًا منه. وخلال مسيرنا عبر DOM، فإنّنا نُغيّر من تحديدنا الأوّل فنضيف إليه أو نحذف منه بعض العناصر، أو نستبدل به تحديدًا آخر بالكامل في بعض الأحيان.</p>
+<h3 id="-">تصفية التّحديدات</h3>
+<p>بإمكانك تصفية تحديد موجودٍ بحيث يتضمّن فقط العناصر الّتي تطابق معاييرَ مُحدّدة. بإمكانك مثلًا إجراء التّصفية بإحدى الطّرق التّالية:</p>
+<pre><code class="lang-javascript">var listItems = $( &#39;li&#39; );
+
+// صفِّ التّحديد ليحوي فقط العناصر ذات الصّنف &#39;special&#39;
+var special = listItems.filter( &#39;.special&#39; );
+
+// صفّ التّحديد ليحوي فقط العناصر من غير الصّنف &#39;special&#39;
+var notSpecial = listItems.not( &#39;.special&#39; );
+
+// صفّ التّحديد ليحوي فقط العناصر الّتي تتضمّن span
+var hasSpans = listItems.has( &#39;span&#39; );
+</code></pre>
+<p>من المهمّ أن تعرف أن الوظيفة ‎<code>.not()</code>‎ <em>ليست</em> عكس ‎<code>.is()</code>‎، لأنّ ‎<code>.is()</code>‎ تُعيد قيمة منطقيّة (<code>true</code> أو <code>false</code>)، بينما تُعيد ‎<code>.not()</code>‎ كائن jQuery جديدًا.</p>
+<h3 id="-">إيجاد العناصر انطلاقًا من تحديد</h3>
+<p>يمكن الاستفادة من تحديد أوّليّ كأساس لإنشاء تحديدات إضافيّة؛ فإذا كان لديك تحديدٌ يحوي عنصر قائمة مُفردًا مثلًا، وأردت التّعامل مع &quot;أشقّائه&quot; أو مع القائمة غير المُرتّبة الّتي تحويه، فبإمكانك إنشاء تحديد جديد انطلاقًا من التّحديد الموجود بسهولة:</p>
+<pre><code class="lang-javascript">// اختر أوّل عنصر قائمة في الصّفحة
+var listItem = $( &#39;li&#39; ).first(); // أيضًا: .last()
+
+// اختر أشقّاء عنصر القائمة
+var siblings = listItem.siblings();
+
+// اختر الشّقيق التّالي لعنصر القائمة
+var nextSibling = listItem.next(); // أيضًا: .prev()
+
+// اختر والد عنصر القائمة
+var list = listItem.parent();
+
+// اختر عناصر القائمة الّتي تنحدر مباشرةً من القائمة
+var listItems = list.children();
+
+// اختر كلّ عناصر القائمة ضمن القائمة، بما في ذلك العناصر الفرعيّة
+var allListItems = list.find( &#39;li&#39; );
+
+// اختر كل أسلاف عنصر القائمة ذوي الصّنف &quot;module&quot;
+var modules = listItem.parents( &#39;.module&#39; );
+
+// اختر أقرب سلفٍ لعنصر القائمة له الصّنف &quot;module&quot;
+var module = listItem.closest( &#39;.module&#39; );
+</code></pre>
+<p>بإمكانك كذلك الإضافة على التّحديد الحاليّ باستخدام الوظيفة ‎<code>.add()</code>‎، الّتي تقبل مُحدِّدًا أو مصفوفة عناصر أو نص HTML أو كائن jQuery.</p>
+<pre><code class="lang-javascript">var list = $( &#39;#my-unordered-list&#39; );
+
+// do some stuff with the list, and then ...
+
+var listAndListItems = list.add( &#39;#my-unordered-list li&#39; );
+</code></pre>
+<h3 id="-">العودة إلى التّحديد الأصليّ</h3>
+<p>تحتفظ jQuery بإشارة إلى تحديد الأصليّ عندما تستخدمه للانتقال إلى تحديدات أخرى انطلاقًا منه، في حال أردت العودة إلى التّحديد الأصليّ. افترض مثلًا أنّك حدّدت قائمة غير مرتّبه، ثمّ أردت التّعديل على عناصر القائمة، ثمّ العودة مجدّدًا للعمل على القائمة غير المرتّبة، عندها بإمكانك استخدام الوظيفة ‎<code>.end()</code>‎ للرّجوع إلى التّحديد الأصليّ:</p>
+<pre><code class="lang-javascript">$( &#39;#my-unordered-list&#39; )
+ .find(&#39;li&#39;)
+
+ // نحن الآن نعمل على عناصر القائمة
+ .addClass(&#39;special&#39;)
+
+.end()
+
+// عدنا الآن للعمل على القائمة ذاتها
+.addClass(&#39;super-special&#39;);
+</code></pre>
+<p>تُسهِّل الوظيفة ‎<code>.end()</code>‎ إجراء تعديلات كثيرة في جملة واحدة، إلّا أنّ هذا الأسلوب لا يُلقي بالًا لوضوح النّصّ البرمجيّ، فهو أشبه بأن تحكي قصّة دون أن تلتقط أنفاسك. لهذا السّبب لا أنصحك بالإكثار من استعماله، فهو يؤدّي في معظم الحالات إلى جعل قراءة النّصّ البرمجيّ وصيانته وتنقيحه أكثر صعوبة.</p>
+<p>فيما يلي حلّ أفضل للمشكلة ذاتها:</p>
+<pre><code class="lang-javascript">var list = $( &#39;#my-unordered-list&#39; );
+var listItems = list.find(&#39;li&#39;);
+
+listItems.addClass( &#39;special&#39; );
+list.addClass( &#39;super-special&#39; );
+</code></pre>
+<p>توفّر jQuery أيضًا الوظيفة ‎<code>.addBack()</code>‎ إن أردت إضافة تحديدك الأصليّ إلى التّحديد الحاليّ. مثال:</p>
+<pre><code class="lang-javascript">$( &#39;li.special&#39; )
+
+ .siblings()
+
+  // نحن نعمل الآن على أشقّاء التّحديد السّابقة
+  .removeClass( &#39;important&#39; )
+
+ .addBack()
+
+ // الآن نعمل على عناصر القائمة الأصليّة وأشقائها **معًا**
+ .addClass( &#39;urgent&#39; );
+</code></pre>
+<p>هل اختلط عليك الأمر؟ الوظيفة ‎<code>.addBack()</code>‎ تشبه الوظيفة ‎<code>.end()</code>‎ في عيوبها، فكلاهما (وإن كان لهما استخدامها) يزيدان تعقيد النّصّ البرمجيّة. الحلّ الأفضل هو استخدام الوظيفة ‎<code>.add()</code>‎ لدمج التّحديدين الأصليين معًا:</p>
+<pre><code class="lang-javascript">var specialListItems = $( &#39;li.special&#39; );
+var otherListItems = specialListItems.siblings();
+
+otherListItems.removeClass( &#39;important&#39; );
+specialListItems.add( otherListItems ).addClass( &#39;urgent&#39; );
+</code></pre>
+<p>هناك وظائف عديدة لم نتطرّق إليها هنا، يمكنك الاطّلاع عليها في وثائق <a href="http://api.jquery.com/category/traversing/">الانتقال عبر الصّفحة</a>.</p>
+<h2 id="-manipulation-">التّعامل مع العناصر (Manipulation)</h2>
+<p>تسمح وظائف التّعامل مع العناصر في jQuery بتغيير DOM الصّفحة بصياغة أكثر بساطة من تلك الّتي توفّرها وظائف DOM الخام. تُعيد وظائف التّعامل مع العناصر في jQuery كائن jQuery الّتي استدعيت للعمل عليه، وهذا يعني إمكانيّة ربطها في سلسلة أو دمجها مع وظائف jQuery أخرى كالّتي ناقشناها في الفقرات السّابقة.</p>
+<h3 id="-">تعديل العناصر</h3>
+<p>كثيرةٌ هي طرق تعديل العناصر في jQuery. سنطّلع فيما يلي على طرق إنجاز المهام الأكثر شيوعًا.</p>
+<h4 id="-classes-">إضافة أو حذف الأصناف (classes)</h4>
+<p>يمكن الاستفادة من أصناف الكائنات في HTML بأن نستهدفها في CSS بغرض تنسيقها، كما يُستفاد منها في إنشاء تحديدات jQuery. فمثلًا يمكن لعنصر في الصّفحة أن يقع تحت الصّنف <code>hidden</code>، والّذي يُستخدم في CSS لجعل خاصّة <code>display</code> موافقة للقيمة <code>none</code> للعناصر من هذا الصّنف، ثمّ يمكن حذف هذا الصّنف أو إضافته لتغيير حالة ظهور العناصر الموافقة في jQuery:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/13/embed?css,js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>إن تطلّبت حالتك إضافة صنفٍ أو حذفه مرارًا، فبإمكانك استخدام الوظيفة ‎<code>.toggleClass()</code>‎ الّتي تُبدّل حالة الصّنف على العنصر، فتضيفه إن لم يكن موجودًا أو تحذفه إن وُجد:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/14/embed?css,js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h4 id="-">تغيير المظهر</h4>
+<p><em>ملاحظة: يُفضّل دومًا استخدام الأصناف واستهدافها بقواعد CSS لتغيير طريقة عرض العناصر، والاقتصار على استخدام jQuery في إضافة هذه الأصناف أو حذفها كما ورد للتوّ. في هذه الفقرة سنتعرّف كيف نُغيّر مظاهر العناصر مُباشرةً في jQuery، ولكننا نُفضِّل دومًا الأسلوب الأوّل إن كان يُحقِّق النّتائج ذاتها.</em></p>
+<p>عندما تعجز عن تحقيق هدفك بإضافة الأصناف أو حذفها، فإنّ jQuery تقدّم الوظيفة <code>.css()</code> الّتي تسمح بتعيين مظهر العناصر مباشرةً، ولعلّ هذا يكون ضروريًّا عادةً عندما تحتاج إلى إسناد قيم عدديّة لا يمكن حسابها إلّا أثناء عمل التّطبيق، كمعلومات توضّع العناصر في الصّفحة. لا يُفضَّل استخدام الوظيفة ‎<code>.css()</code>‎ لإجراء تنسيقات بسيطة مثل ‎<code>display: none</code>‎، بل يُفضَّل في معظم الحالات إنجاز الغاية ذاتها باستخدام الأصناف وCSS.</p>
+<p>افترض مثلًا أنّنا نريد تعيين مظهر العنصر بالاعتماد على عرض والده، وربّما يصعب أو يستحيل معرفة عرض الوالد مُسبقًا عند اعتماد تخطيط مرنٍ للصّفحة. في هذه الحالة قد نلجأ إلى الوظيفة ‎<code>.css()</code>‎ لتنسيق العنصر:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/16/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>إن احتجت إلى تعيين أكثر من خاصّة في وقت واحدٍ، مرّر كائنًا إلى الوظيفة ‎<code>.css()</code>‎ بدلًا من اسم الخاصّة وقيمتها. لاحظ أنّ عليك إحاطة أيّة خاصّة تحوي الرّمز &quot;-&quot; بعلامتي اقتباس:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/17/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h4 id="-forms-">تغيير قيم النّماذج (forms)</h4>
+<p>تقدّم jQuery الوظيفة ‎<code>.val()</code>‎ لتعديل قيمة العناصر في النّماج مثل <code>input</code> و<code>select</code>.</p>
+<p>بإمكانك تمرير سلسلة نصّيّة لتعيين محتوى حقول <code>input</code> النّصّيّة:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/18/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>بالنّسبة للعناصر من نوع <code>select</code>، بإمكانك تعيين الخيار المُختار باستخدام ‎<code>.val()</code>‎ أيضًا:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/19/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>أمّا لحقول <code>input</code> من نوع checkbox، فعليك تعيين الخاصّة <code>checked</code> على العنصر بالوظيفة ‎<code>.prop()</code>‎.</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/20/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><em>ملاحظة: أُضيفت الوظيفة ‎<code>.prop()</code>‎ في الإصدارة 1.6 من jQuery؛ وقبل ذلك كانت تُستخدم الوظيفة ‎<code>.attr()</code>‎ للغرض ذاته، وهي ما تزال تعمل في الإصدارات الحديثة من jQuery، ولكنّها في حالة <code>checked</code> تكتفي باستدعاء ‎<code>.prop()</code>‎. إن كنت تستخدم إصدارةً أحدث من 1.6، فأنصحك باستخدام ‎<code>.prop()</code>‎ دومًا لتعيين الخاصّة <code>checked</code> وخصائص عناصر DOM الأخرى. اطّلع على <a href="http://api.jquery.com/prop/">الوثائق</a> لتفاصيل أكثر.</em></p>
+<h4 id="-attributes-">تغيير الصّفات (attributes) الأخرى</h4>
+<p>بإمكانك استخدام وظيفة ‎<code>.attr()</code>‎ لتغيير صفات العناصر، فيمكنك مثلًا تغيير عنوان رابط (الخاصّة <code>title</code> لعنصر <code>&lt;a&gt;</code>):</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/21/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>عند تعيين قيمة لصفة، بإمكانك تمرير دالّة في موضع المُعامل الثّاني للوظيفة، ومثلها مثل كلّ دوالّ الكتابة السّابقة، تتلقّى هذه الدّالّة مُعاملين اثنين: دليل العنصر الّذي تعمل عليه، والقيمة الحاليّة للصّفة. يجب أن تُعيد هذه الدّالة القيمة الجديدة للصّفة:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/21/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>بإمكانك حذف الصّفات أيضًا، وذلك باستخدام ‎<code>.removeAttr()</code>‎.</p>
+<h3 id="-">الحصول على معلومات من العناصر</h3>
+<p>ناقشنا في الجزء السّابق (أساسيّات jQuery) فكرة وظائف القراءة والكتابة. كلّ الوظائف الّتي يمكن استخدامها لتغيير العناصر، يمكن أيضًا استخدامها لقراءة معلومات من تلك العناصر. فيمكن مثلًا استخدام الوظيفة ‎<code>.val()</code>‎ الّتي وصفناها أعلاه كوظيفة قراءة وكتابة معًا:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/22/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>وكذلك الأمر بالنّسبة للوظيفة ‎<code>.css()</code>‎، إذ يمكن استخدامها لقراءة قيمة خصائص CSS مُفردة بإمرار اسم الخاصّة فقط دون قيمة:</p>
+<pre><code class="lang-javascript">var listItemColor = $( &#39;li&#39; ).css( &#39;color&#39; );
+</code></pre>
+<p>عندما تُستخدم وظائف التّعامل مع العناصر للقراءة، فإنّها <em>تعمل فقط مع العنصر الأول في التّحديد</em>، باستثناء الوظيفة ‎<code>.text()</code>‎ الّتي تقرأ المحتوى النّصيّ <em>لكلّ</em> العناصر المُحدّدة إن لم يُمرّر معامل إليها.</p>
+<h3 id="-">إضافة العناصر إلى الصّفحة</h3>
+<p>سواءٌ حدّدت عنصرًا أو أنشأت واحدًا جديدًا، فبإمكانك إضافة هذا العنصر إلى الصّفحة يمكن فعل ذلك بطريقتين: باستدعاء وظيفة تتبع للعنصر (أو العناصر) المطلوب إضافته، أو باستدعاء وظيفة تتبع لعنصر مرتبط بذلك الّذي تريد إضافته.</p>
+<p>افترض مثلًا أنّك تريد نقل عنصر في قائمة من رأسها إلى ذيلها، هناك عدّة طرق لفعل ذلك.</p>
+<p>بإمكانك مثلًا إضافة العنصر إلى القائمة باستدعاء الوظيفة ‎<code>.appendTo()</code>‎ على عنصر القائمة ذاته:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/22/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>وبإمكانك أيضًا إضافة العنصر باستدعاء ‎<code>.append()</code>‎ على القائمة:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/23/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>أو إضافته باستدعاء ‎<code>.insertAfter()</code>‎ على العنصر المُراد نقله مُمرّرًا العنصر الأخير في القائمة إلى الوظيفة:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/24/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>أو إضافته باستدعاء ‎<code>.after()</code>‎ على العنصر الأخير في القائمة مُمرًّرا العنصر الأولى في القائمة إلى الوظيفة:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/25/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>هناك طرق آخرى كثير لإضافة العناصر، فبإمكانك إضافتها <a href="http://api.jquery.com/category/manipulation/dom-insertion-around/">حول</a> عناصر أخرى أو <a href="http://api.jquery.com/category/manipulation/dom-insertion-inside/">داخلها</a> أو <a href="http://api.jquery.com/category/manipulation/dom-insertion-outside/">خارجها</a> بحسب حاجتك.</p>
+<p>تعتمد أكثر الطّرق كفاءة في إضافة عنصر إلى الصّفحة على العناصر الّتي تتوفّر بين يديك بالفعل. فقد ترغب في إضافة العنصر إلى القائمة غير المُرتّبة في المثال السّابق إن كنت قد حدّدت القائمة غير المرتّبة من قبل لغرض آخر؛ أو إن كنت قد حدّدت عناصر القائجة جميعها، فقد يكون إضافة العنصر الأول بعد العنصر الأخير أمرًا أسهل.</p>
+<p>عندما تختار الطّريقة المناسبة لإضافة العنصر، فلا تكتفِ بالنّظر في سهولة الطّريقة، بل فكّر في إمكانيّة صيانتها لاحقًا. تجنّب الطّرق الّتي تعتمد على افتراض بنية مُحدِّدة بدقَّة لصفحتك، فقد تقرّر تغيير هذه البنية فيما بعد.</p>
+<h3 id="-">نسخ العناصر</h3>
+<p>بإمكانك إنشاء نسخة من عنصر أو مجموعة عناصر باستخدام الوظيفة ‎<code>.clone()</code>‎ في jQuery، وستُنشئ النُّسخة في الذّاكرة دون أن تُدرج في الصّفحة، فعليك فعل ذلك بنفسك إن أردته. بإمكانك تعديل العناصر المنسوخة قبل إضافتها:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/26/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><em><em>ملاحظة*</em>: لن تمنعك jQuery من نسخ عنصر ذي مُعرِّف (ID)، ولكن عليك التأكّد من حذف المُعرِّف أو تغييره في العنصر المنسوخ بتعديل الصّفة <code>id</code> قبل إدراجه في المستند، إذ لا ينبغي أ يوجد عنصران بمُعرِّف واحدٍ في الصّفحة.</em></p>
+<h3 id="-">حذف العناصر</h3>
+<p>هناك ثلاث طرق لحذف العناصر من الصّفحة: ‎<code>.remove()</code>‎‏ و‎<code>.detach()</code>‎‏ و‎<code>.replaceWith()</code>‎‏، ولكلّ منها غرضٌ مُختلف.</p>
+<p>يجب استخدام ‎<code>.remove()</code>‎‏ عند الحاجة لحذف العناصر بصورة دائمة، فهي ستحذف مع العنصر كلّ مُتوليّات الأحداث المُرتبطة به (event handlers). تُعيد الوظيفة ‎<code>.remove()</code>‎‏ إشارةً إلى العناصر المُحذوفة، ولكن عند إضافة هذه العناصر مرّة ثانيةً، فلن تكون أيّة أحداث مُرتبطةً بها.</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/27/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>تُفيد الوظيفة ‎<code>.detach()</code>‎‏ في حذف العناصر مؤقّتًا من الصّفحة، فمثلًا إن رغب في إجراء تعديلات كبيرة على بنية الصّفحة باستخدام jQuery، فقد يكون حذف العناصر مؤقّتًا من الصّفحة ثمّ إضافتها ثانيةً أفضل أداءً بمراحل. ستحتفظ العناصر المحذوفة بهذه الوظيفة بمُتولّيات الأحداث المُرتبطة بها، ويمكن بعد ذلك إضافتها إلى الصّفحة مُجدّدًا باستخدام ‎<code>.appendTo()</code>‎‏ أو غيرها من وظائف الإضافة.</p>
+<pre><code class="lang-javascript">$( &#39;#my-unordered-list li&#39; ).click(function() {
+  alert( $( this ).text() );
+});
+
+var detachedListItem = $( &#39;#my-unordered-list li&#39; ).first().detach();
+
+// افعل شيئًا ما مُعقّدًا بعنصر القائمة
+
+detachedListItem.appendTo( &#39;#my-unordered-list&#39; );
+detachedListItem.trigger( &#39;click&#39; ); // alert!
+</code></pre>
+<p>أخيرًا لدينا الوظيفة ‎<code>.replaceWith()</code>‎‏ الّتي تُحلِّ عنصرًا أو نصّ HTML محلّ عنصرٍ أو عناصر أخرى. تُعاد العناصر الّتي أُزيلت من الوظيفة، ولكنّ كلّ متولّيات الأحداث المرتبطة بها تُحذف، تمامًا كالوظيفة ‎<code>.remove()</code>‎‏.</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/28/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h2 id="-">خاتمة</h2>
+<p>تعلّمنا في هذا الجزء الطّرق المختلفة للانتقال بين العناصر في الصّفحة، وكيفيّة نقلها وتغييرها وإضافة عناصر جديدة. سنتعلّم في الجزء القادم كيف نُنصِت لتفاعل المستخدم مع صفحتنا.</p>
+

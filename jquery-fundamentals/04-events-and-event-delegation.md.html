@@ -1,0 +1,152 @@
+<h1 id="-jquery-4-">تعلّم jQuery‏ (4): الأحداث وتفويضها</h1>
+<p>تُسهّل jQuery الاستجابة لتفاعل المُستخدم مع صفحات الويب. معنى هذا أنّ بإمكانك تنفيذ أمرٍ ما عندما ينقر المُستخدم على جزءٍ مُعيّن من الصّفحة، أو عندما يُحرّك مؤشّر الفأرة فوق عنصر في نموذج مثلاً. في المثال التّالي، لدينا أمر يُنفَّذ عندما ينقر المُستخدم فوق أيّ عنصر قائمة في الصّفحة:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/30/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>يُحدّد النّصّ السّابق كلّ عناصر القائمة ويُسند إليها دالّة تتولّى حدث النّقر على كلّ عنصر، باستخدام وظيفة ‎<code>.click()</code>‎ في jQuery.</p>
+<p>توفّر jQuery وظائف مُختصرةً عديدةً لربط الأحداث، وكلّ من هذه الوظائف يوافق حدث DOM أصليًّا:</p>
+<table>
+<thead>
+<tr>
+<th>اسم الحدث الأصليّ</th>
+<th>الوظيفة المُختصرة</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>‏click‎</td>
+<td>.click()</td>
+</tr>
+<tr>
+<td>‏keydown</td>
+<td>.keydown()</td>
+</tr>
+<tr>
+<td>‏keypress</td>
+<td>.keypress()</td>
+</tr>
+<tr>
+<td>‏keyup</td>
+<td>.keyup()</td>
+</tr>
+<tr>
+<td>‏mouseover</td>
+<td>.mouseover()</td>
+</tr>
+<tr>
+<td>‏mouseout</td>
+<td>.mouseout()</td>
+</tr>
+<tr>
+<td>‏mouseenter</td>
+<td>.mouseenter()</td>
+</tr>
+<tr>
+<td>‏mouseleave</td>
+<td>.mouseleave()</td>
+</tr>
+<tr>
+<td>‏scroll</td>
+<td>.scroll()</td>
+</tr>
+<tr>
+<td>‏focus</td>
+<td>.focus()</td>
+</tr>
+<tr>
+<td>‏blur</td>
+<td>.blur()</td>
+</tr>
+<tr>
+<td>‏resize</td>
+<td>.resize()</td>
+</tr>
+</tbody>
+</table>
+<p>تستخدم هذه الوظائف المُختصرة الوظيفة ‎<code>.on()</code>‎ ما وراء الكواليس، وهي وظيفة يمكنك استخدامها بنفسك لمرونةٍ أكبر. وعند استخدامك لها، فإنّك تُمرّر اسم الحدث الأصليّ كمُعامل أوّل للوظيفة، ثمّ دالّة تتولى الحدث كمعامل ثانٍ:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/31/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>ما إن &quot;تربط&quot; مُتولّي الحدث بعنصرٍ من العناصر، فبإمكانك إثارة هذا الحدث بـjQuery أيضًا:</p>
+<pre><code class="lang-javascript">$( &#39;li&#39; ).trigger( &#39;click&#39; );
+</code></pre>
+<p>وإن كان للحدث الّذي تُريد إثارته وظيفةٌ مختصرة (كما ورد في الجدول السّابق)، فبإمكانك إثارة الحدث باستدعاء الوظيفة المختصرة ذاتها:</p>
+<pre><code class="lang-javascript">$( &#39;li&#39; ).click();
+</code></pre>
+<p><em>ملاحظة: عندما تُثير حدثًا باستخدام ‎<code>.trigger()</code>‎، فإنّك تستدعي مُتولّيات الأحداث الّتي أُنشئت في JavaScript فقط ولا تستدعي السّلوك الافتراضيّ للحدث. فمثلًا إن أثرت حدث النّقر على رابط (عنصر <code>&lt;a&gt;</code>) فلن ينتقل المتصفّح إلى الرّابط المُسند إليه في صفة <code>href</code> (مع أنّ بإمكانك كتابة أوامر تُنفّذ هذه الغاية).</em></p>
+<p>بعد أن تربط حدثًا بُعنصر، بإمكانك فكّ هذا الارتباط باستخدام الوظيفة ‎<code>.off()</code>‎ الّتي تُزيل أية مُتولّيات ارتبطت بهذا الحدث:</p>
+<pre><code class="lang-javascript">$( &#39;li&#39; ).off( &#39;click&#39; );
+</code></pre>
+<h2 id="-">حصر الأحداث ضمن فضاء أسماء</h2>
+<p>من المزايا الّتي تُتيحها ‎<code>.on()</code>‎ إمكانيّة حصر الأحداث ضمن &quot;فضاء أسماء&quot;. قد تتساءل عن الحاجة لذلك. افترض مثلًا أنّك تريد ربط بعض الأحداث بعنصر ما، ثمّ إزالة بعض المُتولّيات، يمكنك أن تفعل ما فعلناه في الفقرة الماضية:</p>
+<p><strong>تحذير: أسلوب برمجيّ غير مُفضّل</strong></p>
+<pre><code class="lang-javascript">$( &#39;li&#39; ).on( &#39;click&#39;, function() {
+  console.log( &#39;a list item was clicked&#39; );
+});
+
+$( &#39;li&#39; ).on( &#39;click&#39;, function() {
+  registerClick();
+  doSomethingElse();
+});
+
+$( &#39;li&#39; ).off( &#39;click&#39; );
+</code></pre>
+<p>إلّا أنّ هذا الأسلوب سيُزيل <em>كلّ</em> مُتولّيات النقر على كلّ عناصر القوائم، وليس هذا ما نريد. إذا ربطت متولّيًا للأحداث محصورًا ضمن فضاء أسماء، فبإمكانك استهدافه بدقّة:</p>
+<pre><code class="lang-javascript">$( &#39;li&#39; ).on( &#39;click.logging&#39;, function() {
+  console.log( &#39;a list item was clicked&#39; );
+});
+
+$( &#39;li&#39; ).on( &#39;click.analytics&#39;, function() {
+  registerClick();
+  doSomethingElse();
+});
+
+$( &#39;li&#39; ).off( &#39;click.logging&#39; );
+</code></pre>
+<p>هذا الأسلوب لا يؤثّر على الأحداث المرتبطة بالنّقر والمُتعلّقة بأغراض إحصاءات الاستخدام في الصّفحة، بينما يزيل أحداث النّقر المُتعلّقة بالسّجلّات.</p>
+<p>بإمكاننا استخدام ميزة حصر الأحداث لإثارة أحداثٍ مُحدّدة:</p>
+<pre><code class="lang-javascript">$( &#39;li&#39; ).trigger( &#39;click.logging&#39; );
+</code></pre>
+<h2 id="-">ربط أحداث مُتعدّدة في وقت واحد</h2>
+<p>ميزة أخرى تُوفّرها  ‎<code>.on()</code>‎، وهي إمكانيّة ربط أحداث مُتعدّدة في وقتٍ واحد. افترض مثلًا أنّك تريد تنفيذ أمرٍ مُعيّن عندما يُمرّر المستخدم الصّفحة أو يغيّر قياس النّافذة. فهذه الوظيفة تُتيح لك تمرير الحدثين معًا مفصولين بمسافة في سلسلة نصيّة، يتبعهما الدّالّة الّتي تريد أن تتولّى الحدثين:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/32/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h2 id="-">تمرير دوالّ مُسمّاة كُمتولّيات الأحداث</h2>
+<p>في كلّ أمثلتنا السّابقة، كنّا نُمرّر دوالّ مجهولة كمُتولّيات للأحداث، ولكن يمكننا إنشاء دالّة قبل إمرارها وحفظها في مُتغيّر ثمّ تمرير هذا المُتغيّر كمُتولّي الحدث. هذا يُفيد في حال أردت استخدام الدّالة نفسها لتتولّى أحداثًا مُختلفة أو أحداثًا من عناصر مُختلفة:</p>
+<pre><code class="lang-javascript">var handleClick = function() {
+  console.log( &#39;something was clicked&#39; );
+};
+
+$( &#39;li&#39; ).on( &#39;click&#39;, handleClick );
+$( &#39;h1&#39; ).on( &#39;click&#39;, handleClick );
+</code></pre>
+<h2 id="-">كائن الحدث</h2>
+<p>في كلّ مرّة يُثار فيها حدثٌ ما، تستقبل الدّالّة المُتولّية للحدث مُعاملًا واحدًا، وهو كائن الحدث الّذي يتبع معايير مُتّفقًا عليها بين كلّ المُتصفّحات. ولهذا الكائن <a href="http://api.jquery.com/category/events/event-object/">خصائص مُفيدة كثيرة</a>، منها:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/33/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h2 id="-">داخل مُتولّي الأحداث</h2>
+<p>عندما تُحدِّد الدّالة المُتولّية لحدث ما، فإنّه يُتاح لهذه الدّالّة وصول إلى عنصر DOM الخام الّذي أطلق الحدث كسياق الدّالّة <code>this</code>، فإن أردت استخدام jQuery للتّعامل مع الحدث، فأحطه بـ‎<code>$()</code>‎:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/34/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h2 id="-">منع السّلوك المبدئيّ</h2>
+<p>قد ترغب أحيانًا في منع السّلوك المبدئيّ لحدثٍ ما، كأن ترغب في تولّي النّقر فوق رابط باستخدام AJAX، بدلًا من بدء إعادة تحميل كاملةٍ للصّفحة (وهو السّلوك المبدئيّ). يصل العديد من المُطوّرين إلى هذه الغاية بإعادة <code>false</code> من مُتولّي الحدث، ولكنّ لهذا تأثيرًا جانبيًّا آخر: فهو يمنع <em>تفشّي</em> الحدث (propagation) أيضًا (سنشرحه بعد قليل)، ممّا قد يعطي نتائج غير مرغوبة. الطّريقة السّليمة لمنع السّلوك المبدئيّ لحدث تكون باستدعاء ‎<code>.preventDefault()</code>‎ على كائن الحدث:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/34/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h2 id="-event-bubbling-">صعود الأحداث (Event bubbling)</h2>
+<p>تمعّن النّص البرمجيّ التّالي:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/35/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>يربط هذا النّص مُتولّيًا للنقر على كلّ العناصر في الصّفحة (وهو أمر يجب <em>ألّا</em> تفعله <em>نهائيًّا</em> في المواقع الحقيقيّة)، بالإضافة إلى عنصري النّافذة والمُستند. ولكن ما الّذي يحدث عندما تنقر على عنصر <code>&lt;a&gt;</code> مُدرج داخل عناصر أخرى؟ الحقيقة أنّ الحدث سيُثار على العنصر <code>&lt;a&gt;</code> وعلى كلّ العناصر الّتي تُحيط به صعودًا حتّى الوصول إلى العنصرين <code>document</code> و<code>window</code>.</p>
+<p>يُسمّى هذا السّلوك &quot;صعود الأحداث&quot;، فالحدث يُثار على العنصر الّذي نقر عليه المُستخدم، ثمّ ينتقل صاعدًا إلى كلّ العناصر الّتي تحويه وصولًا إلى أعلى DOM، إلّا إن استدعيت الوظيفة ‎<code>.stopPropagation()</code>‎ على كائن الحدث.</p>
+<p>بإمكانك فهم ذلك بسهولة أكبر في هذا المثال:</p>
+<pre><code class="lang-html">&lt;a href=&quot;#foo&quot;&gt;&lt;span&gt;I am a Link!&lt;/span&gt;&lt;/a&gt;
+&lt;a href=&quot;#bar&quot;&gt;&lt;b&gt;&lt;i&gt;I am another Link!&lt;/i&gt;&lt;/b&gt;&lt;/a&gt;
+</code></pre>
+<pre><code class="lang-javascript">$( &#39;a&#39; ).on( &#39;click&#39;, function( event ) {
+  event.preventDefault();
+  console.log( $( this ).attr( &#39;href&#39; ) );
+});
+</code></pre>
+<p>عندما تنقر على &quot;I am a Link!‎&quot;، فإنك لا تنقر فعليًّا على العنصر <code>&lt;a&gt;</code>، بل على العنصر <code>&lt;span&gt;</code> داخله، ولكن الحدث &quot;يصعد&quot; نحو العنصر <code>&lt;a&gt;</code> ويُثير حدث النّقر المُرتبط به.</p>
+<h2 id="-event-delegation-">تفويض الأحداث (Event delegation)</h2>
+<p>يسمح لنا مفهوم &quot;صعود الأحداث&quot; بإنجاز فكرة &quot;تفويض الأحداث&quot;، أي ربط الأحداث بعناصر في مستوى أعلى، ثمّ اكتشاف أيّ عنصر فرعيّ ضمنها أثار الحدث. بإمكاننا مثلًا ربط حدث بقائمة غير مُرتّبة، ثمّ تحديد أيّ العناصر أثار الحدث:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/36/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>بالطّبع ستتعقّد الأمور إذا احتوت عناصر القائمة على عناصر فرعيّة ضمنها، ولهذا تُقدّم jQuery وظيفةً مُساعدة تسمح لنا بتحديد أي العناصر نهتمّ بها، مع الاحتفاظ بالحدث مُرتبطًا بالعنصر ذي المُستوى الأعلى:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/38/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>لتفويض الأحداث فائدتان اثنتان: أولاهما أنّه يسمح بربط عددٍ أقلّ من مُتولّيات الأحداث مقارنة بالعدد الّذي نحتاجه لو قرّرنا ربط الأحداث بالعناصر المُنفردة، وهذا يُحسّن الأداء في الصّفحة بصورة كبيرة. وثاني الفائدتين أنّه يسمح لنا بربط الأحداث بالآباء (كالقائمة غير المرتّبة في مثالنا)، مع اطمئنانا إلى أنّ الأحدث ستُثار <em>حتّى وإن تغيّرت مُحتويات العنصر الأب</em>.</p>
+<p>هذا النّصّ مثلًا، يُضيف عنصر قائمةٍ جديدًا بعد تفويض الحدث إلى العنصر الأب، والنّقر فوق هذا العنصر سيُثير الحدث كما ينبغي، دون الحاجة لربط أيّة أحداث جديدة:</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/40/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h2 id="-">خاتمة</h2>
+<p>تعلّمنا في هذا الجزء الوسائل المُختلفة للإنصات إلى تفاعل المُستخدم مع صفحتنا، بما في ذلك كيفيّة الاستفادة من التفويض لتحسين كفاءة ربط الأحداث بالعناصر. سنتعرّف الجزء القادم كيف نُحرّك العناصر باستخدام وظائف التأثيرات الحركيّة في jQuery.</p>
+

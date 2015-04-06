@@ -19,21 +19,14 @@ _**ملاحظة مهمّة عن الحركات:** يكون إنجاز الحرك
 
 يسهل تطبيق إحدى هذه التأثيرات على التّحديد بعد إنشائه:
 
-```javascript
-$( '.hidden' ).show();
-```
+<a class="jsbin-embed" href="http://jsbin.com/huxefi/2/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 بإمكانك أيضًا تحديدُ مدّة للتأثيرات السّابقة، وهناك طريقتان لتحديدها، الأولى: تعيين الوقت بالميللي ثانيّة:
 
-```javascript
-$( '.hidden' ).show( 300 );
-```
-
+<a class="jsbin-embed" href="http://jsbin.com/huxefi/3/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 والثّانية استخدام إحدى السُرعات المُعرّفة مُسبقًا:
 
-```javascript
-$( '.hidden' ).show( 'slow' );
-```
+<a class="jsbin-embed" href="http://jsbin.com/huxefi/4/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 عُرِّفت هذه السُرعات في الكائن `jQuert.fx.speeds`؛ ممّا يعني أنّ بإمكانك تعديله لتغيير القيم المبدئيّة، أو إضافة سُرعات جديدة إليه:
 
@@ -53,32 +46,11 @@ $( '.other-hidden' ).show( 'turtle' );
 
 كثيرًا ما يرغب المُطوّر بفعل شيءٍ ما بعد انتهاء الحركة مباشرةً، فإن حاول فعله قبل انتهاء الحركة، فقد يسبّب تشوّه الحركة وتقطّعها، أو قد يحذف سهوًا عناصر تتحرّك في لحظة حركتها. بإمكانك تمرير استدعاء راجع (callback) إلى وظائف الحركة إن رغبت بتنفيذ أمرٍ ما بعد انتهاء التأثير، وتُشير `this` داخل هذا الاستدعاء إلى عنصر DOM الخام الّذي طُبقّت عليه الحركة، ومثلها ومثل دوالّ تولّي الأحداث، يمكن إحاطة `this` بالوظيفة ‎`$()`‎ لاستخدامها ككائن jQuery:
 
-```javascript
-$( 'p.old' ).fadeOut( 300, function() {
-  $( this ).remove();
-});
-```
+<a class="jsbin-embed" href="http://jsbin.com/huxefi/5/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>`
 
 إن لم يحوِ التّحديد أيّة عناصر، فلن تُستدعى الدّالة. إن احتجت إلى استدعاء الدّالة بصرف النّظر عن وجود العناصر أو غيابها في التّحديد، بإمكانك إنشاء دالّة تتعامل مع الحالتين:
 
-```javascript
-var oldElements = $( 'p.old' );
-var thingToAnimate = $( '#nonexistent' );
-
-// هذه الدّالة ستكون الاستدعاء الرّاجع للوظيفة `show` في حال وجود عناصر نريد إظهارها، فإن لم توجد أيّة عناصر، فإنّنا نستدعيها مباشرةً بأنفسنا.
-var removeOldElements = function() {
-  oldElements.remove();
-};
-
-if ( thingToAnimate.length ) {
-
-  // ستُستدعى وظيفتنا بعد انتهاء الحركة
-  thingToAnimate.show( 'slow', removeOldElements );
-
-} else {
-  removeOldElements();
-}
-```
+<a class="jsbin-embed" href="http://jsbin.com/huxefi/6/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 ##تأثيرات مُخصّصة باستخدام ‎`.animate()`‎
 إن لم تُلبِّ الحركات المُرفقة مع jQuery حاجتك، فبإمكانك استخدام الوظيفة ‎`.animate()`‎ لإنشاء حركات مخصّصة قائمة على خصائص CSS مُتعدّدة (إحدى الاستثناءات: الخاصّ' `color` الّتي لا يمكن تحريكها، ولكن تتوفّر [إضافة](https://github.com/jquery/jquery-color/) تسمح بذلك).
@@ -91,19 +63,7 @@ if ( thingToAnimate.length ) {
 
 يمكن أن تُعيّن قيمة الحركة بكتابة القيمة النّهائيّة المُراد التّحريك إليها، أو كتابة المقدار الّذي يجب تحريكه (الفرق بين موضعي الحركة):
 
-```javascript
-$( '.funtimes' ).animate({
-    left: '+=50', // زد بمقدار 50
-    opacity: 0.25,
-    fontSize: '12px'
-  },
-  300,
-  function() {
-    // تُنفّذ عند انتهاء الحركة
-  }
-);
-
-```
+<a class="jsbin-embed" href="http://jsbin.com/huxefi/7/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 _ملاحظة: إن أردت تحريك خاصّة CSS يحوي اسمها على الإشارة "-"، فعليك تحويل الاسم إلى صيغة camelCase أوّلًا إن لم تشأ إحاطة اسم الخاصّة بعلامات اقتباس، فمثلًا الخاصّة `font-size` تُصبح `fontSize`._
 

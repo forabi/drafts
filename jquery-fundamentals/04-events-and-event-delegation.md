@@ -2,11 +2,7 @@
 =============================
 تُسهّل jQuery الاستجابة لتفاعل المُستخدم مع صفحات الويب. معنى هذا أنّ بإمكانك تنفيذ أمرٍ ما عندما ينقر المُستخدم على جزءٍ مُعيّن من الصّفحة، أو عندما يُحرّك مؤشّر الفأرة فوق عنصر في نموذج مثلاً. في المثال التّالي، لدينا أمر يُنفَّذ عندما ينقر المُستخدم فوق أيّ عنصر قائمة في الصّفحة:
 
-```javascript
-$( 'li' ).click(function( event ) {
-  console.log( 'clicked', $( this ).text() );
-});
-```
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/30/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 يُحدّد النّصّ السّابق كلّ عناصر القائمة ويُسند إليها دالّة تتولّى حدث النّقر على كلّ عنصر، باستخدام وظيفة ‎`.click()`‎ في jQuery.
 
@@ -29,11 +25,7 @@ $( 'li' ).click(function( event ) {
 
 تستخدم هذه الوظائف المُختصرة الوظيفة ‎`.on()`‎ ما وراء الكواليس، وهي وظيفة يمكنك استخدامها بنفسك لمرونةٍ أكبر. وعند استخدامك لها، فإنّك تُمرّر اسم الحدث الأصليّ كمُعامل أوّل للوظيفة، ثمّ دالّة تتولى الحدث كمعامل ثانٍ:
 
-```javascript
-$( 'li' ).on( 'click', function( event ) {
-  console.log( 'clicked', $( this ).text() );
-});
-```
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/31/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 ما إن "تربط" مُتولّي الحدث بعنصرٍ من العناصر، فبإمكانك إثارة هذا الحدث بـjQuery أيضًا:
 
@@ -99,15 +91,7 @@ $( 'li' ).trigger( 'click.logging' );
 ##ربط أحداث مُتعدّدة في وقت واحد
 ميزة أخرى تُوفّرها  ‎`.on()`‎، وهي إمكانيّة ربط أحداث مُتعدّدة في وقتٍ واحد. افترض مثلًا أنّك تريد تنفيذ أمرٍ مُعيّن عندما يُمرّر المستخدم الصّفحة أو يغيّر قياس النّافذة. فهذه الوظيفة تُتيح لك تمرير الحدثين معًا مفصولين بمسافة في سلسلة نصيّة، يتبعهما الدّالّة الّتي تريد أن تتولّى الحدثين:
 
-```javascript
-$( 'input[type="text"]' ).on('focus blur', function() {
-  console.log( 'The user focused or blurred the input' );
-});
-
-$( window ).on( 'resize.foo scroll.bar', function() {
-  console.log( 'The window has been resized or scrolled!' );
-});
-```
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/32/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 ##تمرير دوالّ مُسمّاة كُمتولّيات الأحداث
 في كلّ أمثلتنا السّابقة، كنّا نُمرّر دوالّ مجهولة كمُتولّيات للأحداث، ولكن يمكننا إنشاء دالّة قبل إمرارها وحفظها في مُتغيّر ثمّ تمرير هذا المُتغيّر كمُتولّي الحدث. هذا يُفيد في حال أردت استخدام الدّالة نفسها لتتولّى أحداثًا مُختلفة أو أحداثًا من عناصر مُختلفة:
@@ -124,50 +108,22 @@ $( 'h1' ).on( 'click', handleClick );
 ##كائن الحدث
 في كلّ مرّة يُثار فيها حدثٌ ما، تستقبل الدّالّة المُتولّية للحدث مُعاملًا واحدًا، وهو كائن الحدث الّذي يتبع معايير مُتّفقًا عليها بين كلّ المُتصفّحات. ولهذا الكائن [خصائص مُفيدة كثيرة](http://api.jquery.com/category/events/event-object/)، منها:
 
-```javascript
-$( document ).on( 'click', function( event ) {
-  console.log( event.type );    // نوع الحدث، مثل: "click"
-  console.log( event.which );   // الزرّ أو المفتاح الّذي ضغط
-  console.log( event.target );  // العنصر الّذي انطلق منه الحدث
-  console.log( event.pageX );   // موقع مؤشّر الفأرة على المحور X
-  console.log( event.pageY );   // موقع مؤشّر الفأرة على المحور Y
-});
-```
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/33/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 ##داخل مُتولّي الأحداث
 عندما تُحدِّد الدّالة المُتولّية لحدث ما، فإنّه يُتاح لهذه الدّالّة وصول إلى عنصر DOM الخام الّذي أطلق الحدث كسياق الدّالّة `this`، فإن أردت استخدام jQuery للتّعامل مع الحدث، فأحطه بـ‎`$()`‎:
 
-```javascript
-$( 'input' ).on( 'keydown', function( event ) {
-  // this: العنصر الّذي ارتبط به الحدث
-  // event: كائن الحدث
-
-  // غيّر خلفيّة العنصر إلى اللّون الأحمر إن ضُغط زر مسح الحرف، أو إلى الأخضر فيما سوا ذلك.
-  $( this ).css( 'background', event.which === 8 ? 'red' : 'green' );
-});
-```
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/34/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 ##منع السّلوك المبدئيّ
 قد ترغب أحيانًا في منع السّلوك المبدئيّ لحدثٍ ما، كأن ترغب في تولّي النّقر فوق رابط باستخدام AJAX، بدلًا من بدء إعادة تحميل كاملةٍ للصّفحة (وهو السّلوك المبدئيّ). يصل العديد من المُطوّرين إلى هذه الغاية بإعادة `false` من مُتولّي الحدث، ولكنّ لهذا تأثيرًا جانبيًّا آخر: فهو يمنع _تفشّي_ الحدث (propagation) أيضًا (سنشرحه بعد قليل)، ممّا قد يعطي نتائج غير مرغوبة. الطّريقة السّليمة لمنع السّلوك المبدئيّ لحدث تكون باستدعاء ‎`.preventDefault()`‎ على كائن الحدث:
 
-```javascript
-$( 'a' ).on( 'click', function( event ) {
-  // امنع الحدث المبدئيّ.
-  event.preventDefault();
-  // سجّل ما حدث.
-  console.log( 'I was just clicked!' );
-});
-```
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/34/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 ##صعود الأحداث (Event bubbling)
 تمعّن النّص البرمجيّ التّالي:
 
-```javascript
-$( '*' ).add( [ document, window ] ).on( 'click', function( event ) {
-  event.preventDefault();
-  console.log( this );
-});
-```
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/35/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 يربط هذا النّص مُتولّيًا للنقر على كلّ العناصر في الصّفحة (وهو أمر يجب _ألّا_ تفعله _نهائيًّا_ في المواقع الحقيقيّة)، بالإضافة إلى عنصري النّافذة والمُستند. ولكن ما الّذي يحدث عندما تنقر على عنصر `<a>` مُدرج داخل عناصر أخرى؟ الحقيقة أنّ الحدث سيُثار على العنصر `<a>` وعلى كلّ العناصر الّتي تُحيط به صعودًا حتّى الوصول إلى العنصرين `document` و`window`.
 
@@ -192,33 +148,17 @@ $( 'a' ).on( 'click', function( event ) {
 ##تفويض الأحداث (Event delegation)
 يسمح لنا مفهوم "صعود الأحداث" بإنجاز فكرة "تفويض الأحداث"، أي ربط الأحداث بعناصر في مستوى أعلى، ثمّ اكتشاف أيّ عنصر فرعيّ ضمنها أثار الحدث. بإمكاننا مثلًا ربط حدث بقائمة غير مُرتّبة، ثمّ تحديد أيّ العناصر أثار الحدث:
 
-```javascript
-$( '#my-unordered-list' ).on( 'click', function( event ) {
-  console.log( event.target ); // يُسجّل العنصر الّذي أثار الحدث
-});
-```
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/36/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 بالطّبع ستتعقّد الأمور إذا احتوت عناصر القائمة على عناصر فرعيّة ضمنها، ولهذا تُقدّم jQuery وظيفةً مُساعدة تسمح لنا بتحديد أي العناصر نهتمّ بها، مع الاحتفاظ بالحدث مُرتبطًا بالعنصر ذي المُستوى الأعلى:
 
-```javascript
-$( '#my-unordered-list' ).on( 'click', 'li', function( event ) {
-  console.log( this ); // يُسجّل عنصر القائمة الّذي أثار الحدث
-});
-
-$( '<li>a new list item!</li>' ).appendTo( '#my-unordered-list' );
-```
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/38/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 
 لتفويض الأحداث فائدتان اثنتان: أولاهما أنّه يسمح بربط عددٍ أقلّ من مُتولّيات الأحداث مقارنة بالعدد الّذي نحتاجه لو قرّرنا ربط الأحداث بالعناصر المُنفردة، وهذا يُحسّن الأداء في الصّفحة بصورة كبيرة. وثاني الفائدتين أنّه يسمح لنا بربط الأحداث بالآباء (كالقائمة غير المرتّبة في مثالنا)، مع اطمئنانا إلى أنّ الأحدث ستُثار _حتّى وإن تغيّرت مُحتويات العنصر الأب_.
 
 هذا النّصّ مثلًا، يُضيف عنصر قائمةٍ جديدًا بعد تفويض الحدث إلى العنصر الأب، والنّقر فوق هذا العنصر سيُثير الحدث كما ينبغي، دون الحاجة لربط أيّة أحداث جديدة:
 
-```javascript
-$( '#my-unordered-list' ).on( 'click', 'li', function( event ) {
-  console.log( this ); // يُسجّل عنصر القائمة الّذي نُقر عليه
-});
-
-$( '<li>a new list item!</li>' ).appendTo( '#my-unordered-list' );
-```
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/40/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 ##خاتمة
 تعلّمنا في هذا الجزء الوسائل المُختلفة للإنصات إلى تفاعل المُستخدم مع صفحتنا، بما في ذلك كيفيّة الاستفادة من التفويض لتحسين كفاءة ربط الأحداث بالعناصر. سنتعرّف الجزء القادم كيف نُحرّك العناصر باستخدام وظائف التأثيرات الحركيّة في jQuery.

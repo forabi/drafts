@@ -1,0 +1,322 @@
+<h1 id="-jquery-6-ajax-deferreds-">تعلّم jQuery‏ (6): AJAX والكائنات المُؤجّلة (Deferreds)</h1>
+<h2 id="-ajax">‏AJAX</h2>
+<p>‏AJAX هي اختصار للعبارة &quot;asynchronous JavaScript and XML&quot;، وهي وسيلة لجلب البيانات من الخادوم دون الحاجة لإعادة تحميل الصّفحة، وهي تقوم على استخدام كائن مُتاح في المتصفّح اسمه <code>XMLHttpRequest</code> (أو XHR اختصارًا) لإرسال الطّلب إلى الخادوم ثمّ التّعامل مع البيانات الّتي يُجيب بها الخادوم.</p>
+<p>تُوفّر jQuery الوظيفة ‎<code>$.ajax</code>‎ (ووظائف أخرى مرافقة مُختصرة) لتسهيل العمل مع طلبات XHR في جميع المتصفّحات.</p>
+<h3 id="-ajax-">‏‎$.ajax‎</h3>
+<p>بإمكاننا استخدام الوظيفة ‎<code>$.ajax()</code>‎ المُرفقة مع jQuery بعدّة أساليب: إحداها أن نُمرّر إليها كائنًا يحوي الإعدادات فقط، أو أن نُمرّر الرّابط مع أو بدون كائن الإعدادات. لنُلقِ نظرة على الأسلوب الأول:</p>
+<pre><code class="lang-javascript">// أنشئ دالّة الاستدعاء الرّاجع الّتي ستُنفّذ عندما ينجح طلب AJAX
+var updatePage = function( resp ) {
+  $( &#39;#target&#39;).html( resp.people[0].name );
+};
+
+// وعندما يفشل
+var printError = function( req, status, err ) {
+  console.log( &#39;something went wrong&#39;, status, err );
+};
+
+// أنشئ كائن الإعدادات الذي يصف الطّلب
+var ajaxOptions = {
+  url: &#39;/data/people.json&#39;,
+  dataType: &#39;json&#39;,
+  success: updatePage,
+  error: printError
+};
+
+// أرسل الطّلب
+$.ajax(ajaxOptions);
+</code></pre>
+<p>بإمكانك طبعًا أن تُمرّر كائنًا حرفيًّا مباشرةً إلى الوظيفة‎<code>$.ajax()</code> ‎ وأن تستخدم دالّة مجهولة محلّ <code>success</code> و<code>error</code>، هذا الأسلوب كتابته أسهل، وصيانته في المستقبل أسهل:</p>
+<pre><code class="lang-javascript">$.ajax({
+  url: &#39;/data/people.json&#39;,
+  dataType: &#39;json&#39;,
+  success: function( resp ) {
+    $( &#39;#target&#39;).html( resp.people[0].name );
+  },
+  error: function( req, status, err ) {
+    console.log( &#39;something went wrong&#39;, status, err );
+  }
+});
+</code></pre>
+<p>كما قلنا، بإمكانك استخدام الوظيفة‎<code>$.ajax()</code> ‎ بأسلوب ثانٍ، وذلك بتمرير الرّابط أوّلًا ثمّ كائن الإعدادات ثانيًا (ليس إلزاميًّا). يُفيدك هذا في حال رغبت في استخدام الإعدادات المبدئيّة للوظيفة أو في حال رغبت في استخدام كائن الإعدادات نفسه لأكثر من رابط:</p>
+<pre><code class="lang-javascript">$.ajax( &#39;/data/people.json&#39;, {
+  type: &#39;GET&#39;,
+  dataType: &#39;json&#39;,
+  success: function( resp ) {
+    console.log( resp.people );
+  },
+  error: function( req, status, err ) {
+    console.log( &#39;something went wrong&#39;, status, err );
+  }
+});
+</code></pre>
+<p>في المثال السّابق، لا تشترط الوظيفة سوى الرّابط، ولكنّ إضافة كائن الإعدادات تسمح لنا بإخبار jQuery بنوع البيانات الّتي نُرسلها، وأي فعل HTTP نستخدمه (POST، GET، إلخ...‏‏)، وما نوع البيانات الّتي نتوقّع استقبالها من الخادوم، وما الّذي يجب فعله إن نجح الطّلب أو فشل...</p>
+<p>اطّلع على <a href="http://api.jquery.com/jQuery.ajax/#jQuery-ajax-settings">وثائق الوظيفة‎<code>$.ajax()</code> ‎</a> لقراءة كامل الخيارات الّتي يمكن إضافتها إلى كائن الإعدادات.</p>
+<h3 id="-a-ajax-">‏A في AJAX تعني &quot;لامتزامن&quot;</h3>
+<p>تجري طلبات AJAX بصورة <em>لا متزامنة</em>، وهذا يعني أنّ الوظيفة‎<code>$.ajax</code> ‎ تنتهي قبل انتهاء الطّلب، وقبل أن تُستدعى دّالة <code>success</code>، أيّ أنّ جملة <code>return</code> تُنفّذ قبل أن يصل جواب الطّلب. فالدّالة <code>getSomeData</code> في المثال التّالي ستُعيد قيمة <code>data</code> قبل أن تُعرّف، مما يؤدّي إلى وقوع خطأ:</p>
+<p><strong>تحذير: نصّ برمجيّ غير سليم</strong></p>
+<pre><code class="lang-javascript">var getSomeData = function() {
+  var data;
+
+  $.ajax({
+    url: &#39;/data/people.json&#39;,
+    dataType: &#39;json&#39;,
+    success: function(resp) {
+      data = resp.people;
+    }
+  });
+
+  return data;
+}
+
+$( &#39;#target&#39; ).html( getSomeData().people[0].name );
+</code></pre>
+<h3 id="-x-ajax-json-">‏X في AJAX تعني JSON!</h3>
+<p>وضع المصطلح <a href="http://www.adaptivepath.com/ideas/ajax-new-approach-web-applications">AJAX</a> عام 2005 ليصف طريقة لجلب البيانات من الخادوم دون الحاجة لإعادة تحميل كامل الصّفحة. في ذلك الوقت، كانت الصّيغة الأكثر شيوعًا للبيانات الّتي تُرسلها الخوادم هي <a href="http://en.wikipedia.org/wiki/XML">XML</a>، أمّا اليوم، فإنّ <a href="http://www.json.org/json-ar.html">JSON</a> هي الصّيغة الّتي تعتمدها أكثر التّطبيقات الحديثة.</p>
+<p>صيغة JSON في أساسها هي سلسلة نصّيّة (string) تُمثّل البيانات، وتبدو مُشابهة كثيرًا لكائن JavaScript عاديّ، ولكنّها لا تستطيع تمثيل كلّ أنواع البيانات الّتي يستطيع كائن JavaScript تمثيلها. فمثلًا: لا يمكن لـJSON تمثيل كائنات التّاريخ (<code>Date</code>) ولا الدّوال (functions). فيما يلي مثال عن نصّ JSON، لاحظ كيف تُحاط كلّ أسماء الخصائص بعلامتي اقتباس مُضاعفتين:</p>
+<pre><code class="lang-json">{ &quot;people&quot; : [
+  {
+    &quot;name&quot; : &quot;Ben&quot;,
+    &quot;url&quot; : &quot;http://benalman.com/&quot;,
+    &quot;bio&quot; : &quot;I create groovy websites, useful jQuery plugins, and play a mean funk bass. I&#39;m also Director of Pluginization at @bocoup.&quot;
+  },
+  {
+    &quot;name&quot; : &quot;Rebecca&quot;,
+    &quot;url&quot; : &quot;http://rmurphey.com&quot;,
+    &quot;bio&quot; : &quot;Senior JS dev at Bocoup&quot;
+  },
+  {
+    &quot;name&quot; : &quot;Jory&quot;,
+    &quot;url&quot; : &quot;http://joryburson.com&quot;,
+    &quot;bio&quot; : &quot;super-enthusiastic about open web education @bocoup. lover of media, art, and fake mustaches.&quot;
+  }
+] }
+</code></pre>
+<p>تذكّر أنّ <em>JSON هو تمثيل نصّيّ لكائن</em>، ما يعني أنّه يجب تفسير السّلسلة النّصيّة لتحويلها إلى كائن JavaScript عاديّ قبل التّعامل معها. عندما تعمل مع جواب ورد من الخادوم بصيغة JSON، فإنّ jQuery تتولّى هذه المهمّة عنك. ولكن من المهمّ التمييز بين الكائنات الفعليّة، وطريقة تمثيلها في JSON.</p>
+<p><em>ملاحظة: إن أردت إنشاء سلسلة JSON نصّيّة من كائن JavaScript أو تفسير سلسلة JSON نصّيّة لتحويلها إلى كائن JavaScript دون الاستعانة بـjQuery، فإنّ المُتصفّحات الحديثة تُقدّم الوظيفتين ‎<code>JSON.stringify()</code>‎ و‎<code>JSON.parse()</code>‎، ويمكن إضافة هذه الخصائص إلى المُتصفّحات القديمة باستخدام المكتبة <a href="https://github.com/douglascrockford/JSON-js"><code>json2.js</code></a>. توفّر jQuery أيضًا وظيفة ‎<code>jQuery.parseJSON()</code>‎، الّتي توافق الوظيفة ‎<code>JSON.parse()</code>‎ في المتصفّحات، إلّا أنّها لا توفّر وظيفة تُقابل ‎<code>JSON.stringify()</code>‎.</em></p>
+<h3 id="-">وظائف مُختصرة</h3>
+<p>إن كان كلّ ما نريده إرسال طلب بسيط، دون الاهتمام بالتّعامل مع الأخطاء الّتي قد تقع، فإنّ jQuery تُوفّر وظائف مُختصرة تسمح لنا بفعل ذلك. تستقبل كل وظيفة مُختصرة رابطًا وكائن إعدادات غير إلزاميّ، ودالّة تُستدعى عند نجاح الطّلب فقط:</p>
+<pre><code class="lang-javascript">$.get( &#39;/data/people.html&#39;, function( html ){
+  $( &#39;#target&#39; ).html( html );
+});
+
+$.post( &#39;/data/save&#39;, { name: &#39;Rebecca&#39; }, function( resp ) {
+  console.log( resp );
+});
+</code></pre>
+<h3 id="-">إرسال البيانات والعمل مع النّماذج</h3>
+<p>بإمكاننا إرسال بيانات مع طلبنا بتعيين قيمة للخاصة <code>data</code> في كائن الإعدادات، أو تمرير كائن كمُعامل ثانٍ للوظائف المُختصرة.</p>
+<p>ستُضاف هذه البيانات إلى الرّابط في طلبات GET بصورة &quot;جملة استعلام&quot; (query string)، أمّا في طلبات POST فإنّها ستُرسل كبيانات نموذج. توفّر jQuery وظيفة مُفيدة ‎<code>.serialize()</code>‎ الّتي تستقبل مُدخلات نموذج وتُحوّلها إلى صيغة &quot;جملة استعلام&quot; (مثل <code>field1name=field1value&amp;field2name=field2value...</code>):</p>
+<pre><code class="lang-javascript">$( &#39;form&#39; ).submit(function( event ) {
+  event.preventDefault();
+
+  var form = $( this );
+
+  $.ajax({
+    type: &#39;POST&#39;,
+    url: &#39;/data/save&#39;,
+    data: form.serialize(),
+    dataType: &#39;json&#39;,
+    success: function( resp ) {
+      console.log( resp );
+    }
+  });
+});
+</code></pre>
+<h3 id="-jqxhr">‏jqXHR</h3>
+<p>تُعيد‎<code>$.ajax()</code> ‎ والوظائف المُختصرة المرافقة لها، كائن jqXHR (اختصارًا <em>لـjQuery XML HTTP Request</em>) والّذي يتضمّن وظائف مُفيدةً كثيرة. بإمكاننا إرسال طلب باستخدام ‎<code>$.ajax()</code>‎ ثمّ حفظ كائن jqXHR في مُتغيّر:</p>
+<pre><code class="lang-javascript">var req = $.ajax({
+  url: &#39;/data/people.json&#39;,
+  dataType: &#39;json&#39;
+});
+</code></pre>
+<p>بإمكاننا استخدام هذا العنصر لربط الاستدعاءات الرّاجعة بالطّلب، حتّى بعد أن يكتمل الطّلب. بإمكاننا مثلًا استخدام الوظيفة ‎<code>.then()</code>‎ (ثُمَّ) لإرفاق استدعاءي نجاح الطّلب وفشله، إذ تقبل ‎<code>.then()</code>‎ دالّة أو اثنتين، تستدعى الأولى عند نجاح الطّلب، والثّانية إن فشل:</p>
+<pre><code class="lang-javascript">var success = function( resp ) {
+  $( &#39;#target&#39; ).append(
+    &#39;&lt;p&gt;people: &#39; + resp.people.length + &#39;&lt;/p&gt;&#39;
+  );
+  console.log( resp.people );
+};
+
+var err = function( req, status, err ) {
+  $( &#39;#target&#39; ).append( &#39;&lt;p&gt;something went wrong&lt;/p&gt;&#39; );
+};
+
+req.then( success, err );
+req.then(function() {
+  $( &#39;#target&#39; ).append( &#39;&lt;p&gt;it worked&lt;/p&gt;&#39; );
+});
+</code></pre>
+<p>بإمكاننا استدعاء ‎<code>.then()</code>‎ على كائن الطّلب قدر ما نشاء، وستُنفّذ الاستدعاءات الرّاجعة بالتّرتيب ذاته الّتي أرفقت وفقه.</p>
+<p>إن لم نُرد إرفاق استدعاءي النّجاح والفشل معًا، فبإمكاننا استخدام الوظيفتين ‎<code>.done()</code>‎ و‎<code>.fail()</code>‎ على كائن الطّلب:</p>
+<pre><code class="lang-javascript">req.done( success );
+req.fail( err );
+</code></pre>
+<p>لو أردنا إرفاق استدعاء راجعٍ يُنفَّذ دومًا، بغض النّظر عن نجاح الطّلب أو فشله، فيمكننا استخدام الوظيفة ‎<code>.always()</code>‎ على كائن الطّلب:</p>
+<pre><code class="lang-javascript">req.always(function() {
+  $( &#39;#target&#39; )
+    .append( &#39;&lt;p&gt;one way or another, it is done now&lt;/p&gt;&#39; );
+});
+</code></pre>
+<h3 id="-jsonp">‏JSONP</h3>
+<p>يستغرب كثيرٌ من المبتدئين في JavaScript فشل طلبات XHR الّتي يرسلونها إلى نطاق آخر على الإنترنت، فمثلاً: يحاول بعض المُطوّرين جلب بيانات من واجهة برمجيّة من طرف ثالث (third-party API)، ليفاجؤوا بفشل الطّلب باستمرار.</p>
+<p>السّبب وراء ذلك أنّ المُتصفّحات لا تسمح بإرسال طلبات XHR إلى نطاقات إنترنت أخرى لأسباب أمنيّة، ولكنّ بعض الواجهات البرمجيّة تُعيد البيانات بصيغة JSONP (اختصارًا لـJSON with Padding)، الّتي تسمح للمُطوّرين بجلب البيانات متجاوزين حظر المُتصفّح.</p>
+<p>الحقيقة أن JSONP ليس طلب AJAX فعليًّا، فهو لا يستخدم طلب XHR الّذي يوفّره المُتصفّح، بل يعمل بإدراج وسم <code>&lt;script&gt;</code> في صفحة الويب، الّذي يحوي بدوره البيانات المطلوبة، مُحاطة بدالّة تُعيد هذه البيانات عند استدعائها. ليس هذه التّفاصيل مهمّة الآن، لأنّ jQuery تسمح لك بطلب JSONP كما لو كان XHR باستخدام الوظيفة ‎<code>$.ajax()</code>‎ بتعيين نوع البيانات <code>dataType</code> إلى <code>&#39;jsonp&#39;</code> في كائن الإعدادات.</p>
+<pre><code class="lang-javascript">$.ajax({
+  url: &#39;/data/search.jsonp&#39;,
+  data: { q: &#39;a&#39; },
+  dataType: &#39;jsonp&#39;,
+  success: function( resp ) {
+    $( &#39;#target&#39; ).html( &#39;Results: &#39; + resp.results.length );
+  }
+});
+</code></pre>
+<p><em>ملاحظة: عادةً ما توفّر الواجهات البرمجيّة خيارًا لتعيين اسم الدّالّة الّتي تُحيط بالبيانات والّتي ستُستدعى في عنوان الرّابط. عادةً ما يكون هذا اسم مُعامل الرّابط <code>callback</code>، وهذا ما تتوقّعه jQuery مبدئيًّا، إلّا أن بإمكانك تغييره بتعيين قيمة للخاصة <code>jsonp</code> في كائن الإعدادات الّذي تُمرّره لـ ‎<code>$.ajax()</code>‎.</em></p>
+<p>بإمكانك أيضًا استخدام الوظيفة المُختصرة ‎<code>$.getJSON()</code>‎ لإرسال طلب JSONP، حيث تستطيع jQuery تمييزه من خلال وجود ‎<code>callback=?</code>‎ أو ما يشبهها في الرّابط:</p>
+<pre><code class="lang-javascript">$.getJSON( &#39;/data/search.jsonp?q=a&amp;callback=?&#39;,
+  function( resp ) {
+    $( &#39;#target&#39; ).html( &#39;Results: &#39; + resp.results.length );
+  }
+);
+</code></pre>
+<p>مشاركة الموارد عبر الأصول (<a href="http://en.wikipedia.org/wiki/Cross-origin_resource_sharing">cross-origin resource sharing</a> أو CORS اختصارًا) هي خيارٌ آخر للسّماح بالطّلبات العابرة للأصول. ولكنّها غير مدعومة في المتصفّحات القديمة، كما أنّها تحتاج تهيئة خاصّة على الخادوم وتعديل ترويسات الطّلبات في XHR لتعمل.</p>
+<h2 id="-deferreds-">الكائنات المُؤجّلة (Deferreds)</h2>
+<p>ليست كائنات jqXHR الّتي تعرّفنا عليها إلا &quot;نكهة&quot; خاصّة ممّا يُعرف &quot;بالكائنات المؤجّلة&quot;. تسمح jQuery لك بإنشاء كائنات مؤجّلة بنفسك، والّتي يمكن الاستفادة منها في تسهيل التّعامل مع الأوامر اللامتزامنة، فهي توفّر طريقة للاستجابة لعمليّة تجري بصورة غير متزامنة بعد نجاحها أو فشلها، وتجنّبك الحاجة لكتابة استدعاءات راجعة مُتداخلة فيما بينها.</p>
+<h2 id="-deferred-">‏‎$.Deferred‎</h2>
+<p>بإمكانك إنشاء كائنٍ مؤجّل باستخدام <code>‏‎$.Deferred()‎</code>. في المثال التّالي نُنفّذ دالة داخل <code>setTimeout</code>، ثمّ &quot;نفي&quot; (resolve) بوعدنا بإعادة القيمة الّتي تُرجعها الدّالة هذه. نُعيد الوعد (promise)، وهو كائن يمكن ربط الاستدعاءات الرّاجعة به، ولكنّه لا يؤثّر في نتيجة الكائن المؤجّل بحدّ ذاته. بإمكاننا &quot;الإخلاف&quot; (reject) بالوعد إذا وقع خطأ ما أثناء عمل الدّالّة:</p>
+<pre><code class="lang-javascript">function doSomethingLater( fn, time ) {
+  var dfd = $.Deferred();
+
+  setTimeout(function() {
+    dfd.resolve( fn() );
+  }, time || 0);
+
+  return dfd.promise();
+}
+
+var promise = doSomethingLater(function() {
+  console.log( &#39;This function will be called in 100ms&#39; );
+}, 100);
+</code></pre>
+<h2 id="-then-done-fail-always-">‏‎.then()‎ و‎.done()‎ و‎.fail()‎ و‎.always()‎</h2>
+<p>يمكننا ربط دوالّ تتولّى حالات الخطأ والنّجاح بالوعود، تمامًا كما في كائنات jqXHR:</p>
+<pre><code class="lang-javascript">function doSomethingLater( fn, time ) {
+  var dfd = $.Deferred();
+
+  setTimeout(function() {
+    dfd.resolve( fn() );
+  }, time || 0);
+
+  return dfd.promise();
+}
+
+var success = function( resp ) {
+  $( &#39;#target&#39; ).html( &#39;it worked&#39; );
+};
+
+var err = function( req, status, err ) {
+  $( &#39;#target&#39; ).html( &#39;it failed&#39; );
+};
+
+var dfd = doSomethingLater(function() { /* ... */ }, 100);
+
+dfd.then( success, err );
+</code></pre>
+<h2 id="-pipe-">‏‎.pipe()‎</h2>
+<p>بإمكاننا استخدام الوظيفة <code>‏‎.pipe()‎</code> للوعود للاستجابة إلى القيمة الّتي تُوفى وذلك بتعديلها ثمّ إعادة كائن مؤجّل جديد.</p>
+<p>تعمل الوظيفة <code>‏‎.then()‎</code> بدءًا من الإصدارة 1.8 من jQuery كما تعمل الوظيفة <code>‏‎.pipe()‎</code>.</p>
+<pre><code class="lang-javascript">function doSomethingLater( fn, time ) {
+  var dfd = $.Deferred();
+
+  setTimeout(function() {
+    dfd.resolve( fn() );
+  }, time || 0);
+
+  return dfd.promise();
+}
+
+var dfd = doSomethingLater(function() { return 1; }, 100);
+
+dfd
+  .pipe(function(resp) { return resp + &#39; &#39; + resp; })
+  .done(function(upperCaseResp) {
+    $( &#39;#target&#39; ).html( upperCaseResp );
+  });
+</code></pre>
+<h2 id="-">التّعامل مع العمليّات الّتي قد تكون لامتزامنة</h2>
+<p>أحيانًا تكون لدينا وظيفة قد تعمل بصورة متزامنة أو لا متزامنة وفق ظروف مُعيّنة، فمثلًا: دالّة تقوم بعمليّة لا متزامنة أوّل مرّة تُستدعى فيها، ثمّ تُخزّن القيمة الّتي أنتجتها العمليّة لتُعيدها مباشرةً عند استدعاءها مُستقبلًا. في هذه الحالة يمكننا الاستفادة من ‎<code>$.when()</code>‎ للاستجابة لكلا الحالتين:</p>
+<pre><code class="lang-javascript">function maybeAsync( num ) {
+  var dfd = $.Deferred();
+
+  // أعِد وعدًا مؤجّلًا عندما num === 1
+  if ( num === 1 ) {
+    setTimeout(function() {
+      dfd.resolve( num );
+    }, 100);
+    return dfd.promise();
+  }
+
+  // أنهِ مباشرة فيما سوى ذلك، مُعيدًا num
+  return num;
+}
+
+// هذا سيُجرى بصورة غير متزامنة ويعِد بإعادة 1
+$.when( maybeAsync( 1 ) ).then(function( resp ) {
+  $( &#39;#target&#39; ).append( &#39;&lt;p&gt;&#39; + resp + &#39;&lt;/p&gt;&#39; );
+});
+
+// هذا سُيعيد 0 مُباشرةً
+$.when( maybeAsync( 0 ) ).then(function( resp ) {
+  $( &#39;#target&#39; ).append( &#39;&lt;p&gt;&#39; + resp + &#39;&lt;/p&gt;&#39; );
+});
+</code></pre>
+<p>بإمكانك أيضًا تمرير أكثر من معامل إلى ‎<code>$.when()</code>‎، الأمر الّذي يسمح لك بدمج عمليّات متزامنة ولا متزامنة معًا ثمّ الحصول على نتائج تنفيذها كلّها كُمعاملات للاستدعاء الرّاجع:</p>
+<pre><code class="lang-javascript">function maybeAsync( num ) {
+  var dfd = $.Deferred();
+
+  // أعد وعدًا مؤجّلًا عندما num === 1
+  if ( num === 1 ) {
+    setTimeout(function() {
+      dfd.resolve( num );
+    }, 100);
+    return dfd.promise();
+  }
+
+  // أنهِ مباشرةً فيما سوى ذلك، مُعيدًا num
+  return num;
+}
+
+$.when( maybeAsync( 0 ), maybeAsync( 1 ) )
+  .then(function( resp1, resp2 ) {
+    var target = $( &#39;#target&#39; );
+    target.append( &#39;&lt;p&gt;&#39; + resp1 + &#39;&lt;/p&gt;&#39; );
+    target.append( &#39;&lt;p&gt;&#39; + resp2 + &#39;&lt;/p&gt;&#39; );
+  });
+</code></pre>
+<p>عندما يكون إحدى مُعاملات  ‎<code>$.when()</code>‎ كائن jqXHR، فإنّنا نحصل على مصفوفة من المُعاملات تُمرّر إلى استدعائنا الرّاجع:</p>
+<pre><code class="lang-javascript">function maybeAsync( num ) {
+  var dfd = $.Deferred();
+
+  // أعد وعدًا مؤجّلًا عندما num === 1
+  if ( num === 1 ) {
+    setTimeout(function() {
+      dfd.resolve( num );
+    }, 100);
+    return dfd.promise();
+  }
+
+  // أنهِ مباشرةً فيما سوى ذلك، مُعيدًا num
+  return num;
+}
+
+$.when( maybeAsync( 0 ), $.get( &#39;/data/people.json&#39; ) )
+  .then(function( resp1, resp2 ) {
+    console.log( &quot;Both operations are done&quot;, resp1, resp2 );
+  });
+</code></pre>
+<h2 id="-">مصادر إضافية</h2>
+<ul>
+<li><a href="http://api.jquery.com/category/ajax/">توثيق AJAX</a></li>
+<li><a href="http://api.jquery.com/jQuery.ajax/#jqXHR">كائن jqXHR</a></li>
+<li><a href="http://api.jquery.com/category/deferred-object/">الكائنات المؤجّلة في jQuery</a></li>
+</ul>
+

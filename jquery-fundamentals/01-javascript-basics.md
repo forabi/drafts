@@ -418,3 +418,10 @@ var myObject = {
 * [الدّوالّ](https://developer.mozilla.org/en/JavaScript/Guide/Functions)
 * [عبارات الدّوالّ المُستدعاة فورًا](http://benalman.com/news/2010/11/immediately-invoked-function-expression/)
 * [المصفوفات](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/)
+
+##مصادر إضافية
+* [شبكة مُطوّري موزيلّا: JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+* [Chrome Developer Tools Overview](https://developer.chrome.com/devtools/index)
+* [Fixing these jQuery: A Guide to Debugging](http://fixingthesejquery.com/)
+* [Chrome Developer Tools Cheat Sheet](https://github.com/borismus/DevTools-Lab/raw/master/cheatsheet/chromedev-cheatsheet.pdf)
+* [Chrome Dev Tools: 12 Tricks to Develop Quicker (فيديو)](http://www.youtube.com/watch?v=nOEw9iiopwI)
