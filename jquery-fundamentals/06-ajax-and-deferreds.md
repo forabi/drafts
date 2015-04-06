@@ -1,4 +1,4 @@
-تعلّم jQuery‏ (6): AJAX والوعود المُؤجّلة (Deferreds)
+تعلّم jQuery‏ (6): AJAX والكائنات المُؤجّلة (Deferreds)
 ============================================
 
 ##‏AJAX
@@ -112,7 +112,7 @@ $( '#target' ).html( getSomeData().people[0].name );
     "bio" : "super-enthusiastic about open web education @bocoup. lover of media, art, and fake mustaches."
   }
 ] }
-``
+```
 
 تذكّر أنّ _JSON هو تمثيل نصّيّ لكائن_، ما يعني أنّه يجب تفسير السّلسلة النّصيّة لتحويلها إلى كائن JavaScript عاديّ قبل التّعامل معها. عندما تعمل مع جواب ورد من الخادوم بصيغة JSON، فإنّ jQuery تتولّى هذه المهمّة عنك. ولكن من المهمّ التمييز بين الكائنات الفعليّة، وطريقة تمثيلها في JSON.
 
