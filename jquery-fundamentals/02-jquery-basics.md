@@ -27,15 +27,15 @@ window.jQuery = window.$ = jQuery;
 _ملاحظة: من الآن فصاعدًا سنستخدم `$` بدلًا من `jQuery` في هذه السّلسلة سعيًا للاختصار. لاحظ أنّه إن احتوت صفحتك أكثر من مكتبة واحدة، فقد يُستخدم الاسم `$` من مكتبة أخرى، ممّا يمنع عمل jQuery، فإن واجهتك مشكلة كهذه، جرّب استخدام [`jQuery.noConflict`](http://api.jquery.com/jQuery.noConflict/) قبل تحميل المكتبات الأخرى._
 
 ##‏‎$(document).ready()‎
-قبل استخدام jQuery لفعل أيّ شيء في الصّفحة، علينا التأكّد من كون الصّفحة قد بلغت حالةً تسمح بتعديل محتوياتها. يمكن تنفيذ ذلك في jQuery بإحاطة برنامجنا ضمن دالّة ثمّ إمرار هذه الدّالة إلى ‎`$(document).ready()`‎.  كما ترى في المثال التّالي، يمكن للدّالّة الّتي نمرّرها أن تكون مجهولة (بلا اسم):
+قبل استخدام jQuery لفعل أيّ شيء في الصّفحة، علينا التأكّد من كون الصّفحة قد بلغت حالةً تسمح بتعديل محتوياتها. يمكن تنفيذ ذلك في jQuery بإحاطة برنامجنا ضمن دالّة ثمّ إمرار هذه الدّالة إلى ‎`$(document).ready()`‎.  كما ترى في المثال التّالي، يمكن للدّالّة الّتي نمرّرها أن تكون مجهولة (بلا اسم) (تأكد من ضغط الزرّ Run with JS في كلّ الأمثلة التّالية):
 
-<a class="jsbin-embed" href="http://jsbin.com/fopitohami/2/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/guquno/1/embed?js,console">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 هذا سيؤدّي إلى استدعاء الدّالّة الّتي مرّرناها إلى ‎`.ready()`‎ بعد أن يصبح المُستند (الصفحة) جاهزًا. ما الذي يحدث هنا؟ استخدمنا ‎`$(document)`‎ لإنشاء كائن jQuery من `document` في الصّفحة، ثمّ استدعينا الدّالّة ‎`.ready()`‎ على هذا الكائن، مُمرِّرين إليها الدّالّة الّتي نريد تنفيذها.
 
 بما أنّك ستجد نفسك تُعيد كتابة هذا النّصّ مرارًا، فإنّ jQuery تقدّم لك طريقةً مُختصرةً لإنجازه، إذ تقوم الدّالّة ‎`$()`‎ بمهمّة مُختلفة عند إمرار دالّة إليها بدلًا من مُحدِّد CSS، وعندها تتصرّف وكأنّها اسم بديلٌ للوظيفة  ‎`$(document).ready()`‎:
 
-<a class="jsbin-embed" href="http://jsbin.com/fopitohami/3/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/fopitohami/2/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 _ملاحظة: من الآن فصاعدًا، سنفترض أنّ النّصوص الّتي ترد في هذه السّلسلة مُحاطة بالعبارة ‎`$(document).ready(function() { ... });`‎، وسنترك هذه العبارة بغرض الإيجاز._
 

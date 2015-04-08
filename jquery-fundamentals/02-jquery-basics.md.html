@@ -16,10 +16,10 @@ window.jQuery = window.$ = jQuery;
 <p><em>ملاحظة: من الآن فصاعدًا سنستخدم <code>$</code> بدلًا من <code>jQuery</code> في هذه السّلسلة سعيًا للاختصار. لاحظ أنّه إن احتوت صفحتك أكثر من مكتبة واحدة، فقد يُستخدم الاسم <code>$</code> من مكتبة أخرى، ممّا يمنع عمل jQuery، فإن واجهتك مشكلة كهذه، جرّب استخدام <a href="http://api.jquery.com/jQuery.noConflict/"><code>jQuery.noConflict</code></a> قبل تحميل المكتبات الأخرى.</em></p>
 <h2 id="-document-ready-">‏‎$(document).ready()‎</h2>
 <p>قبل استخدام jQuery لفعل أيّ شيء في الصّفحة، علينا التأكّد من كون الصّفحة قد بلغت حالةً تسمح بتعديل محتوياتها. يمكن تنفيذ ذلك في jQuery بإحاطة برنامجنا ضمن دالّة ثمّ إمرار هذه الدّالة إلى ‎<code>$(document).ready()</code>‎.  كما ترى في المثال التّالي، يمكن للدّالّة الّتي نمرّرها أن تكون مجهولة (بلا اسم):</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/2/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/guquno/1/embed?js,console">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>هذا سيؤدّي إلى استدعاء الدّالّة الّتي مرّرناها إلى ‎<code>.ready()</code>‎ بعد أن يصبح المُستند (الصفحة) جاهزًا. ما الذي يحدث هنا؟ استخدمنا ‎<code>$(document)</code>‎ لإنشاء كائن jQuery من <code>document</code> في الصّفحة، ثمّ استدعينا الدّالّة ‎<code>.ready()</code>‎ على هذا الكائن، مُمرِّرين إليها الدّالّة الّتي نريد تنفيذها.</p>
 <p>بما أنّك ستجد نفسك تُعيد كتابة هذا النّصّ مرارًا، فإنّ jQuery تقدّم لك طريقةً مُختصرةً لإنجازه، إذ تقوم الدّالّة ‎<code>$()</code>‎ بمهمّة مُختلفة عند إمرار دالّة إليها بدلًا من مُحدِّد CSS، وعندها تتصرّف وكأنّها اسم بديلٌ للوظيفة  ‎<code>$(document).ready()</code>‎:</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/3/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/2/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p><em>ملاحظة: من الآن فصاعدًا، سنفترض أنّ النّصوص الّتي ترد في هذه السّلسلة مُحاطة بالعبارة ‎<code>$(document).ready(function() { ... });</code>‎، وسنترك هذه العبارة بغرض الإيجاز.</em></p>
 <h2 id="-">الوصول إلى العناصر</h2>
 <p>أبسط ما يمكن إنجازه بـjQuery تحديد بعض العناصر ثمّ فعل شيء ما بها. إن كنت تفهم مُحدّدات CSS، فستجد أنّ الوصول إلى بعض العناصر سهل ومباشر: ليس عليك إلا إمرار المُحدِّد المناسب إلى ‎<code>$()</code>‎.</p>

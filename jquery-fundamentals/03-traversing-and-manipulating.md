@@ -76,7 +76,7 @@ var module = listItem.closest( '.module' );
 ```javascript
 var list = $( '#my-unordered-list' );
 
-// do some stuff with the list, and then ...
+// افعل شيئًا ما بالقائمة ثم ...
 
 var listAndListItems = list.add( '#my-unordered-list li' );
 ```
@@ -144,7 +144,7 @@ specialListItems.add( otherListItems ).addClass( 'urgent' );
 كثيرةٌ هي طرق تعديل العناصر في jQuery. سنطّلع فيما يلي على طرق إنجاز المهام الأكثر شيوعًا.
 
 ####إضافة أو حذف الأصناف (classes)
-يمكن الاستفادة من أصناف الكائنات في HTML بأن نستهدفها في CSS بغرض تنسيقها، كما يُستفاد منها في إنشاء تحديدات jQuery. فمثلًا يمكن لعنصر في الصّفحة أن يقع تحت الصّنف `hidden`، والّذي يُستخدم في CSS لجعل خاصّة `display` موافقة للقيمة `none` للعناصر من هذا الصّنف، ثمّ يمكن حذف هذا الصّنف أو إضافته لتغيير حالة ظهور العناصر الموافقة في jQuery:
+يمكن الاستفادة من أصناف الكائنات في HTML بأن نستهدفها في CSS بغرض تنسيقها، كما يُستفاد منها في إنشاء تحديدات jQuery. فمثلًا يمكن لعنصر في الصّفحة أن يقع تحت الصّنف `hidden`، والّذي يُستخدم في CSS لجعل خاصّة `display` موافقة للقيمة `none` للعناصر من هذا الصّنف، ثمّ يمكن حذف هذا الصّنف أو إضافته لتغيير حالة ظهور العناصر الموافقة في jQuery (تأكد من ضغط الزرّ Run with JS في كلّ الأمثلة التّالية):
 
 <a class="jsbin-embed" href="http://jsbin.com/fopitohami/13/embed?css,js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 

@@ -143,7 +143,7 @@ $( &#39;h1&#39; ).on( &#39;click&#39;, handleClick );
 <p>يسمح لنا مفهوم &quot;صعود الأحداث&quot; بإنجاز فكرة &quot;تفويض الأحداث&quot;، أي ربط الأحداث بعناصر في مستوى أعلى، ثمّ اكتشاف أيّ عنصر فرعيّ ضمنها أثار الحدث. بإمكاننا مثلًا ربط حدث بقائمة غير مُرتّبة، ثمّ تحديد أيّ العناصر أثار الحدث:</p>
 <p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/36/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>بالطّبع ستتعقّد الأمور إذا احتوت عناصر القائمة على عناصر فرعيّة ضمنها، ولهذا تُقدّم jQuery وظيفةً مُساعدة تسمح لنا بتحديد أي العناصر نهتمّ بها، مع الاحتفاظ بالحدث مُرتبطًا بالعنصر ذي المُستوى الأعلى:</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/38/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/xucuha/1/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>لتفويض الأحداث فائدتان اثنتان: أولاهما أنّه يسمح بربط عددٍ أقلّ من مُتولّيات الأحداث مقارنة بالعدد الّذي نحتاجه لو قرّرنا ربط الأحداث بالعناصر المُنفردة، وهذا يُحسّن الأداء في الصّفحة بصورة كبيرة. وثاني الفائدتين أنّه يسمح لنا بربط الأحداث بالآباء (كالقائمة غير المرتّبة في مثالنا)، مع اطمئنانا إلى أنّ الأحدث ستُثار <em>حتّى وإن تغيّرت مُحتويات العنصر الأب</em>.</p>
 <p>هذا النّصّ مثلًا، يُضيف عنصر قائمةٍ جديدًا بعد تفويض الحدث إلى العنصر الأب، والنّقر فوق هذا العنصر سيُثير الحدث كما ينبغي، دون الحاجة لربط أيّة أحداث جديدة:</p>
 <p><a class="jsbin-embed" href="http://jsbin.com/fopitohami/40/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script></p>

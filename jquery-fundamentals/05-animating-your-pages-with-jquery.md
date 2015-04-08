@@ -17,7 +17,7 @@ _**ملاحظة مهمّة عن الحركات:** يكون إنجاز الحرك
 * ‏‎`.slideUp()`‎: أخفِ العناصر المُحدّدة بحركة سحب شاقوليّة.
 * ‏‎`.slideToggle()`‎: أخفِ العناصر المُحدّدة أو أظهرها بحركة سحبٍ شاقوليّة، اعتمادًا على كون العناصر المُحدّدة مخفيّة أو ظاهرة.
 
-يسهل تطبيق إحدى هذه التأثيرات على التّحديد بعد إنشائه:
+يسهل تطبيق إحدى هذه التأثيرات على التّحديد بعد إنشائه (تأكد من ضغط الزرّ Run with JS في كلّ الأمثلة التّالية):
 
 <a class="jsbin-embed" href="http://jsbin.com/huxefi/2/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
@@ -63,7 +63,7 @@ $( '.other-hidden' ).show( 'turtle' );
 
 يمكن أن تُعيّن قيمة الحركة بكتابة القيمة النّهائيّة المُراد التّحريك إليها، أو كتابة المقدار الّذي يجب تحريكه (الفرق بين موضعي الحركة):
 
-<a class="jsbin-embed" href="http://jsbin.com/huxefi/7/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/huxefi/8/embed?js,console,output">ساحة التّجربة</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 _ملاحظة: إن أردت تحريك خاصّة CSS يحوي اسمها على الإشارة "-"، فعليك تحويل الاسم إلى صيغة camelCase أوّلًا إن لم تشأ إحاطة اسم الخاصّة بعلامات اقتباس، فمثلًا الخاصّة `font-size` تُصبح `fontSize`._
 

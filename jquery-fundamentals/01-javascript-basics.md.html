@@ -78,7 +78,7 @@ var b = &#39;two&#39;;
 <p>تكون المُتغيّرات الّتي تُعرَّف ضمن دالّة بجملة <code>var</code> مُتاحة فقط من داخل هذه الدّالّة، وهذا أمر مرغوبٌ عادةً، ولذا يجب التّصريح عن كلّ المُتغيّرات في البرنامج باستخدام جمل <code>var</code> ما لم يُقصد جعلها عامّة (global)، أي متاحةً عبر كامل البرنامج وفي أيّ موضع منه. ليس هذا ما نُريده عادةً إلّا إذا أردنا تغيير قيمة المُتغيّر من نصّ برمجيّ آخر.</p>
 <p>ولكن ما معنى أن تكون المُتغيّرات مُتاحةً فقط داخل الدّالّة؟ جرّب هذا البرنامج:</p>
 <p><strong>تحذير: نصّ برمجيّ خاطئ</strong></p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/3/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/zocepi/1/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>لو أنّنا حاولنا في المثال السّابق استخدام قيمة <code>foo</code> خارج الدّالة (بدل الاكتفاء بفحص نوعها)، لأبلغنا المُتصفّح بوجود خطأ، ولن يتابع البرنامج العمل فيما يلي الموضع الّذي استخدمنا  <code>foo</code> عنده.</p>
 <p>المثال التّالي يبيّن كيف يمكن لمُتغيّرين مختلفين أن يوجدا باسمٍ واحد طالما أنّ كلًّا منهما موجود في نطاق منفصل عن الآخر. في هذا المثال نُصرّح عن المُتغيّر <code>foo</code> ونسند إليه القيمة <code>&#39;qux&#39;</code>، ثم نُصرّح عن مُتغيّر آخر داخل دالّة، ونُسمّيه <code>foo</code> أيضًا، ونُسند إليه القيمة <code>&#39;bar&#39;</code>. لاحظ أنّ المُتغيّر <code>foo</code> خارج الدّالة لا يتغيّر حتّى بعد أن نُنشئ المُتغيّر <code>foo</code> داخل الدّالة.</p>
 <pre><code class="lang-javascript">var foo = &#39;qux&#39;;
@@ -99,7 +99,7 @@ log( foo ); // تطبع &#39;qux&#39; أيضًا
 </ul>
 <p>انتبه إلى أنّ المُتغيّرات الّتي يُصرَّح عنها بلا الكلمة <code>var</code> تكون ضمنيًّا عامّةً. في المثال التّالي لدينا المُتغيّر <code>a</code> المتاح خارج الدّالة لأنّ عُرِّف بدون الكلمة <code>var</code> (وهذا أمرٌ غير مرغوب في معظم الحالات).</p>
 <p><strong>تحذير: نصّ برمجيّ غير آمن</strong></p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/4/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/3/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <h3 id="-objects-">الكائنات (Objects)</h3>
 <p>الحقيقة أنّ معظم ما نتعامل معه في JavaScript ليس سوى كائنات، وليس في اللّغة إلّا 5 أنواع من القيم الّتي <em>لا</em> تُعتبر كائنات:</p>
 <ul>
@@ -118,11 +118,11 @@ log( foo ); // تطبع &#39;qux&#39; أيضًا
 <p>للكائن الّذي أنشأناه أعلاه <strong>خاصّتان</strong> اثنتان <strong>(properties)</strong>:‏ <code>firstName</code> و<code>lastName</code>. أنشأنا الكائن بصياغة &quot;الكائن الحرفيّ (object literal)&quot; أي بإحاطة مجموعة من أزواج مفتاح/قيمة بقوسين معكوفين <code>{}</code>. لاحظ أنّ نقطتين (<code>:</code>) تفصلان بين المفتاح والقيمة وأنّ فاصلة لاتينيّة (<code>,</code>) تفصل بين كلّ زوجين. لاحظ أنّه ما من فاصلة بعد الزّوج الأخير، وإن أضفتها سهوًا فستقع أخطاء عند تنفيذ البرنامج في المتصفّحات القديمة.</p>
 <h4 id="-">الوصول إلى الخصائص</h4>
 <p>حفظنا الكائن في مُتغيّر أسميناه <code>person</code>، ممّا يُسهّل الوصول إلى خصائصه، إمّا باستخدام <em>أسلوب النّقاط (dot notation)</em> أو <em>أسلوب الأقواس المُربّعة (bracket notation)</em>.</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/5/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/4/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>ستلاحظ أنّنا استخدمنا سلسلة نصّيّة (string) للوصول إلى اسم الخاصّة الّتي نريدها عند اعتماد أسلوب الأقواس المُربّعة. أمّا عند اعتماد الأسلوب الآخر، أسلوب النّقاط، فقد استخدمنا اسم الخاصّة نفسه دون علامتي الاقتباس. يفيد أسلوب الأقواس المُربّعة عندما نريد الوصول إلى خاصّة يُحفَظ اسمها ضمن مُتغيّر:</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/6/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/5/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>بعد أن أنشأنا الكائن، يمكننا تعديل خصائصه:</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/7/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/6/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>هذا الجانب في JavaScript هو نعمة ونقمة في الوقت ذاته، فهو يعني أنّ الكائنات مرنة بصورة فائقة، ولكنّه أيضًا يعني أنّه ما من &quot;خصوصيّة&quot; للكائنات، فيمكن لأيّ نصّ برمجيّ أن يُسند قيمةً جديدة إلى أيّ خاصّة في أيّ كائن يمكنه الوصول إليه؛ وهذا سبب آخر يدفعك للاحتفاظ بالمُتغيّرات معزولةً عن النّطاق العامّ إلّا إذا كنت تريد فعلًا للبرامج الأخرى أن تُغيّر تلك الخصائص.</p>
 <h4 id="-object-methods-">وظائف الكائنات (Object methods)</h4>
 <p><strong>الوظائف (methods)</strong> هي خصائص في الكائن قيمها دوالّ (functions)، لنُضِف وظيفة ‎<code>.greet()</code>‎ إلى كائن <code>person</code>:</p>
@@ -133,17 +133,17 @@ log( foo ); // تطبع &#39;qux&#39; أيضًا
 <p>عندما نستدعي <code>person.greet()‎</code> يكون السّياق هو الكائن <code>person</code> ذاته. معنى هذا أنّ بإمكاننا استخدام <code>this</code> للوصول إلى إحدى خصائص الكائن <code>person</code> مباشرة من داخل الوظيفة ‎<code>.greet()</code>‎.</p>
 <p><em>ملاحظة: معنى <code>this</code> قد يُسبّب ارتباكًا شديدًا لمطوّري JavaScript المُبتدئين، يمكنك الاطمئنان إن لم تفهم بدقّة معناها، لأنّ jQuery تُحسن استغلالها بحيث لا تضطّر للدّخول في تفاصيلها؛ ومع ذلك فلا يكتمل الحديث عن الكائنات ووظائفها دون الإشارة إلى <code>this</code> وإن قليلًا. سأترك لك حرّيّة الانتقال إلى فقرة &quot;الكائنات في jQuery&quot; من هذه المقالة إن شئت، ثمّ عُد إلى هنا عندما تشعر أنّك جاهز لفهمها تمامًا.</em></p>
 <p>لنحاول فهم كيف يمكن استخدام <code>this</code> في وظيفتنا:</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/9/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/sabiya/1/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>ليست مُعقّدةً كثيرًا حتى الآن... صحيح؟ منشأ التّعقيد هو أنّ <em>معنى <code>this</code> يمكن أن يتغيّر</em>، فالأمر كما قلنا يعتمد على السّياق الّذي استدعيت فيه الدّالة! لاحظ النّصّ التّالي:</p>
 <p><strong>تحذير: نصّ برمجيّ خاطئ</strong></p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/10/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/9/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>عندما نحقظ الوظيفة  ‎<code>.greet()</code>‎ في مُتغيّر <code>sayIt</code> ثمّ نستدعي <code>sayIt()‎</code>، فإنّ السّياق يتغيّر ليُصبح الكائن العامّ <code>window</code>، <em>لا الكائن <code>person</code></em>. وبما أنّ ليس للكائن <code>window</code> خاصّة اسمها <code>firstName</code>، فإنّ النتيجة تكون <code>undefined</code> عندما نحاول الوصول إليها.</p>
 <p>ما الذي على المُبرمج فعله إذًا؟ أوّلًا: عليه أن يحذر من النّتائج غير المُتوقّعة لمعنى <code>this</code> عند تخزين وظائف الكائنات في متغيّرات. وثانيًا: عليه أن يعلم أنّ بإمكانه إجبار <code>this</code> أن تُشير إلى ما يشاء من الكائنات وذلك باستخدام إحدى الوظيفتين  ‎<code>.call()</code>‎ و‎<code>.apply()</code>‎ مع الدّالّة ذاتها.</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/11/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/10/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>كلا الوظيفتين المُتشابهتين ‎<code>.call()</code>‎ و‎<code>.apply()</code>‎ تُتيحان إمرار المُعاملات إلى الدّالّة الّتي تُستدعى بهما. تخيّل أنّ دالة التّحيّة تقبل بعض المعاملات، يمكن حينئذٍ إمرار هذه المُعاملات باستخدام ‎<code>.call()</code>‎ كما يلي:</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/12/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/11/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>يمكن تنفيذ الأمر ذاته باستخدام ‎<code>.apply()</code>‎، ولكن سنحتاج معها إلى إمرار المُعاملات ضمن مصفوفة واحدة بدلًا من إمرارها مُنفصلة:</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/13/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/12/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p><em>مُلاحظة: لتفاصيل أكثر عن ‎<code>.call()</code>‎ و‎<code>.apply()</code>‎، راجع وثيقتي شبكة مُطوِّري موزيلّا <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/call">‎<code>.call()</code>‎</a> و<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/apply">‎<code>.apply()</code>‎</a>،</em></p>
 <h4 id="-jquery">الكائنات في jQuery</h4>
 <p>لم نتطرّق بعدُ إلى تفاصيل الكائنات في JavaScriptن لكنّك الآن تعرف الأساسيّات الّتي تُتيح لك التّعامل مع الكائنات خلال تعلّمك jQuery، ففيها ستستعمل الكائنات لضبط الخيارات، كتغيير عدّة خصائص  CSS لعنصر في الصّفحة مرّة واحدة:</p>
@@ -167,17 +167,17 @@ log( foo ); // تطبع &#39;qux&#39; أيضًا
 var firstItem = myArray[ &quot;0&quot; ]; // الوصول إلى العنصر الأوّل
 </code></pre>
 <p>عند الوصول إلى عناصر المصفوفة، فإنّه من الأسهل استخدام الأعداد لتحديد موضع العنصر المطلوب في المصفوفة، والّذي يُسمّى <strong>الدّليل (index)</strong>:</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/14/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/13/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>يمكننا معرفة عدد العناصر في مجموعة بالوصول إلى الخاصّة <code>length</code> في المصفوفة:</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/15/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/14/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <h4 id="-for-">حلقات <code>for</code>: سرد المصفوفات</h4>
 <p>بما أنّنا نعلم كيف نحدّد طول المصفوفة (عدد العناصر فيها)، وأنّ أوّل عناصرها يقع عند الدّليل <code>0</code>، يمكننا إذن سرد عناصر المصفوفة باستخدام حلقة <code>for</code>:</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/16/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/15/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>يمكننا فعل الكثير من الأشياء بالمصفوفات، راجع <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/">وثيقة المصفوفات في شبكة مُطوِّري موزيّلا</a> للاطّلاع على الدّليل الكامل.</p>
 <h2 id="-">المنطق والتّحقّق من الصّحِّة</h2>
 <p>تُوفِّر JavaScript الكلمتين <code>if</code> و<code>else</code>، وكذلك المُعامل الثّلاثي، للسّماح بتنفيذ بعض الأوامر فقط عند تحقّق شروط معيّنة. تُحدّد JavaScript توفّر شرطٍ ما بتحرِّي &quot;صحِّة&quot; قيمة أو عبارة. ولأنّ JavaScript لُغةٌ متغيّرة الأنواع (dynamically typed)، فإنّ بإمكاننا استخدام أيّة قيمة أو أي تركيبٍ من القيّم، إلّا أنّ قواعد التّحقّق من كون قيمةٍ مُعيّنة أو عبارةٍ معيّنة صحيحةً (<code>true</code>) أو خاطئة (<code>false</code>) قد تُسبّب بعض الارتباك.</p>
 <p>فيما يلي مثال عن جملة شرطيّة (<code>if</code>) بسيطة في JavaScript. تتحرّى الجملة من صحِّة العدد <code>1</code>؛ ولأنّ <code>1</code> قيمة <strong>&quot;صائبة&quot; (truthy)</strong>، فسيُنفَّذ النّص البرمجيّ الواقع بين القوسين المعكوفين <code>{}</code> بعد جملة <code>if</code>.</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/17/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/16/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>الحقيقة أنّ معظم القيم في JavaScript &quot;صائبة&quot;، بل إنّ خمس قيمٍ فقط في اللّغة تُعتبر <strong>&quot;خاطئة&quot; (falsy)</strong>:</p>
 <ul>
 <li><code>undefined</code> (القيمة المبدئيّة لكّل مُتغيّر يُفرض دون إسناد قيمة إليه)</li>
@@ -187,11 +187,11 @@ var firstItem = myArray[ &quot;0&quot; ]; // الوصول إلى العنصر ا
 <li><code>&#39;&#39;</code> (سلسلة نصّيّة فارغة)</li>
 </ul>
 <p>عندما نريد تحرّي &quot;خطأ&quot; قيمة ما، نستخدم المُعامل <code>!</code>:</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/18/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/17/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>أمّا القيمة <code>NaN</code> فلها وضعٌ خاصّ، فعند تحرّيها في جملة شرطيّة بسيطة فإنّها خاطئة:</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/19/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/18/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>أمّا عندما نقارن القيمة <code>NaN</code> مع <code>false</code>، فإنّنا نحصل على قيمة &quot;خاطئة&quot;:</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/20/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/19/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>من المهمّ أن نتذكّر أنّ كلّ القيم الأخرى ما عدا الخمس السّابقة تُعتبر صائبة، بما في ذلك المصفوفات الفارغة والكائنات الفارغة وكل السّلاسل النّصيّة غير الفارغة (متضمّنة السلسلة النّصيّة <code>&#39;0&#39;</code>) وكلّ الأعداد ما عدا <code>0</code>.</p>
 <p><em>ملاحظة: من الممكن كتابة جملة شرطيّة فيها <code>if</code> و<code>else</code> في سطر واحدٍ دون استخدام الأقواس المعكوفة، ولكنّ هذه الممارسة غير مفضّلة لأنّها تجعل قراءة البرنامج وصيانته أصعب؛ وما ذكرناها هنا إلّا لأنّها قد تصادفك عند قراءة برامج مطوّرين آخرين.</em></p>
 <h2 id="-logical-operators-">المُعامِلات المنطقيّة (Logical Operators)</h2>
@@ -264,10 +264,10 @@ volatile void while with
 </code></pre>
 <h3 id="-">العمليّات على الأعداد والسّلاسل النّصيّة</h3>
 <p>التّعامل مع الأرقام في JavaScript قد يُعطي نتائج غير متوقّعة أحيانًا، بسبب طريقة تمثيل الأرقام داخليًّا في JavaScript، فمثلاً: عند جمع عددين عشريّين، تكون النّتيجة عدًدا قريبًا جدًّا من القيمة المتوقّعة، لكنّ غير مساوٍ تمامًا:</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/21/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/20/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <p>لن تصادف هذا كثيرًا عند العمل مع jQuery، ولكنّها قضيّة مهمّة يجب الانتباه لها خصوصًا عندما تتعامل مع أرقامٍ عشريّة كالعملات. عندما تُجري عمليّات حسابيّة تحتاج دقّة تامّة، فعليك تحويل القيم إلى أعداد صحيحة قبل العمل بها، ثمّ تحويلها ثانيةً إلى أعداد عشريّة بعد الانتهاء.</p>
 <p>تتسامح JavaScript مع اختلاف الأنواع، فعند إجراء عمليات حسابية باستخدام قيم غير عدديّة، فلن تُبلغك JavaScript بوجود خطأ، بل ستُتابع العمليّة مُعطيةً نتائج قد لا تتوقّعها:</p>
-<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/22/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/wavipizone/21/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <h2 id="-">مطالعة</h2>
 <p>لم نخض في أعماق لغة JavaScript بعدُ. شبكة مُطوّري موزيلّا (MDN) مصدر ممتاز (بالإنكليزيّة) لتعلّم JavaScript بتفاصيلها، وخصوصًا دليل JavaScript على الشّبكة. أكثر المواضيع أهمّيّة لك الآن:</p>
 <ul>
