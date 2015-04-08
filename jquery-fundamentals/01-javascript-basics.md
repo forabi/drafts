@@ -125,7 +125,7 @@ function addTwoNumbers(a, b) {
 
 **تحذير: نصّ برمجيّ خاطئ**
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/3/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/zocepi/1/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 لو أنّنا حاولنا في المثال السّابق استخدام قيمة `foo` خارج الدّالة (بدل الاكتفاء بفحص نوعها)، لأبلغنا المُتصفّح بوجود خطأ، ولن يتابع البرنامج العمل فيما يلي الموضع الّذي استخدمنا  `foo` عنده.
 
@@ -154,7 +154,7 @@ log( foo ); // تطبع 'qux' أيضًا
 
 **تحذير: نصّ برمجيّ غير آمن**
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/4/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/3/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 ###الكائنات (Objects)
 الحقيقة أنّ معظم ما نتعامل معه في JavaScript ليس سوى كائنات، وليس في اللّغة إلّا 5 أنواع من القيم الّتي *لا* تُعتبر كائنات:
@@ -177,15 +177,15 @@ var person = {
 ####الوصول إلى الخصائص
 حفظنا الكائن في مُتغيّر أسميناه `person`، ممّا يُسهّل الوصول إلى خصائصه، إمّا باستخدام _أسلوب النّقاط (dot notation)_ أو _أسلوب الأقواس المُربّعة (bracket notation)_.
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/5/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/4/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 ستلاحظ أنّنا استخدمنا سلسلة نصّيّة (string) للوصول إلى اسم الخاصّة الّتي نريدها عند اعتماد أسلوب الأقواس المُربّعة. أمّا عند اعتماد الأسلوب الآخر، أسلوب النّقاط، فقد استخدمنا اسم الخاصّة نفسه دون علامتي الاقتباس. يفيد أسلوب الأقواس المُربّعة عندما نريد الوصول إلى خاصّة يُحفَظ اسمها ضمن مُتغيّر:
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/6/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/5/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 بعد أن أنشأنا الكائن، يمكننا تعديل خصائصه:
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/7/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/6/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 هذا الجانب في JavaScript هو نعمة ونقمة في الوقت ذاته، فهو يعني أنّ الكائنات مرنة بصورة فائقة، ولكنّه أيضًا يعني أنّه ما من "خصوصيّة" للكائنات، فيمكن لأيّ نصّ برمجيّ أن يُسند قيمةً جديدة إلى أيّ خاصّة في أيّ كائن يمكنه الوصول إليه؛ وهذا سبب آخر يدفعك للاحتفاظ بالمُتغيّرات معزولةً عن النّطاق العامّ إلّا إذا كنت تريد فعلًا للبرامج الأخرى أن تُغيّر تلك الخصائص.
 
@@ -205,27 +205,27 @@ _ملاحظة: معنى `this` قد يُسبّب ارتباكًا شديدًا �
 
 لنحاول فهم كيف يمكن استخدام `this` في وظيفتنا:
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/9/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/sabiya/1/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 ليست مُعقّدةً كثيرًا حتى الآن... صحيح؟ منشأ التّعقيد هو أنّ _معنى `this` يمكن أن يتغيّر_، فالأمر كما قلنا يعتمد على السّياق الّذي استدعيت فيه الدّالة! لاحظ النّصّ التّالي:
 
 **تحذير: نصّ برمجيّ خاطئ**
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/10/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/9/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 عندما نحقظ الوظيفة  ‎`.greet()`‎ في مُتغيّر `sayIt` ثمّ نستدعي `sayIt()‎`، فإنّ السّياق يتغيّر ليُصبح الكائن العامّ `window`، _لا الكائن `person`_. وبما أنّ ليس للكائن `window` خاصّة اسمها `firstName`، فإنّ النتيجة تكون `undefined` عندما نحاول الوصول إليها.
 
 ما الذي على المُبرمج فعله إذًا؟ أوّلًا: عليه أن يحذر من النّتائج غير المُتوقّعة لمعنى `this` عند تخزين وظائف الكائنات في متغيّرات. وثانيًا: عليه أن يعلم أنّ بإمكانه إجبار `this` أن تُشير إلى ما يشاء من الكائنات وذلك باستخدام إحدى الوظيفتين  ‎`.call()`‎ و‎`.apply()`‎ مع الدّالّة ذاتها.
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/11/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/10/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 كلا الوظيفتين المُتشابهتين ‎`.call()`‎ و‎`.apply()`‎ تُتيحان إمرار المُعاملات إلى الدّالّة الّتي تُستدعى بهما. تخيّل أنّ دالة التّحيّة تقبل بعض المعاملات، يمكن حينئذٍ إمرار هذه المُعاملات باستخدام ‎`.call()`‎ كما يلي:
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/12/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/11/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 يمكن تنفيذ الأمر ذاته باستخدام ‎`.apply()`‎، ولكن سنحتاج معها إلى إمرار المُعاملات ضمن مصفوفة واحدة بدلًا من إمرارها مُنفصلة:
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/13/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/12/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 _مُلاحظة: لتفاصيل أكثر عن ‎`.call()`‎ و‎`.apply()`‎، راجع وثيقتي شبكة مُطوِّري موزيلّا [‎`.call()`‎](https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/call) و[‎`.apply()`‎](https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/apply)،_
 
@@ -266,16 +266,16 @@ var firstItem = myArray[ "0" ]; // الوصول إلى العنصر الأوّل
 
 عند الوصول إلى عناصر المصفوفة، فإنّه من الأسهل استخدام الأعداد لتحديد موضع العنصر المطلوب في المصفوفة، والّذي يُسمّى **الدّليل (index)**:
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/14/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/13/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 يمكننا معرفة عدد العناصر في مجموعة بالوصول إلى الخاصّة `length` في المصفوفة:
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/15/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/14/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 ####حلقات `for`: سرد المصفوفات
 بما أنّنا نعلم كيف نحدّد طول المصفوفة (عدد العناصر فيها)، وأنّ أوّل عناصرها يقع عند الدّليل `0`، يمكننا إذن سرد عناصر المصفوفة باستخدام حلقة `for`:
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/16/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/15/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 يمكننا فعل الكثير من الأشياء بالمصفوفات، راجع [وثيقة المصفوفات في شبكة مُطوِّري موزيّلا](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/) للاطّلاع على الدّليل الكامل.
 
@@ -284,7 +284,7 @@ var firstItem = myArray[ "0" ]; // الوصول إلى العنصر الأوّل
 
 فيما يلي مثال عن جملة شرطيّة (`if`) بسيطة في JavaScript. تتحرّى الجملة من صحِّة العدد `1`؛ ولأنّ `1` قيمة **"صائبة" (truthy)**، فسيُنفَّذ النّص البرمجيّ الواقع بين القوسين المعكوفين `{}` بعد جملة `if`.
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/17/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/16/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 الحقيقة أنّ معظم القيم في JavaScript "صائبة"، بل إنّ خمس قيمٍ فقط في اللّغة تُعتبر **"خاطئة" (falsy)**:
 
@@ -296,15 +296,15 @@ var firstItem = myArray[ "0" ]; // الوصول إلى العنصر الأوّل
 
 عندما نريد تحرّي "خطأ" قيمة ما، نستخدم المُعامل `!`:
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/18/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/17/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 أمّا القيمة `NaN` فلها وضعٌ خاصّ، فعند تحرّيها في جملة شرطيّة بسيطة فإنّها خاطئة:
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/19/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/18/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 أمّا عندما نقارن القيمة `NaN` مع `false`، فإنّنا نحصل على قيمة "خاطئة":
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/20/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/19/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 من المهمّ أن نتذكّر أنّ كلّ القيم الأخرى ما عدا الخمس السّابقة تُعتبر صائبة، بما في ذلك المصفوفات الفارغة والكائنات الفارغة وكل السّلاسل النّصيّة غير الفارغة (متضمّنة السلسلة النّصيّة `'0'`) وكلّ الأعداد ما عدا `0`.
 
@@ -402,13 +402,13 @@ var myObject = {
 ###العمليّات على الأعداد والسّلاسل النّصيّة
 التّعامل مع الأرقام في JavaScript قد يُعطي نتائج غير متوقّعة أحيانًا، بسبب طريقة تمثيل الأرقام داخليًّا في JavaScript، فمثلاً: عند جمع عددين عشريّين، تكون النّتيجة عدًدا قريبًا جدًّا من القيمة المتوقّعة، لكنّ غير مساوٍ تمامًا:
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/21/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/20/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 لن تصادف هذا كثيرًا عند العمل مع jQuery، ولكنّها قضيّة مهمّة يجب الانتباه لها خصوصًا عندما تتعامل مع أرقامٍ عشريّة كالعملات. عندما تُجري عمليّات حسابيّة تحتاج دقّة تامّة، فعليك تحويل القيم إلى أعداد صحيحة قبل العمل بها، ثمّ تحويلها ثانيةً إلى أعداد عشريّة بعد الانتهاء.
 
 تتسامح JavaScript مع اختلاف الأنواع، فعند إجراء عمليات حسابية باستخدام قيم غير عدديّة، فلن تُبلغك JavaScript بوجود خطأ، بل ستُتابع العمليّة مُعطيةً نتائج قد لا تتوقّعها:
 
-<a class="jsbin-embed" href="http://jsbin.com/wavipizone/22/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
+<a class="jsbin-embed" href="http://jsbin.com/wavipizone/21/embed?js,console">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script>
 
 ##مطالعة
 لم نخض في أعماق لغة JavaScript بعدُ. شبكة مُطوّري موزيلّا (MDN) مصدر ممتاز (بالإنكليزيّة) لتعلّم JavaScript بتفاصيلها، وخصوصًا دليل JavaScript على الشّبكة. أكثر المواضيع أهمّيّة لك الآن:
